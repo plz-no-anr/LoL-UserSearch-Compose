@@ -11,8 +11,7 @@ android {
     compileSdk = AppConfig.COMPILE_SDK_VERSION
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+        compose = true
     }
 
     defaultConfig {
@@ -90,10 +89,11 @@ dependencies {
     implementation(Dependencies.AndroidX.Compose.UI_PREVIEW)
     implementation(Dependencies.AndroidX.Compose.ACTIVITY)
     implementation(Dependencies.AndroidX.Compose.VIEWMODEL)
+    implementation(Dependencies.AndroidX.Compose.NAVIGATION)
+    implementation(Dependencies.AndroidX.Compose.HILT)
     debugImplementation(Dependencies.AndroidTest.Compose.UI_TOOLING)
     androidTestImplementation(Dependencies.AndroidTest.Compose.UI_JUNIT4)
     debugImplementation(Dependencies.AndroidTest.Compose.UI_MANIFEST)
-
 
     // Lifecycle
     implementation(Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX)
@@ -144,4 +144,5 @@ dependencies {
     // ViewPager
     implementation(Dependencies.ThirdParty.VIEW_PAGER)
     implementation(Dependencies.ThirdParty.VIEW_PAGER_INDICATORS)
+
 }

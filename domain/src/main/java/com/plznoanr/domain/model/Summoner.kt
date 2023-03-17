@@ -9,7 +9,7 @@ data class Summoner(
     val rank: String, // 랭크 (I)
     val wins: Int, // 승리
     val losses: Int, // 패배
-    val miniSeries: MiniSeries?, // 승급전
+    val miniSeries: MiniSeries? = null, // 승급전
     val isPlaying: Boolean,
 ) {
     data class MiniSeries(

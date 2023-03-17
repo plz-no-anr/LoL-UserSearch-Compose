@@ -15,7 +15,7 @@ object Dependencies {
     object ClassPath {
         object Version {
             const val GRADLE_VERSION = "7.4.2"
-            const val KOTLIN_VERSION = "1.8.0"
+            const val KOTLIN_VERSION = "1.8.10"
             const val HILT_VERSION = "2.45"
         }
 
@@ -82,6 +82,7 @@ object Dependencies {
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
             const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
             const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
+            const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
 
 
