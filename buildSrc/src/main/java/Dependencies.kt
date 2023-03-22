@@ -85,8 +85,6 @@ object Dependencies {
             const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
 
-
-
         // Splash
         const val SPLASH_SCREEN = "androidx.core:core-splashscreen:1.0.0"
     }

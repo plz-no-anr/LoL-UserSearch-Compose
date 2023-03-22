@@ -5,10 +5,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plz.no.anr.lol_usersearch_compose.utils.NetworkManager
+import com.plz.no.anr.lol_usersearch_compose.utils.NetworkState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
 
 abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContract.ViewEvent, Effect : BaseContract.ViewSideEffect>
     : ViewModel() {

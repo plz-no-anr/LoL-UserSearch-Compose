@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.MainDestination
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SearchDestination
+import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SpectatorDestination
+import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SummonerDestination
 
 @Composable
 fun AppNavigation() {
@@ -31,11 +33,10 @@ fun AppNavigation() {
                 type = NavType.StringType
             })
         ) {
-            val summonerName = requireNotNull(it.arguments?.getString(Navigation.Args.SUMMONER_NAME)) { "Summoner name is required as an argument" }
-
+            SummonerDestination(navController = navController)
         }
         composable(route = Navigation.Routes.SPECTATOR) {
-
+            SpectatorDestination(navController = navController)
         }
 
     }
@@ -46,7 +47,6 @@ fun AppNavigation() {
 object Navigation {
     object Args {
         const val SUMMONER_NAME = "summoner_name"
-
     }
 
     object Routes {
@@ -70,5 +70,5 @@ fun NavController.navigateToSpectator() {
 }
 
 fun NavController.navigateToSummoner(name: String) {
-    navigate(route = "${Navigation.Routes.SUMMONER}/$name")
+    navigate(route = "summoner/$name")
 }

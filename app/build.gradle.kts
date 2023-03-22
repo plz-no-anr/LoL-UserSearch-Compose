@@ -118,7 +118,6 @@ dependencies {
     implementation(Dependencies.ThirdParty.HILT_ANDROID)
     kapt(Dependencies.ThirdParty.HILT_ANDROID_COMPILER)
 
-
     // Timber
     implementation(Dependencies.ThirdParty.TIMBER)
 

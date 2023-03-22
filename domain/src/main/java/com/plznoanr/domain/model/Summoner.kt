@@ -25,7 +25,13 @@ data class Summoner(
 
     fun getTierRank() = "$tier $rank"
 
-    fun getMiniVisible():String = if (miniSeries?.progress != "No") "visible" else "gone"
+    fun getMiniVisible(): String = if (miniSeries?.progress != "No") "visible" else "gone"
+
+    fun asProfile() = Profile(
+        name = name,
+        level = level,
+        icon = icon,
+    )
 
 }
 

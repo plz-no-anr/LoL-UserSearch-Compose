@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.plz.no.anr.lol_usersearch_compose.LolApplication"
@@ -13,11 +14,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.LolUserSearchCompose"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name="com.plz.no.anr.lol_usersearch_compose.ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.LolUserSearchCompose">
+            android:theme="@style/Theme.LolUserSearchCompose"/>
+        <activity
+            android:name="com.plz.no.anr.lol_usersearch_compose.ui.feature.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
