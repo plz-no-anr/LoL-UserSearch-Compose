@@ -5,11 +5,12 @@ import com.plznoanr.domain.repository.AppRepository
 import com.plznoanr.domain.usecase.base.BaseUseCase
 import kotlinx.coroutines.flow.Flow
 
-class GetKeyUseCase(
+class DeleteKeyUseCase(
     private val repository: AppRepository
-) : BaseUseCase<Unit, String?>() {
-    override fun execute(parameter: Unit): Flow<Result<String?>> {
-        return Result.success(repository.apiKey).asFlow()
+) : BaseUseCase<Unit, Unit>() {
+    override fun execute(parameter: Unit): Flow<Result<Unit>> {
+        repository.apiKey = null
+        return Result.success(Unit).asFlow()
     }
 
 }

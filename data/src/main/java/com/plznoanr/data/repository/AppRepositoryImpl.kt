@@ -3,6 +3,7 @@ package com.plznoanr.data.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.plznoanr.data.di.CoroutineQualifiers
+import com.plznoanr.data.model.local.ProfileEntity
 import com.plznoanr.data.model.local.SearchEntity
 import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
@@ -28,7 +29,7 @@ class AppRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val preferenceDataSource: PreferenceDataSource
 ) : AppRepository {
-    override var apiKey: String
+    override var apiKey: String?
         get() = preferenceDataSource.apiKey
         set(value) {
             preferenceDataSource.apiKey = value
@@ -77,12 +78,11 @@ class AppRepositoryImpl(
         emit(Result.success(Unit))
     }
 
-    override fun getProfile(): Flow<Result<Profile>> = flow {
-        emit(
-            makeResult(coroutineDispatcher) {
-                localDataSource.getProfile().toDomain()
-            }
-        )
+    override fun getProfile(): Flow<Result<Profile?>> = flow {
+        val entity: ProfileEntity? = localDataSource.getProfile()
+        entity?.let {
+            emit(Result.success(entity.toDomain()))
+        } ?: emit(Result.success(null))
     }
 
     override fun insertProfile(profile: Profile): Flow<Result<Unit>> = flow {
@@ -99,11 +99,15 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
         try {
-            val summoner: SummonerResponse = remoteDataSource.requestSummoner(name, apiKey)
+            if (apiKey == null) {
+                emit(Result.failure(Exception("FORBIDDEN")))
+                return@flow
+            }
+            val summoner: SummonerResponse = remoteDataSource.requestSummoner(name, apiKey!!)
 
-            val league = remoteDataSource.requestLeague(summoner.id, apiKey)
+            val league = remoteDataSource.requestLeague(summoner.id, apiKey!!)
 
-            val spectator = remoteDataSource.requestSpectator(summoner.id, apiKey)
+            val spectator = remoteDataSource.requestSpectator(summoner.id, apiKey!!)
 
             var summonerResult: Summoner? = null
 

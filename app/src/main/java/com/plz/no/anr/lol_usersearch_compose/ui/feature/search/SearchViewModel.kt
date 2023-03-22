@@ -26,11 +26,15 @@ sealed class SearchContract : BaseContract() {
         object OnLoad : Event()
         object Refresh : Event()
 
-        data class SearchSummoner(val name: String) : Event()
+        sealed class Summoner : Event() {
+            data class OnSearch(val name: String) : Event()
+        }
 
-        data class DeleteSearch(val name: String) : Event()
+        sealed class Search : Event() {
+            data class OnDelete(val name: String) : Search()
+            object OnDeleteAll : Search()
+        }
 
-        object DeleteAllSearch : Event()
         object Navigation {
             object Back : Event()
         }
@@ -64,7 +68,7 @@ class SearchViewModel @Inject constructor(
                 getSearch()
             }
             is SearchContract.Event.Refresh -> {}
-            is SearchContract.Event.SearchSummoner -> {
+            is SearchContract.Event.Summoner.OnSearch -> {
                 Timber.d("SearchSummoner: ${event.name}")
                 if (event.name.isNotEmpty()) {
                     setEffect { SearchContract.Effect.Navigation.ToSummoner(event.name.trim()) }
@@ -73,10 +77,10 @@ class SearchViewModel @Inject constructor(
             is SearchContract.Event.Navigation.Back -> {
                 setEffect { SearchContract.Effect.Navigation.Back }
             }
-            is SearchContract.Event.DeleteSearch -> {
+            is SearchContract.Event.Search.OnDelete -> {
                 deleteSearch(event.name)
             }
-            is SearchContract.Event.DeleteAllSearch -> {
+            is SearchContract.Event.Search.OnDeleteAll -> {
                 deleteAll()
             }
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lol-UserSearch-Compose</string>
+    <string name="app_name">롤 전적 검색</string>
     <string name="main_title">목록</string>
     <string name="search_title">전적 검색</string>
     <string name="summoner_title">소환사 정보</string>
@@ -11,4 +11,7 @@
     <string name="success">성공</string>
     <string name="error">실패</string>
     <string name="retry">재시도</string>
+    <string name="api_key">API키</string>
+    <string name="add_key">API키 추가</string>
+    <string name="delete">삭제 하기</string>
 </resources>
