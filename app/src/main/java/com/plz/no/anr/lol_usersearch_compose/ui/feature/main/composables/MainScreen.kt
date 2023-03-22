@@ -109,7 +109,11 @@ fun MainScreen(
                 data = profileState,
                 apiKey = keyState,
                 onAddKey = {
-                    onEvent(MainContract.Event.Key.OnAdd(it))
+                    it.run {
+                        if (isNotEmpty()) {
+                            onEvent(MainContract.Event.Key.OnAdd(it))
+                        }
+                    }
                 },
                 onDeleteKey = {
                     onEvent(MainContract.Event.Key.OnDelete)

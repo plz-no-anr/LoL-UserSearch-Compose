@@ -8,10 +8,8 @@ import com.plz.no.anr.lol_usersearch_compose.ui.navigation.Navigation
 import com.plznoanr.domain.model.Summoner
 import com.plznoanr.domain.usecase.summoner.RequestSummonerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class SummonerContract: BaseContract() {
@@ -69,7 +67,6 @@ class SummonerViewModel @Inject constructor(
                     setState { copy(data = it, isLoading = false) }
                 }.onFailure {
                     setState { copy(error = it.message, isLoading = false) }
-                    Timber.e(it)
                 }
             }
         }
