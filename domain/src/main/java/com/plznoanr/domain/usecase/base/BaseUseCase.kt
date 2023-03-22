@@ -9,7 +9,7 @@ abstract class BaseUseCase<in P, R> {
     operator fun invoke(parameter: P): Flow<Result<R>> =
         execute(parameter)
             .onEach {
-                ("${this.javaClass.simpleName}/$parameter/$it").log()
+                ("${this.javaClass.simpleName}%/$parameter%/$it").log()
             }.catch { e ->
                 e.printStackTrace()
                 emit(Result.failure(e))

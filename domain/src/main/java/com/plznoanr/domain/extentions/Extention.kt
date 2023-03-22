@@ -4,11 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 fun <T>Result<T>.asFlow(): Flow<Result<T>> = flowOf(this)
+fun <T>Result<T>.to(): String = this.toString()
 
 fun String.log() {
-    decoration("LOG")
+    decoration("LOG-START")
     this
-        .split("/")
+        .split("%/")
         .forEachIndexed { index, s ->
             when (index) {
                 0 -> println("UseCaseName: $s")
@@ -16,7 +17,7 @@ fun String.log() {
                 2 -> println("Result: $s")
             }
         }
-    decoration("END")
+    decoration("LOG-END")
 }
 
 private fun decoration(msg: String) = run {

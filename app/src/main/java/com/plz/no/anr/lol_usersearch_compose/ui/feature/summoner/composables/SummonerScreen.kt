@@ -1,6 +1,5 @@
 package com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.composables
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,7 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.plz.no.anr.lol_usersearch_compose.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.ErrorScreen
-import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.IconImage
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
 import com.plznoanr.domain.model.Summoner
@@ -72,38 +70,6 @@ fun SummonerScreen(
     }
 
 }
-
-@Composable
-fun SummonerView(
-    modifier: Modifier = Modifier,
-    data: Summoner
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(text = data.name)
-        Text(text = data.level)
-    }
-
-}
-
-@Composable
-fun SummonerInfoView(
-    modifier: Modifier = Modifier,
-    icon: String,
-    name: String,
-    level: String,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        IconImage(url = icon)
-        Text(text = name)
-        Text(text = level)
-    }
-
-}
-
 
 @Preview
 @Composable

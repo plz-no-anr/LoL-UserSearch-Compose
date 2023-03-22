@@ -69,7 +69,6 @@ class SearchViewModel @Inject constructor(
             }
             is SearchContract.Event.Refresh -> {}
             is SearchContract.Event.Summoner.OnSearch -> {
-                Timber.d("SearchSummoner: ${event.name}")
                 if (event.name.isNotEmpty()) {
                     setEffect { SearchContract.Effect.Navigation.ToSummoner(event.name.trim()) }
                 }
