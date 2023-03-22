@@ -5,6 +5,10 @@ import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseContract
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Summoner
+import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
+import com.plznoanr.domain.usecase.key.GetKeyUseCase
+import com.plznoanr.domain.usecase.key.InsertKeyUseCase
+import com.plznoanr.domain.usecase.profile.GetProfileUseCase
 import com.plznoanr.domain.usecase.profile.InsertProfileUseCase
 import com.plznoanr.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.domain.usecase.summoner.DeleteSummonerUseCase
@@ -19,6 +23,7 @@ class MainContract : BaseContract() {
     data class UiState(
         val data: List<Summoner>,
         val profile: Profile? = null,
+        val key: String? = null,
         val isLoading: Boolean = false,
         val error: String? = null
     ) : ViewState
@@ -26,10 +31,18 @@ class MainContract : BaseContract() {
     sealed class Event : ViewEvent {
         object OnLoad : Event()
         object OnSearch : Event()
-        data class OnDelete(val name: String) : Event()
-        data class OnAddProfile(val profile: Profile) : Event()
-        object OnDeleteAll: Event()
         object Refresh : Event()
+        sealed class Summoner : Event() {
+            data class OnDelete(val name: String) : Summoner()
+            object OnDeleteAll: Event()
+        }
+        sealed class Profile : Event() {
+            data class OnAdd(val profile: com.plznoanr.domain.model.Profile) : Profile()
+        }
+        sealed class Key : Event() {
+            data class OnAdd(val key: String) : Key()
+            object OnDelete : Key()
+        }
     }
 
     sealed class Effect : ViewSideEffect {
@@ -46,7 +59,11 @@ class MainViewModel @Inject constructor(
     private val getSummonerUseCase: GetSummonerUseCase,
     private val deleteAllSummonerUseCase: DeleteAllSummonerUseCase,
     private val deleteSummonerUseCase: DeleteSummonerUseCase,
-    private val insertProfileUseCase: InsertProfileUseCase
+    private val getProfileUseCase: GetProfileUseCase,
+    private val insertProfileUseCase: InsertProfileUseCase,
+    private val getKeyUseCase: GetKeyUseCase,
+    private val insertKeyUseCase: InsertKeyUseCase,
+    private val deleteKeyUseCase: DeleteKeyUseCase
 ) : BaseViewModel<MainContract.UiState, MainContract.Event, MainContract.Effect>() {
 
     override fun setInitialState(): MainContract.UiState = MainContract.UiState(
@@ -55,14 +72,18 @@ class MainViewModel @Inject constructor(
 
     override fun handleEvents(event: MainContract.Event) {
         when (event) {
-            is MainContract.Event.OnLoad -> getSummonerList()
-            is MainContract.Event.OnSearch -> {
-                setEffect { MainContract.Effect.Navigation.ToSearch }
+            is MainContract.Event.OnLoad -> {
+                getSummonerList()
+                getProfile()
+                getKey()
             }
+            is MainContract.Event.OnSearch -> setEffect { MainContract.Effect.Navigation.ToSearch }
             is MainContract.Event.Refresh -> {}
-            is MainContract.Event.OnDeleteAll -> deleteAllSummoner()
-            is MainContract.Event.OnDelete -> deleteSummoner(event.name)
-            is MainContract.Event.OnAddProfile -> addProfile(event.profile)
+            is MainContract.Event.Summoner.OnDeleteAll -> deleteAllSummoner()
+            is MainContract.Event.Summoner.OnDelete -> deleteSummoner(event.name)
+            is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
+            is MainContract.Event.Key.OnAdd -> insertKey(event.key)
+            is MainContract.Event.Key.OnDelete -> deleteKey()
         }
     }
 
@@ -136,6 +157,27 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun getProfile() {
+        viewModelScope.launch {
+            getProfileUseCase(Unit).collectLatest { result ->
+                result.onSuccess {
+                    setState {
+                        copy(
+                            profile = it,
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    setState {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+        }
+    }
     private fun addProfile(profile: Profile) {
         viewModelScope.launch {
             insertProfileUseCase(profile).collectLatest { result ->
@@ -159,5 +201,72 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun getKey() {
+        viewModelScope.launch {
+            getKeyUseCase(Unit).collectLatest { result ->
+                result.onSuccess {
+                    setState {
+                        copy(
+                            key = it,
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    setState {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+    private fun insertKey(key: String) {
+        viewModelScope.launch {
+            insertKeyUseCase(key).collectLatest { result ->
+                result.onSuccess {
+                    setState {
+                        copy(
+                            key = key,
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    setState {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun deleteKey() {
+        viewModelScope.launch {
+            deleteKeyUseCase(Unit).collectLatest { result ->
+                result.onSuccess {
+                    setState {
+                        copy(
+                            key = null,
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    setState {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
+                }
+
+            }
+        }
+    }
 
 }

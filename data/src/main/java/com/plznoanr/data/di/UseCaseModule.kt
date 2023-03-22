@@ -1,7 +1,9 @@
 package com.plznoanr.data.di
 
 import com.plznoanr.domain.repository.AppRepository
+import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
 import com.plznoanr.domain.usecase.key.GetKeyUseCase
+import com.plznoanr.domain.usecase.key.InsertKeyUseCase
 import com.plznoanr.domain.usecase.profile.DeleteProfileUseCase
 import com.plznoanr.domain.usecase.profile.GetProfileUseCase
 import com.plznoanr.domain.usecase.profile.InsertProfileUseCase
@@ -97,5 +99,16 @@ object UseCaseModule {
         repository: AppRepository
     ) = DeleteAllSummonerUseCase(repository)
 
+    @Provides
+    @Singleton
+    fun provideInsertKeyUseCase(
+        repository: AppRepository
+    ) = InsertKeyUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteKeyUseCase(
+        repository: AppRepository
+    ) = DeleteKeyUseCase(repository)
 
 }

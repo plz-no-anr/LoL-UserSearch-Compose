@@ -2,9 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.search.composables
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -109,7 +107,7 @@ fun SearchView(
                 .height(60.dp),
             trailingIcon = {
                 IconButton(
-                    onClick = { onEvent(SearchContract.Event.SearchSummoner(name)) }
+                    onClick = { onEvent(SearchContract.Event.Summoner.OnSearch(name)) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -128,7 +126,7 @@ fun SearchView(
         TextButton(
             modifier = Modifier
                 .align(Alignment.End),
-            onClick = { onEvent(SearchContract.Event.DeleteAllSearch) },
+            onClick = { onEvent(SearchContract.Event.Search.OnDeleteAll) },
             colors = ButtonDefaults.textButtonColors(
                 contentColor = Color.Black
             )
@@ -144,8 +142,8 @@ fun SearchView(
             items(data) { search ->
                 SearchItem(
                     data = search,
-                    onSearch = { onEvent(SearchContract.Event.SearchSummoner(search.name)) },
-                    onDelete = { onEvent(SearchContract.Event.DeleteSearch(search.name)) }
+                    onSearch = { onEvent(SearchContract.Event.Summoner.OnSearch(search.name)) },
+                    onDelete = { onEvent(SearchContract.Event.Search.OnDelete(search.name)) }
                 )
             }
         }

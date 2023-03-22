@@ -14,7 +14,7 @@ interface LocalDataSource {
 
     suspend fun deleteSearchAll()
 
-    suspend fun getProfile() : ProfileEntity
+    suspend fun getProfile() : ProfileEntity?
 
     suspend fun insertProfile(profileEntity: ProfileEntity)
 

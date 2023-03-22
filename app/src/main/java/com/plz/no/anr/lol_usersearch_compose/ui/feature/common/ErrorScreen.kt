@@ -112,5 +112,5 @@ private fun String.toErrorDescription() = when (this.toErrorCode()) {
     else -> ErrorType.NETWORK.msg
 }
 
-private fun String.toErrorCode() = this.split("/")[0].toInt()
-private fun String.toErrorMsg() = this.split("/")[1]
+private fun String.toErrorCode() = if (this.contains("/")) this.split("/")[0].toInt() else this
+private fun String.toErrorMsg() = if (this.contains("/")) this.split("/")[1] else this

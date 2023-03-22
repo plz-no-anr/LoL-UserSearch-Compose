@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.plz.no.anr.lol_usersearch_compose.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.ErrorScreen
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.IconImage
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
 import com.plznoanr.domain.model.Summoner
@@ -82,6 +83,23 @@ fun SummonerView(
     ) {
         Text(text = data.name)
         Text(text = data.level)
+    }
+
+}
+
+@Composable
+fun SummonerInfoView(
+    modifier: Modifier = Modifier,
+    icon: String,
+    name: String,
+    level: String,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        IconImage(url = icon)
+        Text(text = name)
+        Text(text = level)
     }
 
 }
