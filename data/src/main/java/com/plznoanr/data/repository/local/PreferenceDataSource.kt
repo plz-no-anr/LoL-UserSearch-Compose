@@ -2,6 +2,7 @@ package com.plznoanr.data.repository.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.plznoanr.data.utils.DEFAULT_API_KEY
 
 class PreferenceDataSource (
     context: Context
@@ -14,7 +15,7 @@ class PreferenceDataSource (
         context.getSharedPreferences(LOL_APP, Context.MODE_PRIVATE)
 
     var apiKey: String
-        get() = prefs.getString(API_KEY, "")!!
+        get() = prefs.getString(API_KEY, DEFAULT_API_KEY)!!
         set(value) {
             prefs.edit().putString(API_KEY, value).apply()
         }

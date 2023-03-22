@@ -4,10 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.plznoanr.domain.model.Profile
 
-@Entity
+@Entity(tableName = "Profile")
 data class ProfileEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey
     val name: String,
     val level: String,
     val icon: String

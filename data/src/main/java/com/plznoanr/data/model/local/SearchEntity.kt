@@ -6,13 +6,11 @@ import com.plznoanr.domain.model.Search
 
 @Entity(tableName = "Search")
 data class SearchEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val name: String,
     val date: String
 ) {
     fun toDomain() = Search(
-        uid = id,
         name = name,
         date = date
     )

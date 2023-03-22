@@ -11,4 +11,6 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val defaultBackgroundColor = Color(0xFF1E1E1E)
+val skyBlue = Color(0xFF0F93F7)
+val sky = Color(0xFF83CAFF)
 

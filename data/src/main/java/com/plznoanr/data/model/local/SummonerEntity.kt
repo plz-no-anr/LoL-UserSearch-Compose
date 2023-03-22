@@ -6,10 +6,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.plznoanr.domain.model.Summoner
 
-@Entity
+@Entity(tableName = "Summoner")
 data class SummonerEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey
     val name: String, // 소환사 이름
     val level: String, // 레벨
     val icon: String, // 소환사 아이콘
