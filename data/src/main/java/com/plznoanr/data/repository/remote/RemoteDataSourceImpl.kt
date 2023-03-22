@@ -11,7 +11,7 @@ interface RemoteDataSource {
 
     suspend fun requestLeague(summonerId:String?, apiKey: String): Set<LeagueResponse>
 
-    suspend fun requestSpectator(summonerId:String?, apiKey: String): SpectatorResponse
+    suspend fun requestSpectator(summonerId:String?, apiKey: String): SpectatorResponse?
 }
 
 class RemoteDataSourceImpl (
@@ -25,13 +25,18 @@ class RemoteDataSourceImpl (
         return api.getLeague(summonerId, apiKey).asResult()
     }
 
-    override suspend fun requestSpectator(summonerId: String?, apiKey: String): SpectatorResponse {
-        val response = api.getSpectator(summonerId, apiKey)
-        return response.asResult()
+    override suspend fun requestSpectator(summonerId: String?, apiKey: String): SpectatorResponse? {
+        return api.getSpectator(summonerId, apiKey).let {
+            if (it.isSuccessful) {
+                it.body()
+            } else {
+                null
+            }
+        }
     }
 }
 
-fun <T>Response<T?>.asResult(): T {
+fun <T> Response<T?>.asResult(): T {
     if (isSuccessful && body() != null) {
         return body()!!
     } else {

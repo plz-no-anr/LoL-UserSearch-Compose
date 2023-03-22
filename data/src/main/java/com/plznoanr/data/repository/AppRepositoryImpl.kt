@@ -9,6 +9,7 @@ import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.PreferenceDataSource
 import com.plznoanr.data.repository.remote.RemoteDataSource
+import com.plznoanr.data.utils.DEFAULT_API_KEY
 import com.plznoanr.data.utils.QueueType
 import com.plznoanr.data.utils.getSummonerIcon
 import com.plznoanr.data.utils.toEntity
@@ -103,7 +104,7 @@ class AppRepositoryImpl(
                 emit(Result.failure(Exception("FORBIDDEN")))
                 return@flow
             }
-            val summoner: SummonerResponse = remoteDataSource.requestSummoner(name, apiKey!!)
+            val summoner = remoteDataSource.requestSummoner(name, apiKey!!)
 
             val league = remoteDataSource.requestLeague(summoner.id, apiKey!!)
 
@@ -125,7 +126,7 @@ class AppRepositoryImpl(
                         wins = it.wins,
                         losses = it.losses,
                         miniSeries = it.miniSeries?.toDomain(),
-                        isPlaying = spectator.gameId != 0L
+                        isPlaying = spectator != null && spectator.gameId != 0L
                     )
                 }
             }
