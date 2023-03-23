@@ -15,7 +15,7 @@ class PreferenceDataSource (
         context.getSharedPreferences(LOL_APP, Context.MODE_PRIVATE)
 
     var apiKey: String?
-        get() = prefs.getString(API_KEY, null)
+        get() = prefs.getString(API_KEY, DEFAULT_API_KEY)
         set(value) {
             prefs.edit().putString(API_KEY, value).apply()
         }
