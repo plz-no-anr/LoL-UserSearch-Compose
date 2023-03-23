@@ -36,7 +36,7 @@ class RemoteDataSourceImpl (
     }
 }
 
-fun <T> Response<T?>.asResult(): T {
+private fun <T> Response<T?>.asResult(): T {
     if (isSuccessful && body() != null) {
         return body()!!
     } else {

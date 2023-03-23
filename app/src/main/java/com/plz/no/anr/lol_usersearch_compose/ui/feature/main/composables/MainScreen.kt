@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plz.no.anr.lol_usersearch_compose.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
-import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.ErrorScreen
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.theme.sky

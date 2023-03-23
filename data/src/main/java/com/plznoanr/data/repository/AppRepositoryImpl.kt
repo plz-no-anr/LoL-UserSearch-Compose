@@ -9,7 +9,6 @@ import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.PreferenceDataSource
 import com.plznoanr.data.repository.remote.RemoteDataSource
-import com.plznoanr.data.utils.DEFAULT_API_KEY
 import com.plznoanr.data.utils.QueueType
 import com.plznoanr.data.utils.getSummonerIcon
 import com.plznoanr.data.utils.toEntity
@@ -100,10 +99,11 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
         try {
-            if (apiKey == null) {
-                emit(Result.failure(Exception("FORBIDDEN")))
+            requireNotNull(apiKey) {
+                emit(Result.failure(Exception("FORBIDDEN - API Key is null")))
                 return@flow
             }
+
             val summoner = remoteDataSource.requestSummoner(name, apiKey!!)
 
             val league = remoteDataSource.requestLeague(summoner.id, apiKey!!)
@@ -145,9 +145,7 @@ class AppRepositoryImpl(
         } catch (e: Exception) {
             emit(Result.failure(e))
         }
-
     }.flowOn(coroutineDispatcher)
-
 
     private suspend fun <T> makeResult(
         dispatcher: CoroutineDispatcher,

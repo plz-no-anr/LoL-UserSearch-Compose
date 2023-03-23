@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol_usersearch_compose.ui.feature.common
+package com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error
 
 enum class ErrorType(val msg: String) {
     NETWORK("Please check your internet connection and try again"),

@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.plz.no.anr.lol_usersearch_compose.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
-import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.ErrorScreen
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.search.SearchContract
 import com.plznoanr.domain.model.Search
