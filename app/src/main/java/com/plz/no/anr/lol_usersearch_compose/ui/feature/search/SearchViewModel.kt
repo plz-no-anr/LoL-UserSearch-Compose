@@ -13,45 +13,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-sealed class SearchContract : BaseContract() {
-
-    data class UiState(
-        val data: List<Search>,
-        val isLoading: Boolean = false,
-        val error: String? = null
-    ) : ViewState
-
-    sealed class Event : ViewEvent {
-
-        object OnLoad : Event()
-        object Refresh : Event()
-
-        sealed class Summoner : Event() {
-            data class OnSearch(val name: String) : Event()
-        }
-
-        sealed class Search : Event() {
-            data class OnDelete(val name: String) : Search()
-            object OnDeleteAll : Search()
-        }
-
-        object Navigation {
-            object Back : Event()
-        }
-    }
-
-    sealed class Effect : ViewSideEffect {
-        data class Toast(val msg: String) : Effect()
-
-        sealed class Navigation : Effect() {
-            object Back : Navigation()
-
-            data class ToSummoner(val name: String) : Navigation()
-        }
-    }
-
-}
-
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,

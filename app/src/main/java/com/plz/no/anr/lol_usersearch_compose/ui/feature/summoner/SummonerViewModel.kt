@@ -12,29 +12,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SummonerContract: BaseContract() {
-
-    data class UiState(
-        val data: Summoner?,
-        val isLoading: Boolean = false,
-        val error: String? = null
-    ): ViewState
-    sealed class Event: ViewEvent {
-        object OnLoad: Event()
-        object Navigation {
-            object Back: Event()
-        }
-    }
-
-    sealed class Effect: ViewSideEffect {
-        data class Toast(val msg: String): Effect()
-        sealed class Navigation: Effect() {
-            object Back: Navigation()
-        }
-    }
-
-}
-
 @HiltViewModel
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
