@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol_usersearch_compose.ui.feature.common
+package com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LolUserSearchCompose"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu">
         <activity
             android:name="com.plz.no.anr.lol_usersearch_compose.ui.MainActivity"
             android:exported="true"
