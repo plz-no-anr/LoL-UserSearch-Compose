@@ -1,0 +1,48 @@
+package com.plz.no.anr.lol_usersearch_compose.ui.feature.main
+
+import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseContract
+import com.plznoanr.domain.model.Profile
+import com.plznoanr.domain.model.Summoner
+
+class MainContract : BaseContract() {
+
+    data class UiState(
+        val data: List<Summoner>,
+        val profile: Profile? = null,
+        val key: String? = null,
+        val isLoading: Boolean = false,
+        val error: String? = null
+    ) : ViewState
+
+    sealed class Event : ViewEvent {
+
+        object OnLoad : Event()
+
+        object OnSearch : Event()
+
+        object Refresh : Event()
+
+        sealed class Summoner : Event() {
+            data class OnDelete(val name: String) : Summoner()
+            object OnDeleteAll: Event()
+        }
+
+        sealed class Profile : Event() {
+            data class OnAdd(val profile: com.plznoanr.domain.model.Profile) : Profile()
+        }
+
+        sealed class Key : Event() {
+            data class OnAdd(val key: String) : Key()
+            object OnDelete : Key()
+        }
+
+    }
+
+    sealed class Effect : ViewSideEffect {
+
+        sealed class Navigation : Effect() {
+            object ToSearch : Navigation()
+        }
+
+    }
+}

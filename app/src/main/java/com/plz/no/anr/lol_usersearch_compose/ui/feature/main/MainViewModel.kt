@@ -18,42 +18,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainContract : BaseContract() {
-
-    data class UiState(
-        val data: List<Summoner>,
-        val profile: Profile? = null,
-        val key: String? = null,
-        val isLoading: Boolean = false,
-        val error: String? = null
-    ) : ViewState
-
-    sealed class Event : ViewEvent {
-        object OnLoad : Event()
-        object OnSearch : Event()
-        object Refresh : Event()
-        sealed class Summoner : Event() {
-            data class OnDelete(val name: String) : Summoner()
-            object OnDeleteAll: Event()
-        }
-        sealed class Profile : Event() {
-            data class OnAdd(val profile: com.plznoanr.domain.model.Profile) : Profile()
-        }
-        sealed class Key : Event() {
-            data class OnAdd(val key: String) : Key()
-            object OnDelete : Key()
-        }
-    }
-
-    sealed class Effect : ViewSideEffect {
-
-        sealed class Navigation : Effect() {
-            object ToSearch : Navigation()
-        }
-
-    }
-}
-
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getSummonerUseCase: GetSummonerUseCase,
