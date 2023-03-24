@@ -15,4 +15,6 @@ object AppConfig {
 
     const val KOTLIN_COMPILER_EXTENTION = "1.4.2"
 
+    const val PROGUARD_FILE_NAME = "proguard-android-optimize.txt"
+    const val PROGUARD_RULES = "proguard-rules.pro"
 }

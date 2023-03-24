@@ -4,6 +4,7 @@ import com.plznoanr.data.api.UserSearchApi
 import com.plznoanr.data.model.remote.LeagueResponse
 import com.plznoanr.data.model.remote.SpectatorResponse
 import com.plznoanr.data.model.remote.SummonerResponse
+import kotlinx.coroutines.delay
 import retrofit2.Response
 
 interface RemoteDataSource {
@@ -26,9 +27,9 @@ class RemoteDataSourceImpl (
     }
 
     override suspend fun requestSpectator(summonerId: String?, apiKey: String): SpectatorResponse? {
-        return api.getSpectator(summonerId, apiKey).let {
-            if (it.isSuccessful) {
-                it.body()
+        return api.getSpectator(summonerId, apiKey).run {
+            if (isSuccessful) {
+                body()
             } else {
                 null
             }

@@ -99,16 +99,16 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
         try {
-            requireNotNull(apiKey) {
-                emit(Result.failure(Exception("FORBIDDEN - API Key is null")))
+            val key = requireNotNull(apiKey) {
+                emit(Result.failure(Exception("FORBIDDEN")))
                 return@flow
             }
 
-            val summoner = remoteDataSource.requestSummoner(name, apiKey!!)
+            val summoner = remoteDataSource.requestSummoner(name, key)
 
-            val league = remoteDataSource.requestLeague(summoner.id, apiKey!!)
+            val league = remoteDataSource.requestLeague(summoner.id, key)
 
-            val spectator = remoteDataSource.requestSpectator(summoner.id, apiKey!!)
+            val spectator = remoteDataSource.requestSpectator(summoner.id, key)
 
             var summonerResult: Summoner? = null
 
