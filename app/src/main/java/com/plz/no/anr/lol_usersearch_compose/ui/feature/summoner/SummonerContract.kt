@@ -19,6 +19,10 @@ class SummonerContract : BaseContract() {
             object Back : Navigation()
         }
 
+        sealed class Spectator : Event() {
+            data class OnWatch(val name: String) : Spectator()
+        }
+
     }
 
     sealed class Effect : ViewSideEffect {
@@ -27,6 +31,8 @@ class SummonerContract : BaseContract() {
 
         sealed class Navigation : Effect() {
             object Back : Navigation()
+
+            data class ToSpectator(val name: String) : Navigation()
         }
 
     }

@@ -11,6 +11,7 @@ import com.plznoanr.data.repository.local.PreferenceDataSource
 import com.plznoanr.data.repository.remote.RemoteDataSource
 import com.plznoanr.data.utils.QueueType
 import com.plznoanr.data.utils.getSummonerIcon
+import com.plznoanr.data.utils.parseError
 import com.plznoanr.data.utils.toEntity
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Search
@@ -141,7 +142,7 @@ class AppRepositoryImpl(
                 localDataSource.insertSummoner(it.toEntity())
 
                 emit(Result.success(it))
-            } ?: emit(Result.failure(Exception("Summoner is null")))
+            } ?: emit(Result.failure(Exception("Summoner is null".parseError(404))))
         } catch (e: Exception) {
             emit(Result.failure(e))
         }

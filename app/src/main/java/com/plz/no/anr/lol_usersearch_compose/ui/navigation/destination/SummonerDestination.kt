@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerViewModel
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.composables.SummonerScreen
+import com.plz.no.anr.lol_usersearch_compose.ui.navigation.navigateToSpectator
 
 @Composable
 fun SummonerDestination(
@@ -19,6 +20,7 @@ fun SummonerDestination(
         onNavigationRequested = {
             when (it) {
                 is SummonerContract.Effect.Navigation.Back -> navController.popBackStack()
+                is SummonerContract.Effect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
             }
         }
     )

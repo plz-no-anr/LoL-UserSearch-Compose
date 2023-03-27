@@ -48,6 +48,7 @@ class MainViewModel @Inject constructor(
             is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
             is MainContract.Event.Key.OnAdd -> insertKey(event.key)
             is MainContract.Event.Key.OnDelete -> deleteKey()
+            is MainContract.Event.Spectator.OnWatch -> setEffect { MainContract.Effect.Navigation.ToSpectator(event.name) }
         }
     }
 

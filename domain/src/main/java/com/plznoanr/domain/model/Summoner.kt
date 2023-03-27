@@ -35,3 +35,20 @@ data class Summoner(
 
 }
 
+fun getDummySummoner() = Summoner(
+    name = "Summoner Name",
+    level = "100",
+    icon = "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/6.png",
+    tier = "GRANDMASTER",
+    rank = "I",
+    leaguePoints = 322,
+    wins = 223,
+    losses = 203,
+    isPlaying = false,
+    miniSeries = Summoner.MiniSeries(
+        progress = "WLNNN",
+        wins = 1,
+        losses = 1,
+        target = 3
+    )
+)

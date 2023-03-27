@@ -27,12 +27,9 @@ class SummonerViewModel @Inject constructor(
 
     override fun handleEvents(event: SummonerContract.Event) {
         when (event) {
-            is SummonerContract.Event.OnLoad -> {
-                requestSummonerData()
-            }
-            is SummonerContract.Event.Navigation.Back -> {
-                setEffect { SummonerContract.Effect.Navigation.Back }
-            }
+            is SummonerContract.Event.OnLoad -> requestSummonerData()
+            is SummonerContract.Event.Navigation.Back -> setEffect { SummonerContract.Effect.Navigation.Back }
+            is SummonerContract.Event.Spectator.OnWatch -> setEffect { SummonerContract.Effect.Navigation.ToSpectator(event.name) }
         }
     }
 

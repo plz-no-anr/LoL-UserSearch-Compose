@@ -31,6 +31,11 @@ class MainContract : BaseContract() {
             data class OnAdd(val profile: com.plznoanr.domain.model.Profile) : Profile()
         }
 
+        sealed class Spectator : Event() {
+            data class OnWatch(val name: String) : Spectator()
+
+        }
+
         sealed class Key : Event() {
             data class OnAdd(val key: String) : Key()
             object OnDelete : Key()
@@ -40,8 +45,11 @@ class MainContract : BaseContract() {
 
     sealed class Effect : ViewSideEffect {
 
+        data class Toast(val message: String) : Effect()
+
         sealed class Navigation : Effect() {
             object ToSearch : Navigation()
+            data class ToSpectator(val name: String) : Navigation()
         }
 
     }

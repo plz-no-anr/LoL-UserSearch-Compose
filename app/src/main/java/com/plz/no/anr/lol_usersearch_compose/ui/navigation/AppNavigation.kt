@@ -53,7 +53,7 @@ object Navigation {
         const val MAIN = "main"
         const val SEARCH = "search"
         const val SUMMONER = "summoner/{${Args.SUMMONER_NAME}}"
-        const val SPECTATOR = "spectator"
+        const val SPECTATOR = "spectator/{${Args.SUMMONER_NAME}}"
     }
 }
 
@@ -65,8 +65,8 @@ fun NavController.navigateToSearch() {
     navigate(route = Navigation.Routes.SEARCH)
 }
 
-fun NavController.navigateToSpectator() {
-    navigate(route = Navigation.Routes.SPECTATOR)
+fun NavController.navigateToSpectator(name: String) {
+    navigate(route = "spectator/$name")
 }
 
 fun NavController.navigateToSummoner(name: String) {

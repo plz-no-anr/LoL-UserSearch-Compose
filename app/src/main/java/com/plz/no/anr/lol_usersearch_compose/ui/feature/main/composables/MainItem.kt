@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Square
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,9 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.IconImage
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.summoner.getTierIcon
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.theme.sky
 import com.plznoanr.domain.model.Summoner
+import com.plznoanr.domain.model.getDummySummoner
 import com.plznoanr.lol_usersearch_compose.R
 
 @Composable
@@ -76,12 +76,13 @@ fun MainItem(
 
                 LeagueInfoView(
                     modifier = modifier
-                    .weight(1f),
+                        .weight(1f),
                     pointWinLose = summoner.getLeaguePoint(),
                     miniSeries = summoner.miniSeries,
                     isPlaying = summoner.isPlaying,
                     onAdd = { onEvent(MainContract.Event.Profile.OnAdd(summoner.asProfile())) },
-                    onDelete = { onEvent(MainContract.Event.Summoner.OnDelete(summoner.name)) }
+                    onDelete = { onEvent(MainContract.Event.Summoner.OnDelete(summoner.name)) },
+                    onSpectator = { onEvent(MainContract.Event.Spectator.OnWatch(summoner.name)) }
                 )
             }
 
@@ -91,7 +92,7 @@ fun MainItem(
 }
 
 @Composable
-fun SummonerView(
+private fun SummonerView(
     icon: String,
     name: String,
     level: String
@@ -124,7 +125,7 @@ fun SummonerView(
 }
 
 @Composable
-fun TierView(
+private fun TierView(
     modifier: Modifier = Modifier,
     tierRank: String,
     tierIcon: Painter = painterResource(id = R.drawable.emblem_bronze)
@@ -162,13 +163,14 @@ fun TierView(
 }
 
 @Composable
-fun LeagueInfoView(
+private fun LeagueInfoView(
     modifier: Modifier = Modifier,
     pointWinLose: String,
     miniSeries: Summoner.MiniSeries?,
     isPlaying: Boolean,
     onAdd: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onSpectator: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -182,65 +184,71 @@ fun LeagueInfoView(
 
         miniSeries?.let {
             MiniSeriesView(
-                miniSeries = it,
-                isPlaying = isPlaying
+                miniSeries = it
             )
         }
 
         IconView(
+            isPlaying = isPlaying,
             onAddClick = onAdd,
-            onDeleteClick = onDelete
+            onDeleteClick = onDelete,
+            onSpectator = onSpectator
         )
 
     }
 }
 
 @Composable
-fun LeaguePointView(
+private fun LeaguePointView(
     pointWinLose: String
 ) {
-    Row(
-    ) {
+    Row {
         Text(
             text = pointWinLose,
             fontSize = 12.sp
         )
-
-
     }
 }
 
 @Composable
-fun IconView(
+private fun IconView(
+    isPlaying: Boolean = false,
     onAddClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onDeleteClick: () -> Unit = {},
+    onSpectator: () -> Unit = {}
 ) {
     Row(
         Modifier.padding(top = 8.dp)
     ) {
-            Icon(
-                Icons.Default.Add,
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable { onAddClick() }
-            )
+        Icon(
+            Icons.Default.Add,
+            contentDescription = null,
+            modifier = Modifier
+                .clickable { onAddClick() }
+        )
         Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                Icons.Default.Delete,
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable { onDeleteClick() }
-            )
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = null,
+            modifier = Modifier
+                .clickable { onDeleteClick() }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        SpectatorView(
+            modifier = Modifier,
+            isPlaying = isPlaying,
+            onSpectator = onSpectator
+        )
 
     }
 
 }
 
 @Composable
-fun MiniSeriesView(
+private fun MiniSeriesView(
     miniSeries: Summoner.MiniSeries,
-    isPlaying: Boolean = false,
-    onSpectator: () -> Unit = {}
 ) {
     Row {
         miniSeries.progress.let {
@@ -265,61 +273,40 @@ fun MiniSeriesView(
                 }
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.Bottom)
-                .clickable { onSpectator() }
-        ) {
-            Text(
-                text = stringResource(id = R.string.playing),
-                fontSize = 12.sp
-            )
-            Icon(
-                imageVector = if (isPlaying) Icons.Rounded.Check else Icons.Rounded.Close,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(20.dp),
-                tint = if (isPlaying) Color.Green else Color.Red
-            )
-        }
     }
 }
+
 @Composable
-private fun getTierIcon(tier: String) = when (tier) {
-    "IRON" -> painterResource(id = R.drawable.emblem_iron)
-    "BRONZE" -> painterResource(id = R.drawable.emblem_bronze)
-    "SILVER" -> painterResource(id = R.drawable.emblem_silver)
-    "GOLD" -> painterResource(id = R.drawable.emblem_gold)
-    "PLATINUM" -> painterResource(id = R.drawable.emblem_platinum)
-    "DIAMOND" -> painterResource(id = R.drawable.emblem_diamond)
-    "MASTER" -> painterResource(id = R.drawable.emblem_master)
-    "GRANDMASTER" -> painterResource(id = R.drawable.emblem_grandmaster)
-    "CHALLENGER" -> painterResource(id = R.drawable.emblem_challenger)
-    else -> painterResource(id = R.drawable.emblem_iron)
+private fun SpectatorView(
+    modifier: Modifier = Modifier,
+    isPlaying: Boolean,
+    onSpectator: () -> Unit = {}
+) {
+    Row(
+        modifier = modifier
+            .clickable {
+                if (isPlaying) onSpectator()
+            }
+    ) {
+        Text(
+            text = stringResource(id = R.string.playing),
+            fontSize = 12.sp
+        )
+        Icon(
+            imageVector = Icons.Rounded.Square,
+            contentDescription = null,
+            modifier = Modifier
+                .size(20.dp),
+            tint = if (isPlaying) Color.Green else Color.Red
+        )
+    }
 }
 
 @Preview
 @Composable
-fun MainItemPreview() {
+private fun MainItemPreview() {
     MainItem(
-        summoner = Summoner(
-            name = "Hide On Bush",
-            level = "100",
-            icon = "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/6.png",
-            tier = "GRANDMASTER",
-            rank = "I",
-            leaguePoints = 322,
-            wins = 223,
-            losses = 203,
-            isPlaying = false,
-            miniSeries = Summoner.MiniSeries(
-                progress = "WLNNN",
-                wins = 1,
-                losses = 1,
-                target = 3
-            )
-        )
+        summoner = getDummySummoner()
     ) {}
 }

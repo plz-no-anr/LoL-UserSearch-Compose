@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plz.no.anr.lol_usersearch_compose.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
-import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.theme.sky
 import com.plznoanr.domain.model.Profile
@@ -61,6 +61,11 @@ fun MainScreen(
         effectFlow?.onEach { effect ->
             when (effect) {
                 is MainContract.Effect.Navigation.ToSearch -> onNavigationRequested(effect)
+                is MainContract.Effect.Navigation.ToSpectator -> onNavigationRequested(effect)
+                is MainContract.Effect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
+                    message = effect.message,
+                    duration = SnackbarDuration.Short
+                )
             }
         }?.collect()
     }
@@ -131,9 +136,11 @@ fun MainScreen(
     }
 }
 
+
+
 @Preview
 @Composable
-fun MainScreenPreview() {
+private fun MainScreenPreview() {
     MainScreen(
         state = MainContract.UiState(
             isLoading = false,

@@ -76,7 +76,7 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun SearchScreenPreview() {
+private fun SearchScreenPreview() {
     SearchScreen(
         state = SearchContract.UiState(
             data = (0..30).map { Search( "name $it", "2023-03-$it") }.asReversed(),

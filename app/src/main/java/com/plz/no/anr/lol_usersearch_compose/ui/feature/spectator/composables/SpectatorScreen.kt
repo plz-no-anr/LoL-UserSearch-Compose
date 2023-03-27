@@ -18,7 +18,7 @@ fun SpectatorScreen(
 
 @Preview
 @Composable
-fun SpectatorScreenPreview() {
+private fun SpectatorScreenPreview() {
     SpectatorScreen(
         state = SpectatorContract.UiState(
             data = null

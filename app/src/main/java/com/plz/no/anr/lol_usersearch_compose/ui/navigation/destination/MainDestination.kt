@@ -7,6 +7,7 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainViewModel
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.composables.MainScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.navigateToSearch
+import com.plz.no.anr.lol_usersearch_compose.ui.navigation.navigateToSpectator
 
 @Composable
 fun MainDestination(
@@ -20,6 +21,7 @@ fun MainDestination(
     ) {
         when (it) {
             is MainContract.Effect.Navigation.ToSearch -> navController.navigateToSearch()
+            is MainContract.Effect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
         }
 
     }
