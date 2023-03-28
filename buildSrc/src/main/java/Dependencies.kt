@@ -1,6 +1,9 @@
 object Dependencies {
 
     object Plugins {
+        object Version {
+            const val KOTLIN_VERSION = "1.8.10"
+        }
         const val APPLICATION = "com.android.application"
         const val LIBRARY = "com.android.library"
         const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
@@ -9,7 +12,8 @@ object Dependencies {
         const val DAGGER_HILT = "com.google.dagger.hilt.android"
 
         const val JAVA_LIBRARY = "java-library"
-        const val KOTLIN_JVM = "org.jetbrains.kotlin.jvm"
+        const val KOTLIN_JVM = "jvm"
+        const val KOTLIN_SERIALIZATION = "plugin.serialization"
     }
 
     object ClassPath {
@@ -20,7 +24,9 @@ object Dependencies {
         }
 
         const val GRADLE = "com.android.tools.build:gradle:${Version.GRADLE_VERSION}"
-        const val KOTLIN_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.KOTLIN_VERSION}"
+//        const val KOTLIN_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.KOTLIN_VERSION}"
+        const val KOTLIN_GRADLE = "gradle-plugin"
+        const val SERIALIZATION = "serialization"
         const val HILT_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:${Version.HILT_VERSION}"
     }
 
@@ -132,6 +138,9 @@ object Dependencies {
         // ViewPager
         const val VIEW_PAGER = "com.google.accompanist:accompanist-pager:${Version.VIEW_PAGER}"
         const val VIEW_PAGER_INDICATORS = "com.google.accompanist:accompanist-pager-indicators:${Version.VIEW_PAGER}"
+
+        // kotlin serialization
+        const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 
     }
 

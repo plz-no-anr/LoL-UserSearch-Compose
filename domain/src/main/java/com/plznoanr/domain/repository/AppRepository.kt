@@ -2,6 +2,7 @@ package com.plznoanr.domain.repository
 
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Search
+import com.plznoanr.domain.model.Spectator
 import com.plznoanr.domain.model.Summoner
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +13,7 @@ interface AppRepository {
     fun deleteSearch(sName: String): Flow<Result<Unit>>
     fun deleteSearchAll(): Flow<Result<Unit>>
     fun requestSummoner(name: String): Flow<Result<Summoner>>
+    fun requestSpectator(name: String): Flow<Result<Spectator>>
     fun getSummonerList(): Flow<Result<List<Summoner>>>
     fun insertSummoner(summoner: Summoner): Flow<Result<Unit>>
     fun deleteSummoner(name: String): Flow<Result<Unit>>

@@ -4,4 +4,9 @@ object QueueType {
     const val SOLO_RANK = "RANKED_SOLO_5x5"
 }
 
-fun getSummonerIcon(iconId: Int) = "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/$iconId.png"
+object JsonFileName {
+    const val CHAMPION = "champion.json"
+    const val MAP = "map.json"
+    const val SUMMONER = "summoner.json"
+    const val RUNE = "runesReforged.json"
+}

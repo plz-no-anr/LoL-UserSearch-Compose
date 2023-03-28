@@ -1,4 +1,4 @@
-package com.plznoanr.data.db
+package com.plznoanr.data.db.dao
 
 import androidx.room.*
 import com.plznoanr.data.model.local.ProfileEntity

@@ -55,7 +55,7 @@ fun SummonerScreen(
             )
         }) {
         when {
-            state.isLoading -> { AppProgressBar() }
+            state.isLoading -> AppProgressBar()
             state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(SummonerContract.Event.Navigation.Back) }
             else -> {
                 state.data?.let { data ->
@@ -65,7 +65,6 @@ fun SummonerScreen(
                         onEvent = onEvent
                     )
                 }
-
             }
         }
 

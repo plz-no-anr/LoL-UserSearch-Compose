@@ -2,7 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.di
 
 import android.content.Context
 import androidx.room.Room
-import com.plznoanr.data.db.AppDao
+import com.plznoanr.data.db.dao.AppDao
 import com.plznoanr.data.db.AppDatabase
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.LocalDataSourceImpl

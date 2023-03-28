@@ -171,6 +171,6 @@ private suspend fun onDrawerEvent(drawerState: DrawerState) = drawerState.also {
 
 private fun getDummyProfile() = Profile(
     name = "name",
-    icon = "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/6.png",
+    icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",
     level = "100"
 )

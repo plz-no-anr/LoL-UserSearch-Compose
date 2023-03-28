@@ -8,7 +8,7 @@ import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
 import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
 import com.plznoanr.domain.usecase.search.GetSearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -48,70 +48,77 @@ class SearchViewModel @Inject constructor(
 
     private fun getSearch() {
         viewModelScope.launch {
-            setState { copy(isLoading = true) }
-            getSearchUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = it.asReversed(),
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
+            getSearchUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = it.asReversed(),
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
                 }
-            }
         }
     }
 
     private fun deleteSearch(name: String) {
         viewModelScope.launch {
-            deleteSearchUseCase(name).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = data.filter { it.name != name },
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
+            deleteSearchUseCase(name)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = data.filter { it.name != name },
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
                 }
-            }
         }
     }
 
     private fun deleteAll() {
         viewModelScope.launch {
-            deleteSearchAllUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = emptyList(),
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
+            deleteSearchAllUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = emptyList(),
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
                 }
-            }
         }
     }
-
 
 }

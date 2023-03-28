@@ -25,8 +25,6 @@ data class Summoner(
 
     fun getTierRank() = "$tier $rank"
 
-    fun getMiniVisible(): String = if (miniSeries?.progress != "No") "visible" else "gone"
-
     fun asProfile() = Profile(
         name = name,
         level = level,
@@ -38,7 +36,7 @@ data class Summoner(
 fun getDummySummoner() = Summoner(
     name = "Summoner Name",
     level = "100",
-    icon = "http://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/6.png",
+    icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",
     tier = "GRANDMASTER",
     rank = "I",
     leaguePoints = 322,

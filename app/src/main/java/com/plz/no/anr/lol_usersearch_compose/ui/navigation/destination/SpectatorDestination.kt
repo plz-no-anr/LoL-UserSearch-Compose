@@ -1,12 +1,16 @@
 package com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination
 
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.SpectatorContract
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.SpectatorViewModel
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.composables.SpectatorScreen
+import com.plznoanr.lol_usersearch_compose.R
 
 @Composable
 fun SpectatorDestination(
