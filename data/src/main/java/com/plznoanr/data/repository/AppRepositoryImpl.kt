@@ -185,7 +185,7 @@ class AppRepositoryImpl(
     private fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
         Spectator.BanChamp(
             team = it.teamId.toTeam(),
-            champ = it.championId.toChampInfo().first
+            champName = it.championId.toChampInfo().first
         )
     }
 

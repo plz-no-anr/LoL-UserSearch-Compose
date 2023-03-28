@@ -8,7 +8,7 @@ data class Spectator(
 ){
     data class BanChamp(
         val team: Team,
-        val champ: String
+        val champName: String
     )
     data class SpectatorInfo(
         val name: String,
