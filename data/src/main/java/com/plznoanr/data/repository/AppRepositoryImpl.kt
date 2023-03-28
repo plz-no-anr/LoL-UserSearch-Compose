@@ -13,10 +13,13 @@ import com.plznoanr.data.utils.*
 import com.plznoanr.domain.model.*
 import com.plznoanr.domain.repository.AppRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.time.LocalDate
 
 class AppRepositoryImpl(
@@ -24,7 +27,7 @@ class AppRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val preferenceDataSource: PreferenceDataSource,
-    private val jsonUtils: JsonUtils
+    private val jsonUtils: JsonUtils,
 ) : AppRepository {
     override var apiKey: String?
         get() = preferenceDataSource.apiKey
@@ -32,6 +35,35 @@ class AppRepositoryImpl(
             preferenceDataSource.apiKey = value
         }
 
+    override var isInit: Boolean
+        get() = preferenceDataSource.isInit
+        set(value) {
+            preferenceDataSource.isInit = value
+        }
+    override fun initLocalJson(): Flow<Result<Boolean>> = flow {
+        if (!isInit) {
+            val json = requireNotNull(jsonUtils.getLocalJson()) {
+                emit(Result.failure(Exception("Local Json is null")))
+                return@flow
+            }
+            json.map.data.values.forEach {
+                localDataSource.insertMap(it.toEntity())
+            }
+            json.champ.data.values.forEach {
+                localDataSource.insertChamp(it.toEntity())
+            }
+            json.rune.forEach {
+                localDataSource.insertRune(it.toEntity())
+            }
+            json.summoner.data.values.forEach {
+                localDataSource.insertSpell(it.toEntity())
+            }
+            isInit = true
+            emit(Result.success(true))
+        } else {
+            emit(Result.success(false))
+        }
+    }.flowOn(coroutineDispatcher)
     override fun getSearchList(): Flow<Result<List<Search>>> = flow {
         emit(makeResult(coroutineDispatcher) {
             localDataSource.getSearch().map { it.toDomain() }
@@ -91,7 +123,6 @@ class AppRepositoryImpl(
         localDataSource.deleteProfile()
         emit(Result.success(Unit))
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
@@ -182,14 +213,14 @@ class AppRepositoryImpl(
         }
     }
 
-    private fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
+    private suspend fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
         Spectator.BanChamp(
             team = it.teamId.toTeam(),
             champName = it.championId.toChampInfo().first
         )
     }
 
-    private fun List<SpectatorResponse.CurrentGameParticipant>.toDomain() = map {
+    private suspend fun List<SpectatorResponse.CurrentGameParticipant>.toDomain() = map {
         val champInfo = it.championId.toChampInfo()
         Spectator.SpectatorInfo(
             name = it.summonerName,
@@ -200,13 +231,106 @@ class AppRepositoryImpl(
             spell2 = it.spell2Id.toSpellImage(),
             runeStyle = it.perks.perkStyle.toRuneStyle(),
             subStyle = it.perks.perkSubStyle.toRuneStyle(),
-            mainRune = jsonUtils.getMainRune(it.perks.perkStyle, it.perks.perkIds[0]),
-            rune = jsonUtils.getRunes(it.perks.perkStyle, it.perks.perkSubStyle, it.perks.perkIds),
+            mainRune = getMainRune(it.perks.perkStyle, it.perks.perkIds[0]),
+            rune = getRunes(it.perks.perkStyle, it.perks.perkSubStyle, it.perks.perkIds),
         )
     }
     private fun Long.toTeam() = if (this.toString() == "100") Team.BLUE else Team.RED
-    private fun Long.toMap() = jsonUtils.getMap(this)
-    private fun Long.toChampInfo() = jsonUtils.getChampInfo(this)
-    private fun Long.toRuneStyle() = jsonUtils.getRuneStyle(this)
-    private fun Long.toSpellImage() = jsonUtils.getSpellImage(this)
+    private suspend fun Long.toMap(): String = withContext(coroutineDispatcher) {
+            localDataSource.getMaps().forEach {
+                if (it.mapId == this@toMap.toString()) {
+                    return@withContext it.mapName
+                }
+            }
+            return@withContext "Not Found"
+        }
+
+    private suspend fun Long.toChampInfo(): Pair<String, String> = withContext(coroutineDispatcher) {
+        localDataSource.getChamps().forEach {
+            if (this@toChampInfo == (-1).toLong()) return@withContext "NoBan" to "NoBan"
+            if (it.key == this@toChampInfo.toString()) {
+                return@withContext it.name to it.image.full.toChampImage()
+            }
+        }
+        return@withContext "Not Found" to "Not Found"
+    }
+    private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune = withContext(coroutineDispatcher) {
+        localDataSource.getRunes().forEach {
+            if (it.id == this@toRuneStyle) {
+                return@withContext Spectator.SpectatorInfo.Rune(it.name, it.icon)
+            }
+        }
+        return@withContext Spectator.SpectatorInfo.Rune("Not Found", "Not Found")
+    }
+    private suspend fun Long.toSpellImage(): String = withContext(coroutineDispatcher) {
+        localDataSource.getSpells().forEach {
+            if (it.key == this@toSpellImage.toString()) {
+                return@withContext it.image.full.toSpellImage()
+            }
+        }
+        return@withContext "Not Found"
+    }
+
+    private suspend fun getMainRune(perkStyle: Long, perks: Long): String = withContext(coroutineDispatcher) {
+        localDataSource.getRunes().forEach {
+            if (it.id == perkStyle) {
+              it.slots.forEach { slot ->
+                  slot.runes.forEach { rune ->
+                      if (rune.id == perks) {
+                          return@withContext rune.icon
+                      }
+
+                  }
+              }
+            }
+        }
+        return@withContext "Not Found"
+    }
+
+    private suspend fun getRunes(
+        perkStyle: Long,
+        subStyle: Long,
+        perks: List<Long>
+    ): List<Spectator.SpectatorInfo.Rune> = withContext(coroutineDispatcher) {
+        val runeNames = MutableList(6) { Spectator.SpectatorInfo.Rune("", "") }
+
+        localDataSource.getRunes().forEach {
+            if (it.id == perkStyle) {
+                it.slots.forEach { slot ->
+                    slot.runes.forEach { rune ->
+                        if (rune.id == perks[0]) {
+                            runeNames[0] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                        if (rune.id == perks[1]) {
+                            Timber.d("Rune2:${rune.icon}")
+                            runeNames[1] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                        if (rune.id == perks[2]) {
+                            Timber.d("Rune3:${rune.icon}")
+                            runeNames[2] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                        if (rune.id == perks[3]) {
+                            Timber.d("Rune4:${rune.icon}")
+                            runeNames[3] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                    }
+                }
+            } else if (it.id == subStyle) {
+                it.slots.forEach { slot ->
+                    slot.runes.forEach { rune ->
+                        if (rune.id == perks[4]) {
+                            Timber.d("Rune5:${rune.icon}")
+                            runeNames[4] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                        if (rune.id == perks[5]) {
+                            Timber.d("Rune6:${rune.icon}")
+                            runeNames[5] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        }
+                    }
+                }
+            }
+        }
+        return@withContext runeNames
+    }
+
 }

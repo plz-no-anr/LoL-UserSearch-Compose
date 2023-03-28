@@ -1,6 +1,7 @@
 package com.plznoanr.data.di
 
 import com.plznoanr.domain.repository.AppRepository
+import com.plznoanr.domain.usecase.json.InitialLocalJsonUseCase
 import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
 import com.plznoanr.domain.usecase.key.GetKeyUseCase
 import com.plznoanr.domain.usecase.key.InsertKeyUseCase
@@ -117,5 +118,11 @@ object UseCaseModule {
     fun provideRequestSpectatorUseCase(
         repository: AppRepository
     ) = RequestSpectatorUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideInitialLocalJsonUseCase(
+        repository: AppRepository
+    ) = InitialLocalJsonUseCase(repository)
 
 }

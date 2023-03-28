@@ -31,6 +31,10 @@ class SplashActivity : ComponentActivity() {
         }
 
         lifecycleScope.launchWhenCreated {
+            viewModel.initLocalJson()
+        }
+
+        lifecycleScope.launchWhenCreated {
             delay(2000)
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
