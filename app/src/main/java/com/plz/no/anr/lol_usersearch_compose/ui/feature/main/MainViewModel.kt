@@ -14,7 +14,7 @@ import com.plznoanr.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plznoanr.domain.usecase.summoner.GetSummonerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,188 +48,218 @@ class MainViewModel @Inject constructor(
             is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
             is MainContract.Event.Key.OnAdd -> insertKey(event.key)
             is MainContract.Event.Key.OnDelete -> deleteKey()
+            is MainContract.Event.Spectator.OnWatch -> setEffect {
+                MainContract.Effect.Navigation.ToSpectator(
+                    event.name
+                )
+            }
         }
     }
 
     private fun getSummonerList() {
         viewModelScope.launch {
-            setState { copy(isLoading = true) }
-            getSummonerUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = it.asReversed(),
-                            isLoading = false
-                        )
+            getSummonerUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = it.asReversed(),
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 
     private fun deleteAllSummoner() {
         viewModelScope.launch {
-            deleteAllSummonerUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = emptyList(),
-                            isLoading = false
-                        )
+            deleteAllSummonerUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = emptyList(),
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 
     private fun deleteSummoner(name: String) {
         viewModelScope.launch {
-            deleteSummonerUseCase(name).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            data = data.filter { it.name != name }.asReversed(),
-                            isLoading = false
-                        )
+            deleteSummonerUseCase(name)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                data = data.filter { it.name != name }.asReversed(),
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 
     private fun getProfile() {
         viewModelScope.launch {
-            getProfileUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            profile = it,
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
+            getProfileUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                profile = it,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
                 }
-            }
         }
     }
+
     private fun addProfile(profile: Profile) {
         viewModelScope.launch {
-            insertProfileUseCase(profile).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            profile = profile,
-                            isLoading = false
-                        )
+            insertProfileUseCase(profile)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                profile = profile,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 
     private fun getKey() {
         viewModelScope.launch {
-            getKeyUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            key = it,
-                            isLoading = false
-                        )
+            getKeyUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                key = it,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
+
     private fun insertKey(key: String) {
         viewModelScope.launch {
-            insertKeyUseCase(key).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            key = key,
-                            isLoading = false
-                        )
+            insertKeyUseCase(key)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                key = key,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 
     private fun deleteKey() {
         viewModelScope.launch {
-            deleteKeyUseCase(Unit).collectLatest { result ->
-                result.onSuccess {
-                    setState {
-                        copy(
-                            key = null,
-                            isLoading = false
-                        )
+            deleteKeyUseCase(Unit)
+                .onStart { setState { copy(isLoading = true) } }
+                .catch { setState { copy(error = it.message, isLoading = false) } }
+                .collect { result ->
+                    result.onSuccess {
+                        setState {
+                            copy(
+                                key = null,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        setState {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    setState {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
 
-            }
+                }
         }
     }
 

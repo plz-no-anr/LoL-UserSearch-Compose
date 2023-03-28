@@ -36,10 +36,11 @@ fun SummonerScreen(
         effectFlow?.onEach { effect ->
             when (effect) {
                 is SummonerContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = "",
+                    message = effect.msg,
                     duration = SnackbarDuration.Short
                 )
                 is SummonerContract.Effect.Navigation.Back -> onNavigationRequested(effect)
+                is SummonerContract.Effect.Navigation.ToSpectator -> onNavigationRequested(effect)
             }
         }?.collect()
     }
@@ -54,16 +55,16 @@ fun SummonerScreen(
             )
         }) {
         when {
-            state.isLoading -> { AppProgressBar() }
+            state.isLoading -> AppProgressBar()
             state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(SummonerContract.Event.Navigation.Back) }
             else -> {
                 state.data?.let { data ->
                     SummonerView(
                         modifier = Modifier.padding(it),
-                        data = data
+                        data = data,
+                        onEvent = onEvent
                     )
                 }
-
             }
         }
 
@@ -73,7 +74,7 @@ fun SummonerScreen(
 
 @Preview
 @Composable
-fun SummonerScreenPreview() {
+private fun SummonerScreenPreview() {
     SummonerScreen(
         state = SummonerContract.UiState(
             data = Summoner(

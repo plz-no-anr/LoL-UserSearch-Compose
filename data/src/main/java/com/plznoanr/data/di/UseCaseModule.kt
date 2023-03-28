@@ -11,6 +11,7 @@ import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
 import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
 import com.plznoanr.domain.usecase.search.GetSearchUseCase
 import com.plznoanr.domain.usecase.search.InsertSearchUseCase
+import com.plznoanr.domain.usecase.spectator.RequestSpectatorUseCase
 import com.plznoanr.domain.usecase.summoner.*
 import dagger.Module
 import dagger.Provides
@@ -110,5 +111,11 @@ object UseCaseModule {
     fun provideDeleteKeyUseCase(
         repository: AppRepository
     ) = DeleteKeyUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideRequestSpectatorUseCase(
+        repository: AppRepository
+    ) = RequestSpectatorUseCase(repository)
 
 }

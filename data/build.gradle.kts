@@ -4,6 +4,8 @@ plugins {
     id(Dependencies.Plugins.KOTLIN_PARCELIZE)
     kotlin(Dependencies.Plugins.KOTLIN_KAPT)
     id(Dependencies.Plugins.DAGGER_HILT)
+//    kotlin(Dependencies.Plugins.KOTLIN_JVM)
+    kotlin(Dependencies.Plugins.KOTLIN_SERIALIZATION)
 }
 
 android {
@@ -70,4 +72,6 @@ dependencies {
     // Test
     testImplementation(Dependencies.Test.JUNIT)
     testImplementation(Dependencies.Test.ROBOELETRIC)
+
+    implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
 }

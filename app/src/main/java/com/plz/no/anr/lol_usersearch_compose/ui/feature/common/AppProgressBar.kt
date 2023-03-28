@@ -46,7 +46,7 @@ fun AppProgressBar(
 
 @Preview
 @Composable
-fun AppProgressBarPreview() {
+private fun AppProgressBarPreview() {
     AppProgressBar(
         modifier = Modifier.background(Color.Black)
     )

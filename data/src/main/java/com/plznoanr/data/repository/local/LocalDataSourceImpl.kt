@@ -1,6 +1,6 @@
 package com.plznoanr.data.repository.local
 
-import com.plznoanr.data.db.AppDao
+import com.plznoanr.data.db.dao.AppDao
 import com.plznoanr.data.model.local.ProfileEntity
 import com.plznoanr.data.model.local.SearchEntity
 import com.plznoanr.data.model.local.SummonerEntity
@@ -31,43 +31,43 @@ interface LocalDataSource {
 }
 
 class LocalDataSourceImpl (
-    private val dao: AppDao
+    private val appDao: AppDao
 ) : LocalDataSource {
-    override suspend fun getSearch(): List<SearchEntity> = dao.getSearch()
+    override suspend fun getSearch(): List<SearchEntity> = appDao.getSearch()
     override suspend fun insertSearch(searchEntity: SearchEntity) {
-        dao.insertSearch(searchEntity)
+        appDao.insertSearch(searchEntity)
     }
 
     override suspend fun deleteSearch(sName: String) {
-        dao.deleteSearch(sName)
+        appDao.deleteSearch(sName)
     }
 
     override suspend fun deleteSearchAll() {
-        dao.deleteSearchAll()
+        appDao.deleteSearchAll()
     }
 
-    override suspend fun getProfile(): ProfileEntity = dao.getProfile()
+    override suspend fun getProfile(): ProfileEntity = appDao.getProfile()
 
     override suspend fun insertProfile(profileEntity: ProfileEntity) {
-        dao.insertProfile(profileEntity)
+        appDao.insertProfile(profileEntity)
     }
 
     override suspend fun deleteProfile() {
-        dao.deleteProfile()
+        appDao.deleteProfile()
     }
 
-    override suspend fun getSummoner(): List<SummonerEntity> = dao.getSummoner()
+    override suspend fun getSummoner(): List<SummonerEntity> = appDao.getSummoner()
 
     override suspend fun insertSummoner(summonerEntity: SummonerEntity) {
-        dao.insertSummoner(summonerEntity)
+        appDao.insertSummoner(summonerEntity)
     }
 
     override suspend fun deleteSummoner(name: String) {
-        dao.deleteSummoner(name)
+        appDao.deleteSummoner(name)
     }
 
     override suspend fun deleteSummonerAll() {
-        dao.deleteSummonerAll()
+        appDao.deleteSummonerAll()
     }
 
 }

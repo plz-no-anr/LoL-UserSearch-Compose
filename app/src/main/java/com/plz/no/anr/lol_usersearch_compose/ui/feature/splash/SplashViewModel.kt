@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val networkManager: NetworkManager
+    private val networkManager: NetworkManager,
 ) : ViewModel() {
 
     fun isNetworkAvailable(): Boolean {

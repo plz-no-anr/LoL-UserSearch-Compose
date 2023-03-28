@@ -32,6 +32,7 @@ sealed class SearchContract : BaseContract() {
     }
 
     sealed class Effect : ViewSideEffect {
+
         data class Toast(val msg: String) : Effect()
 
         sealed class Navigation : Effect() {

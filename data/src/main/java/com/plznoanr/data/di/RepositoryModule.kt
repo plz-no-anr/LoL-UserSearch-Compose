@@ -4,6 +4,7 @@ import com.plznoanr.data.repository.AppRepositoryImpl
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.PreferenceDataSource
 import com.plznoanr.data.repository.remote.RemoteDataSource
+import com.plznoanr.data.utils.JsonUtils
 import com.plznoanr.domain.repository.AppRepository
 import dagger.Module
 import dagger.Provides
@@ -21,11 +22,13 @@ object RepositoryModule {
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         localDataSource: LocalDataSource,
         remoteDataSource: RemoteDataSource,
-        preferenceDataSource: PreferenceDataSource
+        preferenceDataSource: PreferenceDataSource,
+        jsonUtils: JsonUtils
     ) : AppRepository = AppRepositoryImpl(
         coroutineDispatcher,
         localDataSource,
         remoteDataSource,
-        preferenceDataSource
+        preferenceDataSource,
+        jsonUtils
     )
 }

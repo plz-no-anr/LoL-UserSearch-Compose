@@ -1,6 +1,7 @@
 plugins {
     id(Dependencies.Plugins.JAVA_LIBRARY)
-    id(Dependencies.Plugins.KOTLIN_JVM)
+    kotlin(Dependencies.Plugins.KOTLIN_JVM)
+    kotlin(Dependencies.Plugins.KOTLIN_SERIALIZATION)
 }
 
 java {
@@ -12,4 +13,6 @@ dependencies {
     // Coroutines
     implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
     implementation(Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID)
+
+    implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
 }

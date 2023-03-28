@@ -6,6 +6,9 @@ import com.plznoanr.data.model.local.SummonerEntity
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Search
 import com.plznoanr.domain.model.Summoner
+import com.plznoanr.domain.model.common.ChampionJson
+import com.plznoanr.domain.model.common.MapJson
+import com.plznoanr.domain.model.common.SummonerJson
 
 
 fun Search.toEntity() = SearchEntity(

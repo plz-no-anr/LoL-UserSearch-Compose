@@ -101,7 +101,7 @@ fun RetryView(
 
 @Preview
 @Composable
-fun ErrorScreenPreview() {
+private fun ErrorScreenPreview() {
     ErrorScreen()
 }
 
@@ -109,6 +109,7 @@ private fun String.toErrorDescription() = when (this.toErrorCode()) {
     in 200..299 -> "Success"
     403 -> ErrorType.FORBIDDEN.msg
     404 -> ErrorType.NOT_FOUND.msg
+    1000 -> ErrorType.NOT_PLAYING.msg
     else -> ErrorType.NETWORK.msg
 }
 

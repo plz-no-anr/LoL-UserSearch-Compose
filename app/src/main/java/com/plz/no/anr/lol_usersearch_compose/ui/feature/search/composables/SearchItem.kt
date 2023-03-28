@@ -49,7 +49,7 @@ fun SearchItem(
 
 @Preview
 @Composable
-fun SearchItemPreview() {
+private fun SearchItemPreview() {
     SearchItem(
         Search(
             name = "박상군",

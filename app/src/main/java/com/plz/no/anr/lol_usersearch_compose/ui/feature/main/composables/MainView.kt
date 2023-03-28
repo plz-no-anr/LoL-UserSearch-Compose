@@ -114,7 +114,7 @@ fun Drawers(
 
 
 @Composable
-fun KeyView(
+private fun KeyView(
     apiKey: String?,
     onAddKey: (String) -> Unit,
     onDeleteKey: () -> Unit
@@ -164,7 +164,7 @@ fun KeyView(
 
 
 @Composable
-fun KeyAddView(
+private fun KeyAddView(
     onAddKey: (String) -> Unit
 ) {
     var textState by remember {
