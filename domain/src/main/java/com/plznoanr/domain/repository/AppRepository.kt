@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppRepository {
     var apiKey: String?
+
+    var isInit: Boolean
     fun getSearchList(): Flow<Result<List<Search>>>
     fun insertSearch(search: Search): Flow<Result<Unit>>
     fun deleteSearch(sName: String): Flow<Result<Unit>>
@@ -21,5 +23,6 @@ interface AppRepository {
     fun getProfile(): Flow<Result<Profile?>>
     fun insertProfile(profile: Profile): Flow<Result<Unit>>
     fun deleteProfile(): Flow<Result<Unit>>
+    fun initLocalJson(): Flow<Result<Boolean>>
 
 }

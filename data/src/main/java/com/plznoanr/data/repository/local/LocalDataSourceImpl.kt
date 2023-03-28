@@ -1,9 +1,14 @@
 package com.plznoanr.data.repository.local
 
 import com.plznoanr.data.db.dao.AppDao
+import com.plznoanr.data.db.dao.JsonDao
 import com.plznoanr.data.model.local.ProfileEntity
 import com.plznoanr.data.model.local.SearchEntity
 import com.plznoanr.data.model.local.SummonerEntity
+import com.plznoanr.data.model.local.json.ChampEntity
+import com.plznoanr.data.model.local.json.MapEntity
+import com.plznoanr.data.model.local.json.RuneEntity
+import com.plznoanr.data.model.local.json.SpellEntity
 
 interface LocalDataSource {
     suspend fun getSearch() : List<SearchEntity>
@@ -28,10 +33,29 @@ interface LocalDataSource {
 
     suspend fun deleteSummonerAll()
 
+    suspend fun getChamps() : List<ChampEntity>
+
+    suspend fun getSpells() : List<SpellEntity>
+
+    suspend fun getRunes() : List<RuneEntity>
+
+    suspend fun getMaps() : List<MapEntity>
+
+    suspend fun insertChamp(champEntity: ChampEntity)
+
+    suspend fun insertSpell(spellEntity: SpellEntity)
+
+    suspend fun insertRune(runeEntity: RuneEntity)
+
+    suspend fun insertMap(mapEntity: MapEntity)
+
+    suspend fun deleteAllLocalJson()
+
 }
 
 class LocalDataSourceImpl (
-    private val appDao: AppDao
+    private val appDao: AppDao,
+    private val jsonDao: JsonDao
 ) : LocalDataSource {
     override suspend fun getSearch(): List<SearchEntity> = appDao.getSearch()
     override suspend fun insertSearch(searchEntity: SearchEntity) {
@@ -68,6 +92,45 @@ class LocalDataSourceImpl (
 
     override suspend fun deleteSummonerAll() {
         appDao.deleteSummonerAll()
+    }
+
+    override suspend fun getChamps(): List<ChampEntity> {
+        return jsonDao.getChamps()
+    }
+
+    override suspend fun getSpells(): List<SpellEntity> {
+        return jsonDao.getSpells()
+    }
+
+    override suspend fun getRunes(): List<RuneEntity> {
+        return jsonDao.getRunes()
+    }
+
+    override suspend fun getMaps(): List<MapEntity> {
+        return jsonDao.getMaps()
+    }
+
+    override suspend fun insertChamp(champEntity: ChampEntity) {
+        jsonDao.insertChamp(champEntity)
+    }
+
+    override suspend fun insertSpell(spellEntity: SpellEntity) {
+        jsonDao.insertSpell(spellEntity)
+    }
+
+    override suspend fun insertRune(runeEntity: RuneEntity) {
+        jsonDao.insertRune(runeEntity)
+    }
+
+    override suspend fun insertMap(mapEntity: MapEntity) {
+        jsonDao.insertMap(mapEntity)
+    }
+
+    override suspend fun deleteAllLocalJson() {
+        jsonDao.deleteChamps()
+        jsonDao.deleteSpells()
+        jsonDao.deleteRunes()
+        jsonDao.deleteMaps()
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.plznoanr.data.db.dao.AppDao
 import com.plznoanr.data.db.AppDatabase
+import com.plznoanr.data.db.dao.JsonDao
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.LocalDataSourceImpl
 import com.plznoanr.data.repository.local.PreferenceDataSource
@@ -32,8 +33,11 @@ object LocalDataModule {
 
     @Provides
     @Singleton
-    fun provideLocalData(dao: AppDao): LocalDataSource = LocalDataSourceImpl(dao)
+    fun provideJsonDao(database: AppDatabase): JsonDao = database.jsonDao()
 
+    @Provides
+    @Singleton
+    fun provideLocalData(appDao: AppDao, jsonDao: JsonDao): LocalDataSource = LocalDataSourceImpl(appDao, jsonDao)
     @Provides
     @Singleton
     fun providePreferenceData(@ApplicationContext context: Context): PreferenceDataSource = PreferenceDataSource(context)
