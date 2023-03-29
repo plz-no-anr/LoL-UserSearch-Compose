@@ -58,7 +58,7 @@ fun SummonerScreen(
             state.isLoading -> AppProgressBar()
             state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(SummonerContract.Event.Navigation.Back) }
             else -> {
-                state.data?.let { data ->
+                state.data?.also { data ->
                     SummonerView(
                         modifier = Modifier.padding(it),
                         data = data,

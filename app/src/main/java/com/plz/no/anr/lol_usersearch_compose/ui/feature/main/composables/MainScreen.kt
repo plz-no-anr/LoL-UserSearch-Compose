@@ -5,7 +5,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     state: MainContract.UiState,
@@ -36,18 +34,6 @@ fun MainScreen(
     onNavigationRequested: (MainContract.Effect.Navigation) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var isRefreshing by remember {
-        mutableStateOf(false)
-    }
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = {
-            coroutineScope.launch {
-                isRefreshing = true
-                onEvent(MainContract.Event.Refresh)
-            }
-        }
-    )
     val scaffoldState = rememberScaffoldState()
     var profileState by remember {
         mutableStateOf(getDummyProfile())
@@ -115,27 +101,23 @@ fun MainScreen(
     ) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(errMsg = state.error) {
-                onEvent(MainContract.Event.OnLoad)
-            }
+            state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(MainContract.Event.OnLoad) }
             else -> {
                 MainView(
                     modifier = Modifier.padding(it),
-                    summonerList = state.data,
-                    pullRefreshState = pullRefreshState
+                    data = state.data,
+                    isRefreshing = state.isRefreshing,
                 ) { event ->
                     onEvent(event)
                 }
-                state.profile?.let { profile ->
+                state.profile?.also { profile ->
                     profileState = profile
                 }
                 keyState = state.key
-
             }
         }
     }
 }
-
 
 
 @Preview
@@ -143,7 +125,7 @@ fun MainScreen(
 private fun MainScreenPreview() {
     MainScreen(
         state = MainContract.UiState(
-            isLoading = false,
+            isLoading = true,
             data = (0..10).map {
                 Summoner(
                     name = "name",

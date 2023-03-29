@@ -7,7 +7,7 @@ class SpectatorContract : BaseContract() {
 
     data class UiState(
         val data: Spectator?,
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val error: String? = null
     ) : ViewState
 
@@ -21,6 +21,7 @@ class SpectatorContract : BaseContract() {
     }
 
     sealed class Effect : ViewSideEffect {
+        data class Toast(val msg: String) : Effect()
 
         sealed class Navigation : Effect() {
             object Back : Navigation()

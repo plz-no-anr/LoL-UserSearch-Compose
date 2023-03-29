@@ -7,7 +7,7 @@ sealed class SearchContract : BaseContract() {
 
     data class UiState(
         val data: List<Search>,
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val error: String? = null
     ) : ViewState
 

@@ -50,7 +50,6 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             getSearchUseCase(Unit)
                 .onStart { setState { copy(isLoading = true) } }
-                .catch { setState { copy(error = it.message, isLoading = false) } }
                 .collect { result ->
                     result.onSuccess {
                         setState {
@@ -75,7 +74,6 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             deleteSearchUseCase(name)
                 .onStart { setState { copy(isLoading = true) } }
-                .catch { setState { copy(error = it.message, isLoading = false) } }
                 .collect { result ->
                     result.onSuccess {
                         setState {
@@ -100,7 +98,6 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             deleteSearchAllUseCase(Unit)
                 .onStart { setState { copy(isLoading = true) } }
-                .catch { setState { copy(error = it.message, isLoading = false) } }
                 .collect { result ->
                     result.onSuccess {
                         setState {

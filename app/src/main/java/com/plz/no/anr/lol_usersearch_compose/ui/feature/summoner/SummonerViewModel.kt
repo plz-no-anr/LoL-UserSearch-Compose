@@ -41,7 +41,6 @@ class SummonerViewModel @Inject constructor(
             setState { copy(isLoading = true) }
             requestSummonerUseCase(summonerName.trim())
                 .onStart { setState { copy(isLoading = true) } }
-                .catch { setState { copy(error = it.message, isLoading = false) } }
                 .collect { result ->
                     result.onSuccess {
                         setState { copy(data = it, isLoading = false) }

@@ -10,7 +10,8 @@ class MainContract : BaseContract() {
         val data: List<Summoner>,
         val profile: Profile? = null,
         val key: String? = null,
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
+        val isRefreshing: Boolean = false,
         val error: String? = null
     ) : ViewState
 

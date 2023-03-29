@@ -3,7 +3,6 @@ package com.plznoanr.data.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.plznoanr.data.di.CoroutineQualifiers
-import com.plznoanr.data.model.local.ProfileEntity
 import com.plznoanr.data.model.local.SearchEntity
 import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
@@ -16,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.time.LocalDate
 
 class AppRepositoryImpl(
@@ -37,6 +35,7 @@ class AppRepositoryImpl(
         set(value) {
             preferenceDataSource.isInit = value
         }
+
     override fun initLocalJson(): Flow<Result<Boolean>> = flow {
         if (!isInit) {
             val json = requireNotNull(jsonUtils.getLocalJson()) {
@@ -63,63 +62,61 @@ class AppRepositoryImpl(
     }
 
     override fun getSearchList(): Flow<Result<List<Search>>> = flow {
-        emit(makeResult(coroutineDispatcher) {
-            localDataSource.getSearch().map { it.toDomain() }
-        })
+        emit(Result.success(localDataSource.getSearch().toSearchList()))
     }
 
     override fun insertSearch(search: Search): Flow<Result<Unit>> = flow {
-        localDataSource.insertSearch(search.toEntity())
-        emit(Result.success(Unit))
+        localDataSource.insertSearch(search.toEntity()).run {
+            emit(Result.success(Unit))
+        }
     }
 
-
     override fun deleteSearch(sName: String): Flow<Result<Unit>> = flow {
-        localDataSource.deleteSearch(sName)
-        emit(Result.success(Unit))
+        localDataSource.deleteSearch(sName).run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun deleteSearchAll(): Flow<Result<Unit>> = flow {
-        localDataSource.deleteSearchAll()
-        emit(Result.success(Unit))
-    }
-
-    override fun getSummonerList(): Flow<Result<List<Summoner>>> = flow {
-        emit(makeResult(coroutineDispatcher) {
-            localDataSource.getSummoner().map { it.toDomain() }
-        })
+        localDataSource.deleteSearchAll().run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun insertSummoner(summoner: Summoner): Flow<Result<Unit>> = flow {
-        localDataSource.insertSummoner(summoner.toEntity())
-        emit(Result.success(Unit))
+        localDataSource.insertSummoner(summoner.toEntity()).run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun deleteSummoner(name: String): Flow<Result<Unit>> = flow {
-        localDataSource.deleteSummoner(name)
-        emit(Result.success(Unit))
+        localDataSource.deleteSummoner(name).run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun deleteSummonerAll(): Flow<Result<Unit>> = flow {
-        localDataSource.deleteSummonerAll()
-        emit(Result.success(Unit))
+        localDataSource.deleteSummonerAll().run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun getProfile(): Flow<Result<Profile?>> = flow {
-        val entity: ProfileEntity? = localDataSource.getProfile()
-        entity?.let {
-            emit(Result.success(entity.toDomain()))
+        localDataSource.getProfile()?.also {
+            emit(Result.success(it.toDomain()))
         } ?: emit(Result.success(null))
     }
 
     override fun insertProfile(profile: Profile): Flow<Result<Unit>> = flow {
-        localDataSource.insertProfile(profile.toEntity())
-        emit(Result.success(Unit))
+        localDataSource.insertProfile(profile.toEntity()).run {
+            emit(Result.success(Unit))
+        }
     }
 
     override fun deleteProfile(): Flow<Result<Unit>> = flow {
-        localDataSource.deleteProfile()
-        emit(Result.success(Unit))
+        localDataSource.deleteProfile().run {
+            emit(Result.success(Unit))
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -129,45 +126,54 @@ class AppRepositoryImpl(
                 emit(Result.failure(Exception("FORBIDDEN")))
                 return@flow
             }
-
-            val summoner = remoteDataSource.requestSummoner(name, key)
-
-            val league = remoteDataSource.requestLeague(summoner.id, key)
-
-            val spectator = remoteDataSource.requestSpectator(summoner.id, key)
-
-            var summonerResult: Summoner? = null
-
-            val icon = summoner.profileIconId.toIcon()
-
-            league.forEach {
-                if (it.queueType == QueueType.SOLO_RANK) {
-                    summonerResult = Summoner(
-                        name = summoner.name,
-                        level = summoner.summonerLevel.toString(),
-                        icon = icon,
-                        tier = it.tier,
-                        leaguePoints = it.leaguePoints,
-                        rank = it.rank,
-                        wins = it.wins,
-                        losses = it.losses,
-                        miniSeries = it.miniSeries?.toDomain(),
-                        isPlaying = spectator != null && spectator.gameId != 0L
-                    )
+            val result = requestSummoner(name, key)?.also {
+                with(localDataSource.getSummoner()) {
+                    if (isNotEmpty()) {
+                        forEach { entity ->
+                            if (it.name == entity.name) {
+                                localDataSource.updateSummoner(it.toEntity())
+                            } else {
+                                localDataSource.insertSummoner(it.toEntity())
+                            }
+                        }
+                    } else {
+                        localDataSource.insertSummoner(it.toEntity())
+                    }
                 }
+                saveSearch(it.name)
             }
-
-            summonerResult?.let {
-                localDataSource.insertSearch(
-                    SearchEntity(
-                        name = summoner.name,
-                        date = LocalDate.now().toString()
-                    )
-                )
-                localDataSource.insertSummoner(it.toEntity())
-
+            result?.also {
                 emit(Result.success(it))
             } ?: emit(Result.failure(Exception("Summoner is null".parseError(404))))
+
+        } catch (e: Exception) {
+            emit(Result.failure(e))
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun readSummonerList(): Flow<Result<List<Summoner>>> = flow {
+        try {
+            val key = requireNotNull(apiKey) {
+                emit(Result.failure(Exception("FORBIDDEN")))
+                return@flow
+            }
+            val result = requestSummonerList(key)
+            emit(Result.success(result))
+        } catch (e: Exception) {
+            emit(Result.success(localDataSource.getSummoner().toSummonerList()))
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun refreshSummonerList(): Flow<Result<List<Summoner>>> = flow {
+        try {
+            val key = requireNotNull(apiKey) {
+                emit(Result.failure(Exception("FORBIDDEN")))
+                return@flow
+            }
+            val result = requestSummonerList(key)
+            emit(Result.success(result))
         } catch (e: Exception) {
             emit(Result.failure(e))
         }
@@ -179,21 +185,20 @@ class AppRepositoryImpl(
                 emit(Result.failure(Exception("FORBIDDEN")))
                 return@flow
             }
-
             val summoner = remoteDataSource.requestSummoner(name, key)
-
             val spectator = remoteDataSource.requestSpectator(summoner.id, key)
-
             val spectatorResult = spectator?.let { response ->
                 Spectator(
                     map = response.mapId.toMap(),
                     banChamp = response.bannedChampions.toBanChamp(),
-                    redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }.toDomain(),
-                    blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }.toDomain()
+                    redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
+                        .toDomain(),
+                    blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
+                        .toDomain()
                 )
             }
 
-            spectatorResult?.let {
+            spectatorResult?.also {
                 emit(Result.success(it))
             } ?: emit(Result.failure(Exception("Spectator is null".parseError(1000))))
 
@@ -202,13 +207,80 @@ class AppRepositoryImpl(
         }
     }
 
-    private suspend fun <T> makeResult(
-        dispatcher: CoroutineDispatcher,
-        call: suspend () -> T
-    ): Result<T> = runCatching {
-        withContext(dispatcher) {
-            call()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun requestSummoner(name: String, key: String): Summoner? {
+        val summoner = remoteDataSource.requestSummoner(name, key)
+        val league = remoteDataSource.requestLeague(summoner.id, key)
+        val spectator = remoteDataSource.requestSpectator(summoner.id, key)
+        var summonerResult: Summoner? = null
+
+        league.forEach {
+            if (it.queueType == QueueType.SOLO_RANK) {
+                summonerResult = Summoner(
+                    name = summoner.name,
+                    level = summoner.summonerLevel.toString(),
+                    icon = summoner.profileIconId.toIcon(),
+                    tier = it.tier,
+                    leaguePoints = it.leaguePoints,
+                    rank = it.rank,
+                    wins = it.wins,
+                    losses = it.losses,
+                    miniSeries = it.miniSeries?.toDomain(),
+                    isPlaying = spectator != null && spectator.gameId != 0L
+                )
+            }
         }
+        return summonerResult
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun requestSummonerList(key: String): List<Summoner> {
+        val summonerList = mutableListOf<Summoner>()
+        localDataSource.getSummoner().forEach { summonerEntity ->
+            requestSummoner(summonerEntity.name, key)?.also {
+                if (it.name == summonerEntity.name) {
+                    localDataSource.updateSummoner(it.toEntity())
+                } else {
+                    localDataSource.insertSummoner(it.toEntity())
+                }
+                saveSearch(summonerEntity.name)
+                summonerList.add(it)
+            }
+        }
+        return summonerList
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun saveSearch(name: String) {
+        localDataSource.getSearch().run {
+            if (isEmpty()) {
+                localDataSource.insertSearch(
+                    SearchEntity(
+                        name = name,
+                        date = LocalDate.now().toString()
+                    )
+                )
+            } else {
+                forEach { entity ->
+                    if (name == entity.name) {
+                        localDataSource.updateSearch(
+                            SearchEntity(
+                                name = name,
+                                date = LocalDate.now().toString()
+                            )
+                        )
+                    } else {
+                        localDataSource.insertSearch(
+                            SearchEntity(
+                                name = name,
+                                date = LocalDate.now().toString()
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
     }
 
     private suspend fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
@@ -233,33 +305,38 @@ class AppRepositoryImpl(
             rune = getRunes(it.perks.perkStyle, it.perks.perkSubStyle, it.perks.perkIds),
         )
     }
+
     private fun Long.toTeam() = if (this.toString() == "100") Team.BLUE else Team.RED
     private suspend fun Long.toMap(): String = withContext(coroutineDispatcher) {
-            localDataSource.getMaps().forEach {
-                if (it.mapId == this@toMap.toString()) {
-                    return@withContext it.mapName
+        localDataSource.getMaps().forEach {
+            if (it.mapId == this@toMap.toString()) {
+                return@withContext it.mapName
+            }
+        }
+        return@withContext "Not Found"
+    }
+
+    private suspend fun Long.toChampInfo(): Pair<String, String> =
+        withContext(coroutineDispatcher) {
+            localDataSource.getChamps().forEach {
+                if (this@toChampInfo == (-1).toLong()) return@withContext "NoBan" to "NoBan"
+                if (it.key == this@toChampInfo.toString()) {
+                    return@withContext it.name to it.image.full.toChampImage()
                 }
             }
-            return@withContext "Not Found"
+            return@withContext "Not Found" to "Not Found"
         }
 
-    private suspend fun Long.toChampInfo(): Pair<String, String> = withContext(coroutineDispatcher) {
-        localDataSource.getChamps().forEach {
-            if (this@toChampInfo == (-1).toLong()) return@withContext "NoBan" to "NoBan"
-            if (it.key == this@toChampInfo.toString()) {
-                return@withContext it.name to it.image.full.toChampImage()
+    private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
+        withContext(coroutineDispatcher) {
+            localDataSource.getRunes().forEach {
+                if (it.id == this@toRuneStyle) {
+                    return@withContext Spectator.SpectatorInfo.Rune(it.name, it.icon)
+                }
             }
+            return@withContext Spectator.SpectatorInfo.Rune("Not Found", "Not Found")
         }
-        return@withContext "Not Found" to "Not Found"
-    }
-    private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune = withContext(coroutineDispatcher) {
-        localDataSource.getRunes().forEach {
-            if (it.id == this@toRuneStyle) {
-                return@withContext Spectator.SpectatorInfo.Rune(it.name, it.icon)
-            }
-        }
-        return@withContext Spectator.SpectatorInfo.Rune("Not Found", "Not Found")
-    }
+
     private suspend fun Long.toSpellImage(): String = withContext(coroutineDispatcher) {
         localDataSource.getSpells().forEach {
             if (it.key == this@toSpellImage.toString()) {
@@ -269,21 +346,22 @@ class AppRepositoryImpl(
         return@withContext "Not Found"
     }
 
-    private suspend fun getMainRune(perkStyle: Long, perks: Long): String = withContext(coroutineDispatcher) {
-        localDataSource.getRunes().forEach {
-            if (it.id == perkStyle) {
-              it.slots.forEach { slot ->
-                  slot.runes.forEach { rune ->
-                      if (rune.id == perks) {
-                          return@withContext rune.icon
-                      }
+    private suspend fun getMainRune(perkStyle: Long, perks: Long): String =
+        withContext(coroutineDispatcher) {
+            localDataSource.getRunes().forEach {
+                if (it.id == perkStyle) {
+                    it.slots.forEach { slot ->
+                        slot.runes.forEach { rune ->
+                            if (rune.id == perks) {
+                                return@withContext rune.icon
+                            }
 
-                  }
-              }
+                        }
+                    }
+                }
             }
+            return@withContext "Not Found"
         }
-        return@withContext "Not Found"
-    }
 
     private suspend fun getRunes(
         perkStyle: Long,
@@ -300,15 +378,12 @@ class AppRepositoryImpl(
                             runeNames[0] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                         if (rune.id == perks[1]) {
-                            Timber.d("Rune2:${rune.icon}")
                             runeNames[1] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                         if (rune.id == perks[2]) {
-                            Timber.d("Rune3:${rune.icon}")
                             runeNames[2] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                         if (rune.id == perks[3]) {
-                            Timber.d("Rune4:${rune.icon}")
                             runeNames[3] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                     }
@@ -317,11 +392,9 @@ class AppRepositoryImpl(
                 it.slots.forEach { slot ->
                     slot.runes.forEach { rune ->
                         if (rune.id == perks[4]) {
-                            Timber.d("Rune5:${rune.icon}")
                             runeNames[4] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                         if (rune.id == perks[5]) {
-                            Timber.d("Rune6:${rune.icon}")
                             runeNames[5] = Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                         }
                     }

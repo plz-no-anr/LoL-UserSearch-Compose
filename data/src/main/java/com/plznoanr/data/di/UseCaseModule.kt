@@ -82,16 +82,24 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetSummonerUseCase(
-        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
-    ) = GetSummonerUseCase(coroutineDispatcher, repository)
-    @Provides
-    @Singleton
     fun provideRequestSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
     ) = RequestSummonerUseCase(coroutineDispatcher, repository)
+
+    @Provides
+    @Singleton
+    fun provideRequestSummonerListUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        repository: AppRepository
+    ) = ReadSummonerListUseCase(coroutineDispatcher, repository)
+
+    @Provides
+    @Singleton
+    fun provideRefreshSummonerListUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        repository: AppRepository
+    ) = RefreshSummonerListUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
@@ -139,7 +147,7 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideInitialLocalJsonUseCase(
-        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        @CoroutineQualifiers.DefaultDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
     ) = InitialLocalJsonUseCase(coroutineDispatcher, repository)
 

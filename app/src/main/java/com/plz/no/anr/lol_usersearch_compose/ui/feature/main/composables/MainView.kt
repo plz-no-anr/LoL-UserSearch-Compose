@@ -9,8 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,10 +34,12 @@ import com.plznoanr.lol_usersearch_compose.R
 @Composable
 fun MainView(
     modifier: Modifier = Modifier,
-    summonerList: List<Summoner>,
-    pullRefreshState: PullRefreshState,
+    data: List<Summoner>,
+    isRefreshing: Boolean,
     onEvent: (MainContract.Event) -> Unit
 ) {
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onEvent(MainContract.Event.Refresh) })
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -53,12 +56,17 @@ fun MainView(
                 .pullRefresh(state = pullRefreshState)
         ) {
             LazyColumn {
-                items(summonerList) {
+                items(data) {
                     MainItem(summoner = it) { event ->
                         onEvent(event)
                     }
                 }
             }
+            PullRefreshIndicator(
+                isRefreshing,
+                pullRefreshState,
+                Modifier.align(Alignment.TopCenter)
+            )
         }
 
     }
