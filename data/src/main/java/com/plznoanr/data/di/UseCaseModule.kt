@@ -18,6 +18,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -26,103 +27,120 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideGetKeyUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = GetKeyUseCase(repository)
+    ) = GetKeyUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideGetSearchUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = GetSearchUseCase(repository)
+    ) = GetSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideInsertSearchUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = InsertSearchUseCase(repository)
+    ) = InsertSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideDeleteSearchUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteSearchUseCase(repository)
+    ) = DeleteSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideDeleteAllSearchUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteAllSearchUseCase(repository)
+    ) = DeleteAllSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideGetProfileUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = GetProfileUseCase(repository)
+    ) = GetProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideInsertProfileUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = InsertProfileUseCase(repository)
+    ) = InsertProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideDeleteProfileUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteProfileUseCase(repository)
+    ) = DeleteProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideGetSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = GetSummonerUseCase(repository)
+    ) = GetSummonerUseCase(coroutineDispatcher, repository)
     @Provides
     @Singleton
     fun provideRequestSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = RequestSummonerUseCase(repository)
+    ) = RequestSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideInsertSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = InsertSummonerUseCase(repository)
+    ) = InsertSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideDeleteSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteSummonerUseCase(repository)
+    ) = DeleteSummonerUseCase(coroutineDispatcher, repository)
 
 
     @Provides
     @Singleton
     fun provideDeleteAllSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteAllSummonerUseCase(repository)
+    ) = DeleteAllSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideInsertKeyUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = InsertKeyUseCase(repository)
+    ) = InsertKeyUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideDeleteKeyUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = DeleteKeyUseCase(repository)
+    ) = DeleteKeyUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideRequestSpectatorUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = RequestSpectatorUseCase(repository)
+    ) = RequestSpectatorUseCase(coroutineDispatcher, repository)
 
     @Provides
     @Singleton
     fun provideInitialLocalJsonUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
-    ) = InitialLocalJsonUseCase(repository)
+    ) = InitialLocalJsonUseCase(coroutineDispatcher, repository)
 
 }

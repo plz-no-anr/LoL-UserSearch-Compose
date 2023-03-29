@@ -13,11 +13,8 @@ import com.plznoanr.data.utils.*
 import com.plznoanr.domain.model.*
 import com.plznoanr.domain.repository.AppRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
@@ -63,41 +60,42 @@ class AppRepositoryImpl(
         } else {
             emit(Result.success(false))
         }
-    }.flowOn(coroutineDispatcher)
+    }
+
     override fun getSearchList(): Flow<Result<List<Search>>> = flow {
         emit(makeResult(coroutineDispatcher) {
             localDataSource.getSearch().map { it.toDomain() }
         })
-    }.flowOn(coroutineDispatcher)
+    }
 
     override fun insertSearch(search: Search): Flow<Result<Unit>> = flow {
         localDataSource.insertSearch(search.toEntity())
         emit(Result.success(Unit))
-    }.flowOn(coroutineDispatcher)
+    }
 
 
     override fun deleteSearch(sName: String): Flow<Result<Unit>> = flow {
         localDataSource.deleteSearch(sName)
         emit(Result.success(Unit))
-    }.flowOn(coroutineDispatcher)
+    }
 
     override fun deleteSearchAll(): Flow<Result<Unit>> = flow {
         localDataSource.deleteSearchAll()
         emit(Result.success(Unit))
-    }.flowOn(coroutineDispatcher)
+    }
 
     override fun getSummonerList(): Flow<Result<List<Summoner>>> = flow {
         emit(makeResult(coroutineDispatcher) {
             localDataSource.getSummoner().map { it.toDomain() }
         })
-    }.flowOn(coroutineDispatcher)
+    }
 
     override fun insertSummoner(summoner: Summoner): Flow<Result<Unit>> = flow {
         localDataSource.insertSummoner(summoner.toEntity())
         emit(Result.success(Unit))
-    }.flowOn(coroutineDispatcher)
+    }
 
-    override fun deleteSummoner(name: String): Flow<Result<Unit>> = flow{
+    override fun deleteSummoner(name: String): Flow<Result<Unit>> = flow {
         localDataSource.deleteSummoner(name)
         emit(Result.success(Unit))
     }
@@ -173,7 +171,7 @@ class AppRepositoryImpl(
         } catch (e: Exception) {
             emit(Result.failure(e))
         }
-    }.flowOn(coroutineDispatcher)
+    }
 
     override fun requestSpectator(name: String): Flow<Result<Spectator>> = flow {
         try {
@@ -202,7 +200,7 @@ class AppRepositoryImpl(
         } catch (e: Exception) {
             emit(Result.failure(e))
         }
-    }.flowOn(coroutineDispatcher)
+    }
 
     private suspend fun <T> makeResult(
         dispatcher: CoroutineDispatcher,
