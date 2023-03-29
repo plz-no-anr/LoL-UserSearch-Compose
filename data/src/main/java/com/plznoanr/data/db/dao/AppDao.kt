@@ -16,6 +16,9 @@ interface AppDao {
     @Query("DELETE FROM Search WHERE name = :sName")
     suspend fun deleteSearch(sName: String)
 
+    @Update
+    suspend fun updateSearch(searchEntity: SearchEntity)
+
     @Query("DELETE FROM Search")
     suspend fun deleteSearchAll()
 
@@ -25,6 +28,9 @@ interface AppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProfile(profileEntity: ProfileEntity)
 
+    @Update
+    suspend fun updateProfile(profileEntity: ProfileEntity)
+
     @Query("DELETE FROM Profile")
     suspend fun deleteProfile()
 
@@ -32,6 +38,8 @@ interface AppDao {
     suspend fun getSummoner() : List<SummonerEntity>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
+    @Update
+    suspend fun updateSummoner(summonerEntity: SummonerEntity)
     @Query("DELETE FROM Summoner WHERE name = :summonerName")
     suspend fun deleteSummoner(summonerName: String)
 

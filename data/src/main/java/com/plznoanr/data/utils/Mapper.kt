@@ -21,6 +21,8 @@ fun Search.toEntity() = SearchEntity(
     date = date
 )
 
+fun List<SearchEntity>.toSearchList() = map { it.toDomain() }
+
 fun Summoner.toEntity() = SummonerEntity(
     name = name,
     level = level,
@@ -33,6 +35,8 @@ fun Summoner.toEntity() = SummonerEntity(
     miniSeries = miniSeries?.toEntity(),
     isPlaying = isPlaying
 )
+
+fun List<SummonerEntity>.toSummonerList() = map { it.toDomain() }
 
 fun Summoner.MiniSeries.toEntity() = SummonerEntity.MiniSeries(
     losses = losses,

@@ -35,10 +35,10 @@ fun SpectatorScreen(
         onEvent(SpectatorContract.Event.OnLoad)
         effectFlow?.onEach { effect ->
             when (effect) {
-//                is SpectatorContract.Effect.Toast -> snackbarHostState.showSnackbar(
-//                    message = effect.msg,
-//                    duration = SnackbarDuration.Short
-//                )
+                is SpectatorContract.Effect.Toast -> snackbarHostState.showSnackbar(
+                    message = effect.msg,
+                    duration = SnackbarDuration.Short
+                )
                 is SpectatorContract.Effect.Navigation.Back -> onNavigationRequested(effect)
             }
         }?.collect()
@@ -68,7 +68,6 @@ fun SpectatorScreen(
             }
         }
     }
-
 }
 
 

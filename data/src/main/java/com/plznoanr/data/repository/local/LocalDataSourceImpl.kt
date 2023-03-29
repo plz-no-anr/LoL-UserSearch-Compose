@@ -17,17 +17,23 @@ interface LocalDataSource {
 
     suspend fun deleteSearch(sName: String)
 
+    suspend fun updateSearch(searchEntity: SearchEntity)
+
     suspend fun deleteSearchAll()
 
     suspend fun getProfile() : ProfileEntity?
 
     suspend fun insertProfile(profileEntity: ProfileEntity)
 
+    suspend fun updateProfile(profileEntity: ProfileEntity)
+
     suspend fun deleteProfile()
 
     suspend fun getSummoner() : List<SummonerEntity>
 
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
+
+    suspend fun updateSummoner(summonerEntity: SummonerEntity)
 
     suspend fun deleteSummoner(name: String)
 
@@ -62,6 +68,10 @@ class LocalDataSourceImpl (
         appDao.insertSearch(searchEntity)
     }
 
+    override suspend fun updateSearch(searchEntity: SearchEntity) {
+        appDao.updateSearch(searchEntity)
+    }
+
     override suspend fun deleteSearch(sName: String) {
         appDao.deleteSearch(sName)
     }
@@ -76,6 +86,10 @@ class LocalDataSourceImpl (
         appDao.insertProfile(profileEntity)
     }
 
+    override suspend fun updateProfile(profileEntity: ProfileEntity) {
+        appDao.updateProfile(profileEntity)
+    }
+
     override suspend fun deleteProfile() {
         appDao.deleteProfile()
     }
@@ -84,6 +98,10 @@ class LocalDataSourceImpl (
 
     override suspend fun insertSummoner(summonerEntity: SummonerEntity) {
         appDao.insertSummoner(summonerEntity)
+    }
+
+    override suspend fun updateSummoner(summonerEntity: SummonerEntity) {
+        appDao.updateSummoner(summonerEntity)
     }
 
     override suspend fun deleteSummoner(name: String) {

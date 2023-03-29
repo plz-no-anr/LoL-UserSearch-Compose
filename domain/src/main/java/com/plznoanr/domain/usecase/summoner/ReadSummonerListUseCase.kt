@@ -6,13 +6,13 @@ import com.plznoanr.domain.usecase.base.BaseUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
-class GetSummonerUseCase(
+class ReadSummonerListUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val repository: AppRepository
+    private val appRepository: AppRepository
 ): BaseUseCase<Unit, List<Summoner>>(coroutineDispatcher) {
 
     override fun execute(parameter: Unit): Flow<Result<List<Summoner>>> {
-        return repository.getSummonerList()
+        return appRepository.readSummonerList()
     }
 
 }

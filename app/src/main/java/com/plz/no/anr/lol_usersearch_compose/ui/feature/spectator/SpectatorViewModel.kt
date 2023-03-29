@@ -35,7 +35,6 @@ class SpectatorViewModel @Inject constructor(
         viewModelScope.launch {
             requestSpectatorUseCase(summonerName)
                 .onStart { setState { copy(isLoading = true) } }
-                .catch { setState { copy(isLoading = false, error = it.message) } }
                 .collect { result ->
                     result.onSuccess {
                         setState { copy(data = it, isLoading = false) }
