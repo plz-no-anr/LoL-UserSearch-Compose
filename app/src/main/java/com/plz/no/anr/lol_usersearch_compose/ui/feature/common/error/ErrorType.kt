@@ -5,4 +5,6 @@ enum class ErrorType(val msg: String) {
     FORBIDDEN("This key has expired, please reissue"),
     NOT_FOUND("Summoner that doesn't exist"),
     NOT_PLAYING("The summoner is not in game"),
+    NO_MATCH_HISTORY("The summoner does not have a match for this season."),
+    Unauthorized("The wrong approach."),
 }

@@ -107,9 +107,11 @@ private fun ErrorScreenPreview() {
 
 private fun String.toErrorDescription() = when (this.toErrorCode()) {
     in 200..299 -> "Success"
+    401 -> ErrorType.Unauthorized.msg
     403 -> ErrorType.FORBIDDEN.msg
     404 -> ErrorType.NOT_FOUND.msg
     1000 -> ErrorType.NOT_PLAYING.msg
+    1001 -> ErrorType.NO_MATCH_HISTORY.msg
     else -> ErrorType.NETWORK.msg
 }
 
