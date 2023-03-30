@@ -1,16 +1,13 @@
 package com.plz.no.anr.lol_usersearch_compose.ui.feature.search
 
 import androidx.lifecycle.viewModelScope
-import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseContract
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
-import com.plznoanr.domain.model.Search
 import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
 import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
 import com.plznoanr.domain.usecase.search.GetSearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel

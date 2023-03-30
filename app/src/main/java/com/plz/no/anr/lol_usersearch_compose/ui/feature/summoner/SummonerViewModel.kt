@@ -2,14 +2,10 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseContract
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.Navigation
-import com.plznoanr.domain.model.Summoner
 import com.plznoanr.domain.usecase.summoner.RequestSummonerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -13,6 +13,7 @@ import com.plznoanr.domain.model.*
 import com.plznoanr.domain.repository.AppRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -24,6 +25,8 @@ class AppRepositoryImpl(
     private val preferenceDataSource: PreferenceDataSource,
     private val jsonUtils: JsonUtils,
 ) : AppRepository {
+    private val defaultText = "Not Found"
+
     override var apiKey: String?
         get() = preferenceDataSource.apiKey
         set(value) {
@@ -36,12 +39,18 @@ class AppRepositoryImpl(
             preferenceDataSource.isInit = value
         }
 
+    private fun getAuthKey() = requireNotNull(apiKey) {
+        throw Exception(Error.FORBIDDEN.parse())
+    }
+
+    private fun getJson() = requireNotNull(jsonUtils.getLocalJson()) {
+        throw Exception(Error.NO_JSON_DATA.parse())
+    }
+
     override fun initLocalJson(): Flow<Result<Boolean>> = flow {
         if (!isInit) {
-            val json = requireNotNull(jsonUtils.getLocalJson()) {
-                emit(Result.failure(Exception("Local Json is null")))
-                return@flow
-            }
+            val json = getJson()
+
             json.map.data.values.forEach {
                 localDataSource.insertMap(it.toEntity())
             }
@@ -122,10 +131,7 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
         try {
-            val key = requireNotNull(apiKey) {
-                emit(Result.failure(Exception("FORBIDDEN")))
-                return@flow
-            }
+            val key = getAuthKey()
             val result = requestSummoner(name, key)?.also {
                 with(localDataSource.getSummoner()) {
                     if (isNotEmpty()) {
@@ -144,7 +150,7 @@ class AppRepositoryImpl(
             }
             result?.also {
                 emit(Result.success(it))
-            } ?: emit(Result.failure(Exception("Summoner is null".parseError(404))))
+            } ?: emit(Result.failure(Exception(Error.NO_MATCH_HISTORY.parse())))
 
         } catch (e: Exception) {
             emit(Result.failure(e))
@@ -154,10 +160,8 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun readSummonerList(): Flow<Result<List<Summoner>>> = flow {
         try {
-            val key = requireNotNull(apiKey) {
-                emit(Result.failure(Exception("FORBIDDEN")))
-                return@flow
-            }
+            val key = getAuthKey()
+
             val result = requestSummonerList(key)
             emit(Result.success(result))
         } catch (e: Exception) {
@@ -168,10 +172,7 @@ class AppRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun refreshSummonerList(): Flow<Result<List<Summoner>>> = flow {
         try {
-            val key = requireNotNull(apiKey) {
-                emit(Result.failure(Exception("FORBIDDEN")))
-                return@flow
-            }
+            val key = getAuthKey()
             val result = requestSummonerList(key)
             emit(Result.success(result))
         } catch (e: Exception) {
@@ -179,12 +180,10 @@ class AppRepositoryImpl(
         }
     }
 
+
     override fun requestSpectator(name: String): Flow<Result<Spectator>> = flow {
         try {
-            val key = requireNotNull(apiKey) {
-                emit(Result.failure(Exception("FORBIDDEN")))
-                return@flow
-            }
+            val key = getAuthKey()
             val summoner = remoteDataSource.requestSummoner(name, key)
             val spectator = remoteDataSource.requestSpectator(summoner.id, key)
             val spectatorResult = spectator?.let { response ->
@@ -200,7 +199,7 @@ class AppRepositoryImpl(
 
             spectatorResult?.also {
                 emit(Result.success(it))
-            } ?: emit(Result.failure(Exception("Spectator is null".parseError(1000))))
+            } ?: emit(Result.failure(Exception(Error.NOT_PLAYING.parse())))
 
         } catch (e: Exception) {
             emit(Result.failure(e))
@@ -313,7 +312,7 @@ class AppRepositoryImpl(
                 return@withContext it.mapName
             }
         }
-        return@withContext "Not Found"
+        return@withContext defaultText
     }
 
     private suspend fun Long.toChampInfo(): Pair<String, String> =
@@ -324,7 +323,7 @@ class AppRepositoryImpl(
                     return@withContext it.name to it.image.full.toChampImage()
                 }
             }
-            return@withContext "Not Found" to "Not Found"
+            return@withContext defaultText to defaultText
         }
 
     private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
@@ -334,7 +333,7 @@ class AppRepositoryImpl(
                     return@withContext Spectator.SpectatorInfo.Rune(it.name, it.icon)
                 }
             }
-            return@withContext Spectator.SpectatorInfo.Rune("Not Found", "Not Found")
+            return@withContext Spectator.SpectatorInfo.Rune(defaultText, defaultText)
         }
 
     private suspend fun Long.toSpellImage(): String = withContext(coroutineDispatcher) {
@@ -343,7 +342,7 @@ class AppRepositoryImpl(
                 return@withContext it.image.full.toSpellImage()
             }
         }
-        return@withContext "Not Found"
+        return@withContext defaultText
     }
 
     private suspend fun getMainRune(perkStyle: Long, perks: Long): String =
@@ -360,7 +359,7 @@ class AppRepositoryImpl(
                     }
                 }
             }
-            return@withContext "Not Found"
+            return@withContext defaultText
         }
 
     private suspend fun getRunes(
