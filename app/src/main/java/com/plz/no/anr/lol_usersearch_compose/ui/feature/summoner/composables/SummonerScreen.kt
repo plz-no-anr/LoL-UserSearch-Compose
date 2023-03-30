@@ -13,6 +13,7 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
+import com.plznoanr.data.model.common.parseError
 import com.plznoanr.domain.model.Summoner
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.flow.Flow
@@ -56,7 +57,7 @@ fun SummonerScreen(
         }) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(SummonerContract.Event.Navigation.Back) }
+            state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(SummonerContract.Event.Navigation.Back) }
             else -> {
                 state.data?.also { data ->
                     SummonerView(

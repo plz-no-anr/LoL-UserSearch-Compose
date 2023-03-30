@@ -18,7 +18,7 @@ sealed class SearchContract : BaseContract() {
         object Refresh : Event()
 
         sealed class Summoner : Event() {
-            data class OnSearch(val name: String) : Event()
+            data class OnSearch(val name: String) : Summoner()
         }
 
         sealed class Search : Event() {
@@ -26,8 +26,8 @@ sealed class SearchContract : BaseContract() {
             object OnDeleteAll : Search()
         }
 
-        object Navigation {
-            object Back : Event()
+        sealed class Navigation : Event() {
+            object Back : Navigation()
         }
     }
 

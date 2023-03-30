@@ -17,6 +17,7 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.theme.sky
+import com.plznoanr.data.model.common.parseError
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Summoner
 import com.plznoanr.lol_usersearch_compose.R
@@ -101,7 +102,7 @@ fun MainScreen(
     ) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(errMsg = state.error) { onEvent(MainContract.Event.OnLoad) }
+            state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(MainContract.Event.OnLoad) }
             else -> {
                 MainView(
                     modifier = Modifier.padding(it),

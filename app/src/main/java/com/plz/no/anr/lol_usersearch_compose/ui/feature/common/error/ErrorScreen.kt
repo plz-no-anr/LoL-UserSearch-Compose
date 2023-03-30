@@ -17,12 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.data.model.common.AppError
 import com.plznoanr.lol_usersearch_compose.R
 
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
-    errMsg: String = stringResource(id = R.string.error),
+    error: AppError = AppError.Default,
     onRetry: () -> Unit = {}
 ) {
     Column(
@@ -46,7 +47,7 @@ fun ErrorScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = errMsg.toErrorMsg(),
+            text = error.message,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -55,7 +56,7 @@ fun ErrorScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = errMsg.toErrorDescription(),
+            text = error.toDescription(),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 18.sp,
         )
@@ -95,25 +96,10 @@ fun RetryView(
             )
         }
     }
-
 }
-
 
 @Preview
 @Composable
 private fun ErrorScreenPreview() {
     ErrorScreen()
 }
-
-private fun String.toErrorDescription() = when (this.toErrorCode()) {
-    in 200..299 -> "Success"
-    401 -> ErrorType.Unauthorized.msg
-    403 -> ErrorType.FORBIDDEN.msg
-    404 -> ErrorType.NOT_FOUND.msg
-    1000 -> ErrorType.NOT_PLAYING.msg
-    1001 -> ErrorType.NO_MATCH_HISTORY.msg
-    else -> ErrorType.NETWORK.msg
-}
-
-private fun String.toErrorCode() = if (this.contains("/")) this.split("/")[0].toInt() else this
-private fun String.toErrorMsg() = if (this.contains("/")) this.split("/")[1] else this
