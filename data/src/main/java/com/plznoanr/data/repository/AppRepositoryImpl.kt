@@ -43,7 +43,7 @@ class AppRepositoryImpl(
         throw Exception(AppError.Forbidden.parse())
     }
 
-    private fun getJson() = requireNotNull(jsonUtils.getLocalJson()) {
+    private suspend fun getJson() = requireNotNull(jsonUtils.getLocalJson()) {
         throw Exception(AppError.NoJsonData.parse())
     }
 
@@ -180,7 +180,6 @@ class AppRepositoryImpl(
         }
     }
 
-
     override fun requestSpectator(name: String): Flow<Result<Spectator>> = flow {
         try {
             val key = getAuthKey()
@@ -279,7 +278,6 @@ class AppRepositoryImpl(
                 }
             }
         }
-
     }
 
     private suspend fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {

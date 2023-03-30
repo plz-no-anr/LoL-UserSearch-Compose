@@ -1,5 +1,6 @@
 package com.plznoanr.data.di
 
+import com.plznoanr.data.di.CoroutineQualifiers
 import com.plznoanr.domain.repository.AppRepository
 import com.plznoanr.domain.usecase.json.InitialLocalJsonUseCase
 import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
@@ -147,7 +148,7 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideInitialLocalJsonUseCase(
-        @CoroutineQualifiers.DefaultDispatcher coroutineDispatcher: CoroutineDispatcher,
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
     ) = InitialLocalJsonUseCase(coroutineDispatcher, repository)
 
