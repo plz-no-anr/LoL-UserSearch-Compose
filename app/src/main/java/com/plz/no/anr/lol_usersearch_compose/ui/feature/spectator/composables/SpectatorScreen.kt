@@ -13,7 +13,6 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.SpectatorContract
-import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

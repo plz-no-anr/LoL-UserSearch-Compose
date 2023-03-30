@@ -14,6 +14,7 @@ import com.plznoanr.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plznoanr.domain.usecase.summoner.RefreshSummonerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,7 +39,7 @@ class MainViewModel @Inject constructor(
 
     override fun handleEvents(event: MainContract.Event) {
         when (event) {
-            is MainContract.Event.OnLoad -> onLoadData()
+            is MainContract.Event.OnLoad -> onLoad()
             is MainContract.Event.OnSearch -> setEffect { MainContract.Effect.Navigation.ToSearch }
             is MainContract.Event.Refresh -> refreshSummonerList()
             is MainContract.Event.Summoner.OnDeleteAll -> deleteAllSummoner()
@@ -54,61 +55,30 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun onLoadData() {
+    private fun onLoad() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getKeyUseCase(Unit)
-                    .buffer()
-                    .collect { result ->
-                        result.onSuccess {
-                            setState {
-                                copy(
-                                    key = it,
-                                )
-                            }
-                        }.onFailure {
-                            setState {
-                                copy(
-                                    error = it.message,
-                                )
-                            }
+                combine(
+                    getKeyUseCase(Unit),
+                    getProfileUseCase(Unit),
+                    readSummonerListUseCase(Unit)
+                ) { k, p, r ->
+                    if (k.isSuccess && p.isSuccess && r.isSuccess) {
+                        k.getOrNull() to p.getOrNull() to r.getOrElse { emptyList() }
+                    } else {
+                        null to null to emptyList()
+                    }
+                }.onStart { setState { copy(isLoading = true) } }
+                    .collect {
+                        setState {
+                            copy(
+                                key = it.first.first,
+                                profile = it.first.second,
+                                data = it.second.asReversed(),
+                                isLoading = false
+                            )
                         }
                     }
-                getProfileUseCase(Unit)
-                    .buffer()
-                    .collect { result ->
-                        result.onSuccess {
-                            setState {
-                                copy(
-                                    profile = it,
-                                )
-                            }
-                        }.onFailure {
-                            setState {
-                                copy(
-                                    error = it.message,
-                                )
-                            }
-                        }
-                    }
-                readSummonerListUseCase(Unit)
-                    .buffer()
-                    .collect { result ->
-                        result.onSuccess {
-                            setState {
-                                copy(
-                                    data = it.asReversed(),
-                                )
-                            }
-                        }.onFailure {
-                            setState {
-                                copy(
-                                    error = it.message,
-                                )
-                            }
-                        }
-                    }
-                setState { copy(isLoading = false) }
             }
         }
     }

@@ -7,7 +7,7 @@ class SpectatorContract : BaseContract() {
 
     data class UiState(
         val data: Spectator?,
-        val isLoading: Boolean = true,
+        val isLoading: Boolean = false,
         val error: String? = null
     ) : ViewState
 

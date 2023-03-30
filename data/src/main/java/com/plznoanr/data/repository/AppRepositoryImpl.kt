@@ -13,6 +13,7 @@ import com.plznoanr.domain.model.*
 import com.plznoanr.domain.repository.AppRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -160,6 +161,7 @@ class AppRepositoryImpl(
     override fun readSummonerList(): Flow<Result<List<Summoner>>> = flow {
         try {
             val key = getAuthKey()
+
             val result = requestSummonerList(key)
             emit(Result.success(result))
         } catch (e: Exception) {

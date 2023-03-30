@@ -7,7 +7,7 @@ class SummonerContract : BaseContract() {
 
     data class UiState(
         val data: Summoner?,
-        val isLoading: Boolean = true,
+        val isLoading: Boolean = false,
         val error: String? = null
     ) : ViewState
 
