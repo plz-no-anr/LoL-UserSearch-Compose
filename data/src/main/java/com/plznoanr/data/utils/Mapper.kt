@@ -10,10 +10,10 @@ import com.plznoanr.data.model.local.json.SpellEntity
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Search
 import com.plznoanr.domain.model.Summoner
-import com.plznoanr.domain.model.common.ChampionJson
-import com.plznoanr.domain.model.common.MapJson
-import com.plznoanr.domain.model.common.RuneJson
-import com.plznoanr.domain.model.common.SummonerJson
+import com.plznoanr.domain.model.common.json.ChampionJson
+import com.plznoanr.domain.model.common.json.MapJson
+import com.plznoanr.domain.model.common.json.RuneJson
+import com.plznoanr.domain.model.common.json.SummonerJson
 
 
 fun Search.toEntity() = SearchEntity(
@@ -90,15 +90,15 @@ fun SummonerJson.Spell.toEntity() = SpellEntity(
 )
 
 
-private fun List<RuneJson.RuneInfo>.toEntity() = map { it.toEntity1() }
+private fun List<RuneJson.RuneInfo>.toEntity() = map { it.toRuneInfo() }
 
-private fun RuneJson.RuneInfo.toEntity1() = RuneEntity.RuneInfo(
-    runes = runes.toEntity2()
+private fun RuneJson.RuneInfo.toRuneInfo() = RuneEntity.RuneInfo(
+    runes = runes.toSubRuneList()
 )
 
-private fun List<RuneJson.RuneInfo.SubRune>.toEntity2() = map { it.toEntity3() }
+private fun List<RuneJson.RuneInfo.SubRune>.toSubRuneList() = map { it.toSubRune() }
 
-private fun RuneJson.RuneInfo.SubRune.toEntity3() = RuneEntity.RuneInfo.SubRune(
+private fun RuneJson.RuneInfo.SubRune.toSubRune() = RuneEntity.RuneInfo.SubRune(
     id = id,
     key = key,
     icon = icon,

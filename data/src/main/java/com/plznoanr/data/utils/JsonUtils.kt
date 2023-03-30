@@ -1,8 +1,11 @@
 package com.plznoanr.data.utils
 
 import android.content.Context
-import com.plznoanr.domain.model.Spectator
 import com.plznoanr.domain.model.common.*
+import com.plznoanr.domain.model.common.json.ChampionJson
+import com.plznoanr.domain.model.common.json.MapJson
+import com.plznoanr.domain.model.common.json.RuneJson
+import com.plznoanr.domain.model.common.json.SummonerJson
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import timber.log.Timber

@@ -7,14 +7,6 @@ import com.plznoanr.data.model.remote.SummonerResponse
 import kotlinx.coroutines.delay
 import retrofit2.Response
 
-interface RemoteDataSource {
-    suspend fun requestSummoner(name: String, apiKey: String): SummonerResponse
-
-    suspend fun requestLeague(summonerId:String?, apiKey: String): Set<LeagueResponse>
-
-    suspend fun requestSpectator(summonerId:String?, apiKey: String): SpectatorResponse?
-}
-
 class RemoteDataSourceImpl (
     private val api: UserSearchApi
 ): RemoteDataSource {

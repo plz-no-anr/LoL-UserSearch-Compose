@@ -13,10 +13,10 @@ import com.plznoanr.domain.model.*
 import com.plznoanr.domain.repository.AppRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import com.plznoanr.data.model.common.AppError
 
 class AppRepositoryImpl(
     @CoroutineQualifiers.IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
@@ -40,11 +40,11 @@ class AppRepositoryImpl(
         }
 
     private fun getAuthKey() = requireNotNull(apiKey) {
-        throw Exception(Error.FORBIDDEN.parse())
+        throw Exception(AppError.Forbidden.parse())
     }
 
     private fun getJson() = requireNotNull(jsonUtils.getLocalJson()) {
-        throw Exception(Error.NO_JSON_DATA.parse())
+        throw Exception(AppError.NoJsonData.parse())
     }
 
     override fun initLocalJson(): Flow<Result<Boolean>> = flow {
@@ -150,7 +150,7 @@ class AppRepositoryImpl(
             }
             result?.also {
                 emit(Result.success(it))
-            } ?: emit(Result.failure(Exception(Error.NO_MATCH_HISTORY.parse())))
+            } ?: emit(Result.failure(Exception(AppError.NoMatchHistory.parse())))
 
         } catch (e: Exception) {
             emit(Result.failure(e))
@@ -199,7 +199,7 @@ class AppRepositoryImpl(
 
             spectatorResult?.also {
                 emit(Result.success(it))
-            } ?: emit(Result.failure(Exception(Error.NOT_PLAYING.parse())))
+            } ?: emit(Result.failure(Exception(AppError.NotPlaying.parse())))
 
         } catch (e: Exception) {
             emit(Result.failure(e))

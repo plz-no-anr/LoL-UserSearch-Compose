@@ -25,7 +25,7 @@ class MainContract : BaseContract() {
 
         sealed class Summoner : Event() {
             data class OnDelete(val name: String) : Summoner()
-            object OnDeleteAll: Event()
+            object OnDeleteAll: Summoner()
         }
 
         sealed class Profile : Event() {

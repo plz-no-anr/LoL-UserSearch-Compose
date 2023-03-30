@@ -1,4 +1,4 @@
-package com.plznoanr.domain.model.common
+package com.plznoanr.domain.model.common.json
 
 @kotlinx.serialization.Serializable
 data class ChampionJson(
@@ -22,5 +22,4 @@ data class ChampionJson(
             val group: String,
         )
     }
-
 }

@@ -15,8 +15,8 @@ class SpectatorContract : BaseContract() {
 
         object OnLoad : Event()
 
-        object Navigation {
-            object Back : Event()
+        sealed class Navigation : Event() {
+            object Back : Navigation()
         }
     }
 

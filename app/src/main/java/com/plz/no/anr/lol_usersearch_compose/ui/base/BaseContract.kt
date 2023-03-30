@@ -1,6 +1,6 @@
 package com.plz.no.anr.lol_usersearch_compose.ui.base
 
-open class BaseContract {
+abstract class BaseContract {
     interface ViewEvent
 
     interface ViewState

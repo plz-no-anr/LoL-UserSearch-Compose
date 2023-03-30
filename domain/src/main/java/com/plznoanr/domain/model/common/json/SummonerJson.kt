@@ -1,18 +1,19 @@
-package com.plznoanr.domain.model.common
+package com.plznoanr.domain.model.common.json
 
 @kotlinx.serialization.Serializable
-data class MapJson(
+data class SummonerJson(
     val type: String,
     val version: String,
-    val data: Map<String, MapData>
+    val data: Map<String, Spell>
 ) {
     @kotlinx.serialization.Serializable
-    data class MapData(
-        @kotlinx.serialization.SerialName("MapName")
-        val mapName: String,
-        @kotlinx.serialization.SerialName("MapId")
-        val mapId: String,
-        val image: Image
+    data class Spell(
+        val id: String,
+        val name: String,
+        val description: String,
+        val tooltip: String,
+        val image: Image,
+        val key: String
     ) {
         @kotlinx.serialization.Serializable
         data class Image(
