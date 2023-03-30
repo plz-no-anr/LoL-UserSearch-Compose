@@ -13,5 +13,6 @@
     <string name="retry">재시도</string>
     <string name="api_key">API키</string>
     <string name="add_key">API키 추가</string>
+    <string name="get_key">발급 받기</string>
     <string name="delete">삭제 하기</string>
 </resources>

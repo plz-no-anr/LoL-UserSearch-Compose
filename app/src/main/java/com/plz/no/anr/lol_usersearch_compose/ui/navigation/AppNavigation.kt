@@ -1,6 +1,9 @@
 package com.plz.no.anr.lol_usersearch_compose.ui.navigation
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -11,6 +14,7 @@ import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.MainDesti
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SearchDestination
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SpectatorDestination
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.destination.SummonerDestination
+import com.plz.no.anr.lol_usersearch_compose.utils.Constants
 
 @Composable
 fun AppNavigation() {
