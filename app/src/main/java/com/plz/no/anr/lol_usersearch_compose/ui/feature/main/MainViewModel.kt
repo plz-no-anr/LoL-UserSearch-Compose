@@ -14,7 +14,6 @@ import com.plznoanr.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plznoanr.domain.usecase.summoner.RefreshSummonerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,6 +44,7 @@ class MainViewModel @Inject constructor(
             is MainContract.Event.Summoner.OnDeleteAll -> deleteAllSummoner()
             is MainContract.Event.Summoner.OnDelete -> deleteSummoner(event.name)
             is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
+            is MainContract.Event.Key.OnGet -> setEffect { MainContract.Effect.MoveGetApiKey }
             is MainContract.Event.Key.OnAdd -> insertKey(event.key)
             is MainContract.Event.Key.OnDelete -> deleteKey()
             is MainContract.Event.Spectator.OnWatch -> setEffect {

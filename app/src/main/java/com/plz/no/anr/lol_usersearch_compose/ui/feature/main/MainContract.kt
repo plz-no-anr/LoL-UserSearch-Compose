@@ -38,6 +38,8 @@ class MainContract : BaseContract() {
         }
 
         sealed class Key : Event() {
+
+            object OnGet : Key()
             data class OnAdd(val key: String) : Key()
             object OnDelete : Key()
         }
@@ -47,6 +49,8 @@ class MainContract : BaseContract() {
     sealed class Effect : ViewSideEffect {
 
         data class Toast(val message: String) : Effect()
+
+        object MoveGetApiKey : Effect()
 
         sealed class Navigation : Effect() {
             object ToSearch : Navigation()

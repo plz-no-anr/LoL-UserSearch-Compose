@@ -5,15 +5,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plz.no.anr.lol_usersearch_compose.utils.NetworkManager
-import com.plz.no.anr.lol_usersearch_compose.utils.NetworkState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import timber.log.Timber
 
 
 abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContract.ViewEvent, Effect : BaseContract.ViewSideEffect>
@@ -33,12 +30,18 @@ abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContr
     private val _effect: Channel<Effect> = Channel()
     val effect = _effect.receiveAsFlow()
 
+    private val exceptionHandler by lazy {
+        CoroutineExceptionHandler { _, t ->
+            Timber.e(t)
+        }
+    }
+
     init {
         subscribeToEvents()
     }
 
     private fun subscribeToEvents() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             _event.collect {
                 handleEvents(it)
             }
@@ -46,7 +49,7 @@ abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContr
     }
 
     fun setEvent(event: Event) {
-        viewModelScope.launch { _event.emit(event) }
+        viewModelScope.launch(exceptionHandler) { _event.emit(event) }
     }
 
     protected fun setState(reducer: UiState.() -> UiState) {
@@ -56,7 +59,7 @@ abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContr
 
     protected fun setEffect(builder: () -> Effect) {
         val effectValue = builder()
-        viewModelScope.launch { _effect.send(effectValue) }
+        viewModelScope.launch(exceptionHandler) { _effect.send(effectValue) }
     }
 
 }

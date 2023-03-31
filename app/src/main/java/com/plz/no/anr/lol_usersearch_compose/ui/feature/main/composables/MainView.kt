@@ -76,6 +76,7 @@ fun MainView(
 fun Drawers(
     data: Profile,
     apiKey: String?,
+    onGetKey: () -> Unit,
     onAddKey: (String) -> Unit,
     onDeleteKey: () -> Unit
 ) {
@@ -114,6 +115,7 @@ fun Drawers(
 
     KeyView(
         apiKey = apiKey,
+        onGetKey = onGetKey,
         onAddKey = onAddKey,
         onDeleteKey = onDeleteKey
     )
@@ -124,6 +126,7 @@ fun Drawers(
 @Composable
 private fun KeyView(
     apiKey: String?,
+    onGetKey: () -> Unit,
     onAddKey: (String) -> Unit,
     onDeleteKey: () -> Unit
 ) {
@@ -157,12 +160,25 @@ private fun KeyView(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedButton(onClick = onDeleteKey) {
-                Text(
-                    text = stringResource(id = R.string.delete),
-                    color = sky
-                )
+            Row {
+                OutlinedButton(onClick = onGetKey) {
+                    Text(
+                        text = stringResource(id = R.string.get_key),
+                        color = sky
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                OutlinedButton(onClick = onDeleteKey) {
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        color = sky
+                    )
+                }
             }
+
+
         } ?: run {
             KeyAddView { onAddKey(it) }
         }

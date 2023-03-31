@@ -28,19 +28,19 @@ sealed class AppError(val code: Int, val message: String) {
 }
 
 fun String.parseError(): AppError = this.let {
-        if (it.contains("/")) it.split("/")[0].toInt().let {  code ->
-            when (code) {
-                0 -> AppError.Network
-                404 -> AppError.NotFound
-                400 -> AppError.BadRequest
-                401 -> AppError.Unauthorized
-                403 -> AppError.Forbidden
-                1000 -> AppError.NotPlaying
-                1001 -> AppError.NoMatchHistory
-                1002 -> AppError.NoJsonData
-                else -> AppError.Default
-            }
-        } else {
-            AppError.Default
+    if (it.contains("/")) it.split("/")[0].toInt().let { code ->
+        when (code) {
+            0 -> AppError.Network
+            404 -> AppError.NotFound
+            400 -> AppError.BadRequest
+            401 -> AppError.Unauthorized
+            403 -> AppError.Forbidden
+            1000 -> AppError.NotPlaying
+            1001 -> AppError.NoMatchHistory
+            1002 -> AppError.NoJsonData
+            else -> AppError.Default
         }
+    } else {
+        AppError.Default
     }
+}

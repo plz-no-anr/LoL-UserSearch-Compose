@@ -34,7 +34,6 @@ class SummonerViewModel @Inject constructor(
 
     private fun requestSummonerData() {
         viewModelScope.launch {
-            setState { copy(isLoading = true) }
             requestSummonerUseCase(summonerName.trim())
                 .onStart { setState { copy(isLoading = true) } }
                 .collect { result ->
