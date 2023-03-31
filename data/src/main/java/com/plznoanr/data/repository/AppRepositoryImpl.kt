@@ -3,6 +3,7 @@ package com.plznoanr.data.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.plznoanr.data.di.CoroutineQualifiers
+import com.plznoanr.data.model.common.AppError
 import com.plznoanr.data.model.local.SearchEntity
 import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import com.plznoanr.data.model.common.AppError
 
 class AppRepositoryImpl(
     @CoroutineQualifiers.IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
