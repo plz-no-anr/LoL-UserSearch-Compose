@@ -6,7 +6,9 @@ import com.plz.no.anr.lol_usersearch_compose.utils.NetworkManager
 import com.plz.no.anr.lol_usersearch_compose.utils.NetworkState
 import com.plznoanr.domain.usecase.json.InitialLocalJsonUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,21 +19,20 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     suspend fun initLocalJson() {
-        viewModelScope.launch {
+        withContext(Dispatchers.IO) {
             initialLocalJsonUseCase(Unit)
                 .collect {
                     it.onSuccess { result ->
                         if (result) {
-                            Timber.d("initLocalJson success")
+                            Timber.d("Initial LocalJson success")
                         } else {
-                            Timber.d("Already initLocalJson")
+                            Timber.d("Already Init LocalJson")
                         }
                     }.onFailure { t ->
                         Timber.e(t)
-                        Timber.d("initLocalJson fail")
+                        Timber.d("Initial LocalJson fail")
                     }
                 }
-
         }
     }
 

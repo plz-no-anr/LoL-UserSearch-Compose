@@ -8,12 +8,23 @@ class MainContract : BaseContract() {
 
     data class UiState(
         val data: List<Summoner>,
-        val profile: Profile? = null,
-        val key: String? = null,
-        val isLoading: Boolean = false,
-        val isRefreshing: Boolean = false,
-        val error: String? = null
-    ) : ViewState
+        val profile: Profile?,
+        val key: String?,
+        val isLoading: Boolean,
+        val isRefreshing: Boolean,
+        val error: String?
+    ) : ViewState {
+            companion object {
+                fun initial() = UiState(
+                    data = emptyList(),
+                    profile = null,
+                    key = null,
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = null
+                )
+            }
+    }
 
     sealed class Event : ViewEvent {
 

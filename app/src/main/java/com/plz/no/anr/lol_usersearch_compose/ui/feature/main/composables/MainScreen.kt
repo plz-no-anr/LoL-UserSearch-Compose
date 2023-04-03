@@ -20,7 +20,6 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract
 import com.plz.no.anr.lol_usersearch_compose.ui.theme.sky
 import com.plznoanr.data.model.common.parseError
 import com.plznoanr.domain.model.Profile
-import com.plznoanr.domain.model.Summoner
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -133,23 +132,7 @@ fun MainScreen(
 @Composable
 private fun MainScreenPreview() {
     MainScreen(
-        state = MainContract.UiState(
-            isLoading = true,
-            data = (0..10).map {
-                Summoner(
-                    name = "name",
-                    level = "100",
-                    icon = "",
-                    tier = "tier",
-                    rank = "rank",
-                    leaguePoints = 32,
-                    wins = 20,
-                    losses = 20,
-                    isPlaying = false
-                )
-            },
-            error = null
-        ),
+        state = MainContract.UiState.initial(),
         effectFlow = null,
         onEvent = {},
         onNavigationRequested = {}

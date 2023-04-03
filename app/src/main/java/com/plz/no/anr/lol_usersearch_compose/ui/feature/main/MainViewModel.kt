@@ -32,9 +32,7 @@ class MainViewModel @Inject constructor(
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
 ) : BaseViewModel<MainContract.UiState, MainContract.Event, MainContract.Effect>() {
 
-    override fun setInitialState(): MainContract.UiState = MainContract.UiState(
-        data = emptyList()
-    )
+    override fun setInitialState(): MainContract.UiState = MainContract.UiState.initial()
 
     override fun handleEvents(event: MainContract.Event) {
         when (event) {
@@ -47,11 +45,7 @@ class MainViewModel @Inject constructor(
             is MainContract.Event.Key.OnGet -> setEffect { MainContract.Effect.MoveGetApiKey }
             is MainContract.Event.Key.OnAdd -> insertKey(event.key)
             is MainContract.Event.Key.OnDelete -> deleteKey()
-            is MainContract.Event.Spectator.OnWatch -> setEffect {
-                MainContract.Effect.Navigation.ToSpectator(
-                    event.name
-                )
-            }
+            is MainContract.Event.Spectator.OnWatch -> setEffect { MainContract.Effect.Navigation.ToSpectator(event.name) }
         }
     }
 
