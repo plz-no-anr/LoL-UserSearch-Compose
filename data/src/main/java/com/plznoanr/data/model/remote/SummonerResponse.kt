@@ -1,6 +1,6 @@
 package com.plznoanr.data.model.remote
 
-data class SummonerResponse(
+internal data class SummonerResponse(
     val accountId: String,
     val profileIconId: Int,
     val revisionDate: Long,

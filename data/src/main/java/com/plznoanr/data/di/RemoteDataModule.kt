@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteDataModule {
+internal object RemoteDataModule {
     @Provides
     @Singleton
     fun provideApiService(): UserSearchApi =

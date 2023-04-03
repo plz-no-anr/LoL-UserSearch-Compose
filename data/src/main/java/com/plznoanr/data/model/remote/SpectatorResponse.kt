@@ -1,9 +1,6 @@
 package com.plznoanr.data.model.remote
 
-import com.plznoanr.domain.model.Spectator
-import com.plznoanr.domain.model.Team
-
-data class SpectatorResponse(
+internal data class SpectatorResponse(
     val gameId: Long,
     val gameType: String,
     val gameStartTime: Long,

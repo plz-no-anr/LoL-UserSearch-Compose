@@ -2,7 +2,7 @@ package com.plznoanr.data.model.remote
 
 import com.plznoanr.domain.model.Summoner
 
-data class LeagueResponse(
+internal data class LeagueResponse(
     val leagueId: String,
     val summonerId: String,
     val summonerName: String,
