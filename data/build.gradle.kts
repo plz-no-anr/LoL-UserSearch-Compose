@@ -1,11 +1,10 @@
 plugins {
-    id(Dependencies.Plugins.LIBRARY)
-    id(Dependencies.Plugins.KOTLIN_ANDROID)
-    id(Dependencies.Plugins.KOTLIN_PARCELIZE)
-    kotlin(Dependencies.Plugins.KOTLIN_KAPT)
-    id(Dependencies.Plugins.DAGGER_HILT)
-//    kotlin(Dependencies.Plugins.KOTLIN_JVM)
-    kotlin(Dependencies.Plugins.KOTLIN_SERIALIZATION)
+    androidLib
+    kotlinAndroid
+    kotlinKapt
+    kotlinParcelize
+    kotlinSerialization
+    daggerHiltAndroid
 }
 
 android {
@@ -41,12 +40,7 @@ kapt {
 }
 
 dependencies {
-    implementation(project(Dependencies.MultiModule.DOMAIN))
-
-    implementation(Dependencies.AndroidX.CORE_KTX)
-    implementation(Dependencies.AndroidX.APP_COMPAT)
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID)
+    implementation(domain)
 
     // Coroutines
     implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
@@ -54,8 +48,6 @@ dependencies {
     // Retrofit
     implementation(Dependencies.ThirdParty.RETROFIT)
     implementation(Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON)
-
-    implementation(Dependencies.ThirdParty.ANDROID_MATERIAL)
 
     // Room
     implementation(Dependencies.AndroidX.ROOM)
@@ -69,9 +61,6 @@ dependencies {
     // Timber
     implementation(Dependencies.ThirdParty.TIMBER)
 
-    // Test
-    testImplementation(Dependencies.Test.JUNIT)
-    testImplementation(Dependencies.Test.ROBOELETRIC)
-
     implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
+    implementationUnitTest()
 }

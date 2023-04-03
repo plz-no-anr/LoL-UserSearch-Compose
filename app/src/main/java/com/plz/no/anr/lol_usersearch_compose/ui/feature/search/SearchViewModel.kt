@@ -18,28 +18,20 @@ class SearchViewModel @Inject constructor(
 ) : BaseViewModel<SearchContract.UiState, SearchContract.Event, SearchContract.Effect>() {
 
     override fun setInitialState(): SearchContract.UiState =
-        SearchContract.UiState(data = emptyList())
+        SearchContract.UiState.initial()
 
     override fun handleEvents(event: SearchContract.Event) {
         when (event) {
-            is SearchContract.Event.OnLoad -> {
-                getSearch()
-            }
+            is SearchContract.Event.OnLoad -> getSearch()
             is SearchContract.Event.Refresh -> {}
             is SearchContract.Event.Summoner.OnSearch -> {
                 if (event.name.isNotEmpty()) {
                     setEffect { SearchContract.Effect.Navigation.ToSummoner(event.name.trim()) }
                 }
             }
-            is SearchContract.Event.Navigation.Back -> {
-                setEffect { SearchContract.Effect.Navigation.Back }
-            }
-            is SearchContract.Event.Search.OnDelete -> {
-                deleteSearch(event.name)
-            }
-            is SearchContract.Event.Search.OnDeleteAll -> {
-                deleteAll()
-            }
+            is SearchContract.Event.Navigation.Back -> setEffect { SearchContract.Effect.Navigation.Back }
+            is SearchContract.Event.Search.OnDelete -> deleteSearch(event.name)
+            is SearchContract.Event.Search.OnDeleteAll -> deleteAll()
         }
     }
 

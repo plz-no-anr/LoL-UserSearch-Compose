@@ -75,9 +75,7 @@ fun SpectatorScreen(
 @Composable
 private fun SpectatorScreenPreview() {
     SpectatorScreen(
-        state = SpectatorContract.UiState(
-            data = null
-        ),
+        state = SpectatorContract.UiState.initial(),
         effectFlow = null,
         onEvent = {},
         onNavigationRequested = {},

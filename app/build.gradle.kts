@@ -1,9 +1,10 @@
+
 plugins {
-    id(Dependencies.Plugins.APPLICATION)
-    id(Dependencies.Plugins.KOTLIN_ANDROID)
-    id(Dependencies.Plugins.KOTLIN_PARCELIZE)
-    kotlin(Dependencies.Plugins.KOTLIN_KAPT)
-    id(Dependencies.Plugins.DAGGER_HILT)
+    androidApplication
+    kotlinAndroid
+    kotlinKapt
+    kotlinParcelize
+    daggerHiltAndroid
 }
 
 android {
@@ -61,8 +62,8 @@ kapt {
 }
 
 dependencies {
-    implementation(project(Dependencies.MultiModule.DATA))
-    implementation(project(Dependencies.MultiModule.DOMAIN))
+    implementation(data)
+    implementation(domain)
 
     implementation(Dependencies.AndroidX.CORE_KTX)
     implementation(Dependencies.AndroidX.APP_COMPAT)
@@ -70,31 +71,8 @@ dependencies {
     // Splash
     implementation(Dependencies.AndroidX.SPLASH_SCREEN)
 
-    // UI
-    implementation(Dependencies.ThirdParty.ANDROID_MATERIAL)
-    implementation(Dependencies.AndroidX.SWIFE_REFRESH_LAYOUT)
-    implementation(Dependencies.AndroidX.NAVIGATION_FRAGMENT_KTX)
-    implementation(Dependencies.AndroidX.NAVIGATION_UI_KTX)
-
     // Compose
-    val composeBom = platform(Dependencies.AndroidX.Version.COMPOSE_BOM)
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-    implementation(Dependencies.AndroidX.Compose.MATERIAL3)
-    implementation(Dependencies.AndroidX.Compose.MATERIAL3_WINDOW_SIZE)
-    implementation(Dependencies.AndroidX.Compose.MATERIAL)
-    implementation(Dependencies.AndroidX.Compose.MATERIAL_ICON_CORE)
-    implementation(Dependencies.AndroidX.Compose.MATERIAL_ICON_EXTENDED)
-    implementation(Dependencies.AndroidX.Compose.FOUNDATION)
-    implementation(Dependencies.AndroidX.Compose.UI)
-    implementation(Dependencies.AndroidX.Compose.UI_PREVIEW)
-    implementation(Dependencies.AndroidX.Compose.ACTIVITY)
-    implementation(Dependencies.AndroidX.Compose.VIEWMODEL)
-    implementation(Dependencies.AndroidX.Compose.NAVIGATION)
-    implementation(Dependencies.AndroidX.Compose.HILT)
-    debugImplementation(Dependencies.AndroidTest.Compose.UI_TOOLING)
-    androidTestImplementation(Dependencies.AndroidTest.Compose.UI_JUNIT4)
-    debugImplementation(Dependencies.AndroidTest.Compose.UI_MANIFEST)
+    implementationCompose()
 
     // Lifecycle
     implementation(Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX)
@@ -122,14 +100,6 @@ dependencies {
     // Timber
     implementation(Dependencies.ThirdParty.TIMBER)
 
-    // Test
-    testImplementation(Dependencies.Test.JUNIT)
-    testImplementation(Dependencies.Test.ROBOELETRIC)
-
-    // Android Test
-    androidTestImplementation(Dependencies.AndroidTest.JUNIT)
-    androidTestImplementation(Dependencies.AndroidTest.ESPRESSO_CORE)
-
     // Theme Adapter
     implementation(Dependencies.ThirdParty.THEME_ADAPTER_APPCOMPAT)
     implementation(Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL)
@@ -145,4 +115,9 @@ dependencies {
     implementation(Dependencies.ThirdParty.VIEW_PAGER)
     implementation(Dependencies.ThirdParty.VIEW_PAGER_INDICATORS)
 
+    // UnitTest
+    implementationUnitTest()
+
+    // Android Test
+    implementationAndroidTest()
 }

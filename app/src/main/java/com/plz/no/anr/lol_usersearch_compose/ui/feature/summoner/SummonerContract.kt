@@ -7,9 +7,18 @@ class SummonerContract : BaseContract() {
 
     data class UiState(
         val data: Summoner?,
-        val isLoading: Boolean = false,
-        val error: String? = null
-    ) : ViewState
+        val isLoading: Boolean,
+        val error: String?
+    ) : ViewState {
+
+            companion object {
+                fun initial() = UiState(
+                    data = null,
+                    isLoading = false,
+                    error = null
+                )
+            }
+    }
 
     sealed class Event : ViewEvent {
 

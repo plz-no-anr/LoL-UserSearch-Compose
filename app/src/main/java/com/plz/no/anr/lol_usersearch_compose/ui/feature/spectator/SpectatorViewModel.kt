@@ -20,15 +20,11 @@ class SpectatorViewModel @Inject constructor(
         stateHandle.get<String>(Navigation.Args.SUMMONER_NAME) ?: ""
     }
 
-    override fun setInitialState(): SpectatorContract.UiState = SpectatorContract.UiState(
-        data = null
-    )
+    override fun setInitialState(): SpectatorContract.UiState = SpectatorContract.UiState.initial()
 
     override fun handleEvents(event: SpectatorContract.Event) {
         when (event) {
-            is SpectatorContract.Event.Navigation.Back -> {
-                setEffect { SpectatorContract.Effect.Navigation.Back }
-            }
+            is SpectatorContract.Event.Navigation.Back -> setEffect { SpectatorContract.Effect.Navigation.Back }
             is SpectatorContract.Event.OnLoad -> getSpectator()
         }
     }

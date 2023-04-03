@@ -7,10 +7,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.plz.no.anr.lol_usersearch_compose.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @SuppressLint("CustomSplashScreen")
@@ -30,17 +33,14 @@ class SplashActivity : ComponentActivity() {
             finish()
         }
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.initLocalJson()
-        }
-
-        lifecycleScope.launchWhenCreated {
-            delay(2000)
-            val intent = Intent(this@SplashActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.initLocalJson()
+                val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
     }
-
 }

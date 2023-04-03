@@ -233,19 +233,19 @@ class AppRepositoryImpl(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun requestSummonerList(key: String): List<Summoner> {
-        val summonerList = mutableListOf<Summoner>()
-        localDataSource.getSummoner().forEach { summonerEntity ->
-            requestSummoner(summonerEntity.name, key)?.also {
-                if (it.name == summonerEntity.name) {
-                    localDataSource.updateSummoner(it.toEntity())
-                } else {
-                    localDataSource.insertSummoner(it.toEntity())
+        return mutableListOf<Summoner>().apply {
+            localDataSource.getSummoner().forEach { summonerEntity ->
+                requestSummoner(summonerEntity.name, key)?.also {
+                    if (it.name == summonerEntity.name) {
+                        localDataSource.updateSummoner(it.toEntity())
+                    } else {
+                        localDataSource.insertSummoner(it.toEntity())
+                    }
+                    saveSearch(summonerEntity.name)
+                    add(it)
                 }
-                saveSearch(summonerEntity.name)
-                summonerList.add(it)
             }
         }
-        return summonerList
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

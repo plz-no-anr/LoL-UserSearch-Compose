@@ -1,20 +1,33 @@
+import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.project
+import org.gradle.plugin.use.PluginDependenciesSpec
+import org.gradle.plugin.use.PluginDependencySpec
+
+inline val PluginDependenciesSpec.androidApplication: PluginDependencySpec
+    get() = id("com.android.application")
+inline val PluginDependenciesSpec.androidLib: PluginDependencySpec
+    get() = id("com.android.library")
+inline val PluginDependenciesSpec.kotlinAndroid: PluginDependencySpec
+    get() = kotlin("android")
+inline val PluginDependenciesSpec.kotlin: PluginDependencySpec
+    get() = kotlin("jvm")
+inline val PluginDependenciesSpec.kotlinKapt: PluginDependencySpec
+    get() = kotlin("kapt")
+inline val PluginDependenciesSpec.kotlinParcelize: PluginDependencySpec
+    get() = id("kotlin-parcelize")
+inline val PluginDependenciesSpec.daggerHiltAndroid: PluginDependencySpec
+    get() = id("dagger.hilt.android.plugin")
+inline val PluginDependenciesSpec.kotlinSerialization: PluginDependencySpec
+    get() = kotlin("plugin.serialization")
+inline val PluginDependenciesSpec.javaLib: PluginDependencySpec
+    get() = id("java-library")
+
+// Multi Module
+inline val DependencyHandler.data get() = project(":data")
+inline val DependencyHandler.domain get() = project(":domain")
+
 object Dependencies {
-
-    object Plugins {
-        object Version {
-            const val KOTLIN_VERSION = "1.8.10"
-        }
-        const val APPLICATION = "com.android.application"
-        const val LIBRARY = "com.android.library"
-        const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
-        const val KOTLIN_PARCELIZE = "kotlin-parcelize"
-        const val KOTLIN_KAPT = "kapt"
-        const val DAGGER_HILT = "com.google.dagger.hilt.android"
-
-        const val JAVA_LIBRARY = "java-library"
-        const val KOTLIN_JVM = "jvm"
-        const val KOTLIN_SERIALIZATION = "plugin.serialization"
-    }
 
     object ClassPath {
         object Version {
@@ -24,7 +37,6 @@ object Dependencies {
         }
 
         const val GRADLE = "com.android.tools.build:gradle:${Version.GRADLE_VERSION}"
-//        const val KOTLIN_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.KOTLIN_VERSION}"
         const val KOTLIN_GRADLE = "gradle-plugin"
         const val SERIALIZATION = "serialization"
         const val HILT_PLUGIN = "com.google.dagger:hilt-android-gradle-plugin:${Version.HILT_VERSION}"
@@ -55,11 +67,6 @@ object Dependencies {
         const val ROOM = "androidx.room:room-ktx:${Version.ROOM}"
         const val ROOM_RUNTIME = "androidx.room:room-runtime:${Version.ROOM}"
         const val ROOM_COMPILER = "androidx.room:room-compiler:${Version.ROOM}"
-
-        // Ui
-        const val SWIFE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-        const val NAVIGATION_FRAGMENT_KTX = "androidx.navigation:navigation-fragment-ktx:${Version.NAVIGATION}"
-        const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${Version.NAVIGATION}"
 
         object Compose {
             // Compose
@@ -144,7 +151,7 @@ object Dependencies {
 
     }
 
-    object Test {
+    object UnitTest {
 
         object Version {
             const val JUNIT = "4.13.2"
@@ -176,9 +183,45 @@ object Dependencies {
         }
 
     }
+}
 
-    object MultiModule {
-        const val DATA = ":data"
-        const val DOMAIN = ":domain"
-    }
+fun DependencyHandler.implementationCompose(
+) {
+    arrayOf(
+        platform(Dependencies.AndroidX.Version.COMPOSE_BOM),
+        Dependencies.AndroidX.Compose.MATERIAL3,
+        Dependencies.AndroidX.Compose.MATERIAL3_WINDOW_SIZE,
+        Dependencies.AndroidX.Compose.MATERIAL,
+        Dependencies.AndroidX.Compose.MATERIAL_ICON_CORE,
+        Dependencies.AndroidX.Compose.MATERIAL_ICON_EXTENDED,
+        Dependencies.AndroidX.Compose.FOUNDATION,
+        Dependencies.AndroidX.Compose.UI,
+        Dependencies.AndroidX.Compose.UI_PREVIEW,
+        Dependencies.AndroidX.Compose.ACTIVITY,
+        Dependencies.AndroidX.Compose.VIEWMODEL,
+        Dependencies.AndroidX.Compose.RUNTIME,
+        Dependencies.AndroidX.Compose.NAVIGATION,
+        Dependencies.AndroidX.Compose.HILT,
+    ).forEach { add("implementation", it) }
+
+    add("debugImplementation", Dependencies.AndroidTest.Compose.UI_TOOLING)
+    add("debugImplementation", Dependencies.AndroidTest.Compose.UI_MANIFEST)
+    add("androidTestImplementation", Dependencies.AndroidTest.Compose.UI_JUNIT4)
+}
+
+fun DependencyHandler.implementationUnitTest() {
+    arrayOf(
+        Dependencies.UnitTest.JUNIT,
+        Dependencies.UnitTest.ROBOELETRIC,
+        Dependencies.UnitTest.MOCKK,
+        Dependencies.UnitTest.KOTLIN_COROUTINES_TEST,
+        Dependencies.UnitTest.OKHTTP3_MOCK_WEBSERVER,
+    ).forEach { add("testImplementation", it) }
+}
+
+fun DependencyHandler.implementationAndroidTest() {
+    arrayOf(
+        Dependencies.AndroidTest.JUNIT,
+        Dependencies.AndroidTest.ESPRESSO_CORE,
+    ).forEach { add("androidTestImplementation", it) }
 }

@@ -1,6 +1,5 @@
 package com.plznoanr.data.di
 
-import com.plznoanr.data.di.CoroutineQualifiers
 import com.plznoanr.domain.repository.AppRepository
 import com.plznoanr.domain.usecase.json.InitialLocalJsonUseCase
 import com.plznoanr.domain.usecase.key.DeleteKeyUseCase

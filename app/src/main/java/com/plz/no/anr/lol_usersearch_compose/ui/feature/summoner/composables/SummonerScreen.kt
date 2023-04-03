@@ -77,19 +77,7 @@ fun SummonerScreen(
 @Composable
 private fun SummonerScreenPreview() {
     SummonerScreen(
-        state = SummonerContract.UiState(
-            data = Summoner(
-                name = "",
-                level = "200",
-                icon = "",
-                tier = "CHALLENGER",
-                leaguePoints = 300,
-                rank = "I",
-                wins = 100,
-                losses = 0,
-                isPlaying = false
-            )
-        ),
+        state = SummonerContract.UiState.initial(),
         effectFlow = null,
         onEvent = {},
         onNavigationRequested = {}

@@ -20,9 +20,7 @@ class SummonerViewModel @Inject constructor(
         stateHandle.get<String>(Navigation.Args.SUMMONER_NAME) ?: ""
     }
 
-    override fun setInitialState(): SummonerContract.UiState = SummonerContract.UiState(
-        data = null
-    )
+    override fun setInitialState(): SummonerContract.UiState = SummonerContract.UiState.initial()
 
     override fun handleEvents(event: SummonerContract.Event) {
         when (event) {
