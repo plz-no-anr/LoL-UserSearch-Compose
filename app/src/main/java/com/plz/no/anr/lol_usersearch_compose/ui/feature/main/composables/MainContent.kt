@@ -32,7 +32,7 @@ import com.plznoanr.lol_usersearch_compose.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainView(
+fun MainContent(
     modifier: Modifier = Modifier,
     data: List<Summoner>,
     isRefreshing: Boolean,

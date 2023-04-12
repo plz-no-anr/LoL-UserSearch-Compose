@@ -21,7 +21,7 @@ import com.plznoanr.lol_usersearch_compose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchView(
+fun SearchContent(
     modifier: Modifier = Modifier,
     data: List<Search>,
     name: String,

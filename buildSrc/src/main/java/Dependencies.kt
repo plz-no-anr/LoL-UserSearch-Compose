@@ -91,9 +91,9 @@ object Dependencies {
             // Android Studio Preview support
             const val UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
 
-            const val ACTIVITY = "androidx.activity:activity-compose:1.6.1"
-            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
-            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
+            const val ACTIVITY = "androidx.activity:activity-compose:1.7.0"
+            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
             const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
             const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
@@ -185,6 +185,11 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.implementationHilt() {
+    add("implementation", Dependencies.ThirdParty.HILT_ANDROID)
+    add("kapt", Dependencies.ThirdParty.HILT_ANDROID_COMPILER)
+}
+
 fun DependencyHandler.implementationCompose(
 ) {
     arrayOf(
@@ -208,6 +213,48 @@ fun DependencyHandler.implementationCompose(
     add("debugImplementation", Dependencies.AndroidTest.Compose.UI_MANIFEST)
     add("androidTestImplementation", Dependencies.AndroidTest.Compose.UI_JUNIT4)
 }
+
+fun DependencyHandler.implementationLifeCycle() {
+    arrayOf(
+        Dependencies.AndroidX.LIFECYCLE_EXTENSIONS,
+        Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX,
+        Dependencies.AndroidX.LIFECYCLE_RUNTIME_KTX,
+        Dependencies.AndroidX.LIFECYCLE_VIEWMODEL_KTX
+    ).forEach { add("implementation", it) }
+}
+
+
+fun DependencyHandler.implementationCoroutines() {
+    arrayOf(
+        Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE,
+        Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID
+    ).forEach { add("implementation", it) }
+}
+
+fun DependencyHandler.implementationRetrofit() {
+    arrayOf(
+        Dependencies.ThirdParty.RETROFIT,
+        Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON
+    ).forEach { add("implementation", it) }
+}
+
+fun DependencyHandler.implementationRoom() {
+    arrayOf(
+        Dependencies.AndroidX.ROOM,
+        Dependencies.AndroidX.ROOM_RUNTIME
+    ).forEach { add("implementation", it) }
+    add("kapt", Dependencies.AndroidX.ROOM_COMPILER)
+}
+
+fun DependencyHandler.implementationThemeAdapter() {
+    arrayOf(
+        Dependencies.ThirdParty.THEME_ADAPTER_APPCOMPAT,
+        Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL,
+        Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL3,
+    ).forEach { add("implementation", it) }
+}
+
+
 
 fun DependencyHandler.implementationUnitTest() {
     arrayOf(

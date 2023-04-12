@@ -110,7 +110,7 @@ fun MainScreen(
             state.isLoading -> AppProgressBar()
             state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(MainContract.Event.OnLoad) }
             else -> {
-                MainView(
+                MainContent(
                     modifier = Modifier.padding(it),
                     data = state.data,
                     isRefreshing = state.isRefreshing,

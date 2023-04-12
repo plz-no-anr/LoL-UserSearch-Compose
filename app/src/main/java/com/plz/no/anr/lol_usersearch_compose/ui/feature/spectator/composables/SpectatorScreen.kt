@@ -58,7 +58,7 @@ fun SpectatorScreen(
             state.error != null -> ErrorScreen(error = state.error.parseError())
             else -> {
                 state.data?.let { data ->
-                    SpectatorView(
+                    SpectatorContent(
                         modifier = Modifier
                             .padding(it),
                         data = data

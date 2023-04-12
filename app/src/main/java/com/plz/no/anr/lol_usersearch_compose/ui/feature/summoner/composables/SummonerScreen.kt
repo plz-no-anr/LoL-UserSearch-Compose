@@ -14,7 +14,6 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract
 import com.plznoanr.data.model.common.parseError
-import com.plznoanr.domain.model.Summoner
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -60,7 +59,7 @@ fun SummonerScreen(
             state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(SummonerContract.Event.Navigation.Back) }
             else -> {
                 state.data?.also { data ->
-                    SummonerView(
+                    SummonerContent(
                         modifier = Modifier.padding(it),
                         data = data,
                         onEvent = onEvent

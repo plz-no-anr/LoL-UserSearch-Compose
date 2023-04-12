@@ -12,7 +12,6 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.search.SearchContract
 import com.plznoanr.data.model.common.parseError
-import com.plznoanr.domain.model.Search
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -60,7 +59,7 @@ fun SearchScreen(
             state.isLoading -> { AppProgressBar() }
             state.error != null -> ErrorScreen(error = state.error.parseError()) {}
             else -> {
-                SearchView(
+                SearchContent(
                     modifier = Modifier
                         .padding(it),
                     data = state.data,

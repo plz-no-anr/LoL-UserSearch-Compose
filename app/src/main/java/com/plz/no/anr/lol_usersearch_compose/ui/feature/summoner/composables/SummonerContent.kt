@@ -29,7 +29,7 @@ import com.plznoanr.domain.model.getDummySummoner
 import com.plznoanr.lol_usersearch_compose.R
 
 @Composable
-fun SummonerView(
+fun SummonerContent(
     modifier: Modifier = Modifier,
     data: Summoner,
     onEvent: (SummonerContract.Event) -> Unit
@@ -225,5 +225,5 @@ private fun SpectatorView(
 @Preview
 @Composable
 private fun SummonerViewPreview() {
-    SummonerView(data = getDummySummoner()) {}
+    SummonerContent(data = getDummySummoner()) {}
 }
