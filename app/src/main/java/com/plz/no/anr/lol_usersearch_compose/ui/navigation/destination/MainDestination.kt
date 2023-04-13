@@ -16,12 +16,12 @@ fun MainDestination(
 ) {
     MainScreen(
         state = viewModel.uiState.value,
-        effectFlow = viewModel.effect,
-        onEvent = viewModel::setEvent,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::setIntent,
     ) {
         when (it) {
-            is MainContract.Effect.Navigation.ToSearch -> navController.navigateToSearch()
-            is MainContract.Effect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
+            is MainContract.SideEffect.Navigation.ToSearch -> navController.navigateToSearch()
+            is MainContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
         }
 
     }

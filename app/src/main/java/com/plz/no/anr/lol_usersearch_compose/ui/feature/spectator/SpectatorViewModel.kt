@@ -3,6 +3,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.SpectatorContract.*
 import com.plz.no.anr.lol_usersearch_compose.ui.navigation.Route
 import com.plznoanr.domain.usecase.spectator.RequestSpectatorUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,18 +15,18 @@ import javax.inject.Inject
 class SpectatorViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val requestSpectatorUseCase: RequestSpectatorUseCase
-) : BaseViewModel<SpectatorContract.UiState, SpectatorContract.Event, SpectatorContract.Effect>() {
+) : BaseViewModel<UiState, Intent, SideEffect>() {
 
     private val summonerName: String? by lazy {
         stateHandle.get<String>(Route.Spectator.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): SpectatorContract.UiState = SpectatorContract.UiState.initial()
+    override fun setInitialState(): UiState = UiState.initial()
 
-    override fun handleEvents(event: SpectatorContract.Event) {
-        when (event) {
-            is SpectatorContract.Event.Navigation.Back -> setEffect { SpectatorContract.Effect.Navigation.Back }
-            is SpectatorContract.Event.OnLoad -> getSpectator()
+    override fun handleEvents(intent: Intent) {
+        when (intent) {
+            is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
+            is Intent.OnLoad -> getSpectator()
         }
     }
 

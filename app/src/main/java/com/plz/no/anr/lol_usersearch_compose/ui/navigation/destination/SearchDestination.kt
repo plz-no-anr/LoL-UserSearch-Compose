@@ -15,12 +15,12 @@ fun SearchDestination(
 ) {
     SearchScreen(
         state = viewModel.uiState.value,
-        effectFlow = viewModel.effect,
-        onEvent = viewModel::setEvent,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::setIntent,
         onNavigationRequested = {
             when (it) {
-                is SearchContract.Effect.Navigation.ToSummoner -> navController.navigateToSummoner(it.name)
-                is SearchContract.Effect.Navigation.Back -> navController.popBackStack()
+                is SearchContract.SideEffect.Navigation.ToSummoner -> navController.navigateToSummoner(it.name)
+                is SearchContract.SideEffect.Navigation.Back -> navController.popBackStack()
             }
         }
     )

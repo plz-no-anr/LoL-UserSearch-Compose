@@ -13,22 +13,22 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContract.ViewEvent, Effect : BaseContract.ViewSideEffect>
+abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseContract.Intent, SideEffect : BaseContract.SideEffect>
     : ViewModel() {
 
     abstract fun setInitialState(): UiState
 
-    abstract fun handleEvents(event: Event)
+    abstract fun handleEvents(intent: Intent)
 
     private val initialState: UiState by lazy { setInitialState() }
 
     private val _uiState: MutableState<UiState> = mutableStateOf(initialState)
     val uiState: State<UiState> = _uiState
 
-    private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
+    private val _intent: MutableSharedFlow<Intent> = MutableSharedFlow()
 
-    private val _effect: Channel<Effect> = Channel()
-    val effect = _effect.receiveAsFlow()
+    private val _sideEffect: Channel<SideEffect> = Channel()
+    val sideEffect = _sideEffect.receiveAsFlow()
 
     private val exceptionHandler by lazy {
         CoroutineExceptionHandler { _, t ->
@@ -42,14 +42,14 @@ abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContr
 
     private fun subscribeToEvents() {
         viewModelScope.launch(exceptionHandler) {
-            _event.collect {
+            _intent.collect {
                 handleEvents(it)
             }
         }
     }
 
-    fun setEvent(event: Event) {
-        viewModelScope.launch(exceptionHandler) { _event.emit(event) }
+    fun setIntent(intent: Intent) {
+        viewModelScope.launch(exceptionHandler) { _intent.emit(intent) }
     }
 
     protected fun setState(reducer: UiState.() -> UiState) {
@@ -57,9 +57,9 @@ abstract class BaseViewModel<UiState : BaseContract.ViewState, Event : BaseContr
         _uiState.value = newState
     }
 
-    protected fun setEffect(builder: () -> Effect) {
+    protected fun setEffect(builder: () -> SideEffect) {
         val effectValue = builder()
-        viewModelScope.launch(exceptionHandler) { _effect.send(effectValue) }
+        viewModelScope.launch(exceptionHandler) { _sideEffect.send(effectValue) }
     }
 
 }

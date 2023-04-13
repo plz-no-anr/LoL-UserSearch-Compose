@@ -23,23 +23,23 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SpectatorScreen(
     state: SpectatorContract.UiState,
-    effectFlow: Flow<SpectatorContract.Effect>?,
-    onEvent: (SpectatorContract.Event) -> Unit,
-    onNavigationRequested: (SpectatorContract.Effect.Navigation) -> Unit,
+    sideEffectFlow: Flow<SpectatorContract.SideEffect>?,
+    onIntent: (SpectatorContract.Intent) -> Unit,
+    onNavigationRequested: (SpectatorContract.SideEffect.Navigation) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(SpectatorContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is SpectatorContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = effect.msg,
+        onIntent(SpectatorContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is SpectatorContract.SideEffect.Toast -> snackbarHostState.showSnackbar(
+                    message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SpectatorContract.Effect.Navigation.Back -> onNavigationRequested(effect)
+                is SpectatorContract.SideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
             }
         }?.collect()
     }
@@ -50,7 +50,7 @@ fun SpectatorScreen(
             TopAppBar(
                 title = stringResource(id = R.string.spectator_title),
                 isBackPressVisible = true,
-                onBackPressed = { onEvent(SpectatorContract.Event.Navigation.Back) }
+                onBackPressed = { onIntent(SpectatorContract.Intent.Navigation.Back) }
             )
         }) {
         when {
@@ -76,8 +76,8 @@ fun SpectatorScreen(
 private fun SpectatorScreenPreview() {
     SpectatorScreen(
         state = SpectatorContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {},
     )
 }

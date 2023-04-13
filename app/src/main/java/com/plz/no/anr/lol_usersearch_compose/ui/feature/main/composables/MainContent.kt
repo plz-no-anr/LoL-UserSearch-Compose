@@ -36,9 +36,9 @@ fun MainContent(
     modifier: Modifier = Modifier,
     data: List<Summoner>,
     isRefreshing: Boolean,
-    onEvent: (MainContract.Event) -> Unit
+    onIntent: (MainContract.Intent) -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onEvent(MainContract.Event.Refresh) })
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(MainContract.Intent.Refresh) })
 
     Column(
         modifier = modifier
@@ -49,7 +49,7 @@ fun MainContent(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(top = 16.dp, end = 16.dp)
-                .clickable { onEvent(MainContract.Event.Summoner.OnDeleteAll) },
+                .clickable { onIntent(MainContract.Intent.Summoner.OnDeleteAll) },
         )
         Box(
             modifier = Modifier
@@ -58,7 +58,7 @@ fun MainContent(
             LazyColumn {
                 items(data) {
                     MainItem(summoner = it) { event ->
-                        onEvent(event)
+                        onIntent(event)
                     }
                 }
             }

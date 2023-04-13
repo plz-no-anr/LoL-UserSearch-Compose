@@ -21,9 +21,9 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SearchScreen(
     state: SearchContract.UiState,
-    effectFlow: Flow<SearchContract.Effect>?,
-    onEvent: (SearchContract.Event) -> Unit,
-    onNavigationRequested: (SearchContract.Effect.Navigation) -> Unit,
+    sideEffectFlow: Flow<SearchContract.SideEffect>?,
+    onIntent: (SearchContract.Intent) -> Unit,
+    onNavigationRequested: (SearchContract.SideEffect.Navigation) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -32,15 +32,15 @@ fun SearchScreen(
     var name by remember { mutableStateOf("") }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(SearchContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is SearchContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = effect.msg,
+        onIntent(SearchContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is SearchContract.SideEffect.Toast -> snackbarHostState.showSnackbar(
+                    message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SearchContract.Effect.Navigation.Back -> onNavigationRequested(effect)
-                is SearchContract.Effect.Navigation.ToSummoner -> onNavigationRequested(effect)
+                is SearchContract.SideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
+                is SearchContract.SideEffect.Navigation.ToSummoner -> onNavigationRequested(sideEffect)
             }
         }?.collect()
     }
@@ -51,7 +51,7 @@ fun SearchScreen(
             TopAppBar(
                 title = stringResource(id = R.string.search_title),
                 isBackPressVisible = true,
-                onBackPressed = { onEvent(SearchContract.Event.Navigation.Back) }
+                onBackPressed = { onIntent(SearchContract.Intent.Navigation.Back) }
             )
         }
     ) {
@@ -65,7 +65,7 @@ fun SearchScreen(
                     data = state.data,
                     name = name,
                     onNameChange = { summonerName -> name = summonerName },
-                    onEvent = onEvent,
+                    onIntent = onIntent,
                 )
             }
         }
@@ -79,8 +79,8 @@ fun SearchScreen(
 private fun SearchScreenPreview() {
     SearchScreen(
         state = SearchContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {}
     )
 }

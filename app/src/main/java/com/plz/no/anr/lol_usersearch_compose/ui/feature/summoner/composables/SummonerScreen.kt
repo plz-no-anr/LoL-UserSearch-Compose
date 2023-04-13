@@ -23,24 +23,24 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun SummonerScreen(
     state: SummonerContract.UiState,
-    effectFlow: Flow<SummonerContract.Effect>?,
-    onEvent: (SummonerContract.Event) -> Unit,
-    onNavigationRequested: (SummonerContract.Effect.Navigation) -> Unit
+    sideEffectFlow: Flow<SummonerContract.SideEffect>?,
+    onIntent: (SummonerContract.Intent) -> Unit,
+    onNavigationRequested: (SummonerContract.SideEffect.Navigation) -> Unit
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(SummonerContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is SummonerContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = effect.msg,
+        onIntent(SummonerContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is SummonerContract.SideEffect.Toast -> snackbarHostState.showSnackbar(
+                    message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SummonerContract.Effect.Navigation.Back -> onNavigationRequested(effect)
-                is SummonerContract.Effect.Navigation.ToSpectator -> onNavigationRequested(effect)
+                is SummonerContract.SideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
+                is SummonerContract.SideEffect.Navigation.ToSpectator -> onNavigationRequested(sideEffect)
             }
         }?.collect()
     }
@@ -51,18 +51,18 @@ fun SummonerScreen(
             TopAppBar(
                 title = stringResource(id = R.string.summoner_title),
                 isBackPressVisible = true,
-                onBackPressed = { onEvent(SummonerContract.Event.Navigation.Back) }
+                onBackPressed = { onIntent(SummonerContract.Intent.Navigation.Back) }
             )
         }) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(SummonerContract.Event.Navigation.Back) }
+            state.error != null -> ErrorScreen(error = state.error.parseError()) { onIntent(SummonerContract.Intent.Navigation.Back) }
             else -> {
                 state.data?.also { data ->
                     SummonerContent(
                         modifier = Modifier.padding(it),
                         data = data,
-                        onEvent = onEvent
+                        onIntent = onIntent
                     )
                 }
             }
@@ -77,8 +77,8 @@ fun SummonerScreen(
 private fun SummonerScreenPreview() {
     SummonerScreen(
         state = SummonerContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {}
     )
 }

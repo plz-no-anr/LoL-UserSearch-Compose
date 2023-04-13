@@ -9,7 +9,7 @@ sealed class SearchContract : BaseContract() {
         val data: List<Search>,
         val isLoading: Boolean,
         val error: String?
-    ) : ViewState {
+    ) : BaseContract.UiState {
 
             companion object {
                 fun initial() = UiState(
@@ -20,31 +20,33 @@ sealed class SearchContract : BaseContract() {
             }
     }
 
-    sealed class Event : ViewEvent {
+    sealed class Intent :
+        BaseContract.Intent {
 
-        object OnLoad : Event()
+        object OnLoad : Intent()
 
-        object Refresh : Event()
+        object Refresh : Intent()
 
-        sealed class Summoner : Event() {
+        sealed class Summoner : Intent() {
             data class OnSearch(val name: String) : Summoner()
         }
 
-        sealed class Search : Event() {
+        sealed class Search : Intent() {
             data class OnDelete(val name: String) : Search()
             object OnDeleteAll : Search()
         }
 
-        sealed class Navigation : Event() {
+        sealed class Navigation : Intent() {
             object Back : Navigation()
         }
     }
 
-    sealed class Effect : ViewSideEffect {
+    sealed class SideEffect :
+        BaseContract.SideEffect {
 
-        data class Toast(val msg: String) : Effect()
+        data class Toast(val msg: String) : SideEffect()
 
-        sealed class Navigation : Effect() {
+        sealed class Navigation : SideEffect() {
             object Back : Navigation()
             data class ToSummoner(val name: String) : Navigation()
         }

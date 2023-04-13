@@ -51,7 +51,7 @@ object Dependencies {
             const val LIFECYCLE_EXTENSION = "2.2.0"
             const val NAVIGATION = "2.5.3"
             const val ROOM = "2.5.0"
-            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.01.00"
+            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.04.00"
         }
 
         const val CORE_KTX = "androidx.core:core-ktx:${Version.CORE_KTX}"

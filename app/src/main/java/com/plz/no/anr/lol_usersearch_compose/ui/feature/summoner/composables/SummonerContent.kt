@@ -32,7 +32,7 @@ import com.plznoanr.lol_usersearch_compose.R
 fun SummonerContent(
     modifier: Modifier = Modifier,
     data: Summoner,
-    onEvent: (SummonerContract.Event) -> Unit
+    onIntent: (SummonerContract.Intent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -58,7 +58,7 @@ fun SummonerContent(
             tierIcon = getTierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
             isPlaying = data.isPlaying,
-            onSpectator = { onEvent(SummonerContract.Event.Spectator.OnWatch(data.name)) }
+            onSpectator = { onIntent(SummonerContract.Intent.Spectator.OnWatch(data.name)) }
         )
 
     }

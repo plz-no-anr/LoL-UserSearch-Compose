@@ -26,7 +26,7 @@ fun SearchContent(
     data: List<Search>,
     name: String,
     onNameChange: (String) -> Unit,
-    onEvent: (SearchContract.Event) -> Unit,
+    onIntent: (SearchContract.Intent) -> Unit,
 ) {
 
     Column(
@@ -42,7 +42,7 @@ fun SearchContent(
                 .height(60.dp),
             trailingIcon = {
                 IconButton(
-                    onClick = { onEvent(SearchContract.Event.Summoner.OnSearch(name)) }
+                    onClick = { onIntent(SearchContract.Intent.Summoner.OnSearch(name)) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -61,7 +61,7 @@ fun SearchContent(
         TextButton(
             modifier = Modifier
                 .align(Alignment.End),
-            onClick = { onEvent(SearchContract.Event.Search.OnDeleteAll) },
+            onClick = { onIntent(SearchContract.Intent.Search.OnDeleteAll) },
             colors = ButtonDefaults.textButtonColors(
                 contentColor = Color.Black
             )
@@ -77,8 +77,8 @@ fun SearchContent(
             items(data) { search ->
                 SearchItem(
                     data = search,
-                    onSearch = { onEvent(SearchContract.Event.Summoner.OnSearch(search.name)) },
-                    onDelete = { onEvent(SearchContract.Event.Search.OnDelete(search.name)) }
+                    onSearch = { onIntent(SearchContract.Intent.Summoner.OnSearch(search.name)) },
+                    onDelete = { onIntent(SearchContract.Intent.Search.OnDelete(search.name)) }
                 )
             }
         }

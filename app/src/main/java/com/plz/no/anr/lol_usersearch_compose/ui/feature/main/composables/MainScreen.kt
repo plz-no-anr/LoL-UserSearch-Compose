@@ -30,9 +30,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     state: MainContract.UiState,
-    effectFlow: Flow<MainContract.Effect>?,
-    onEvent: (MainContract.Event) -> Unit,
-    onNavigationRequested: (MainContract.Effect.Navigation) -> Unit,
+    sideEffectFlow: Flow<MainContract.SideEffect>?,
+    onIntent: (MainContract.Intent) -> Unit,
+    onNavigationRequested: (MainContract.SideEffect.Navigation) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
@@ -46,16 +46,16 @@ fun MainScreen(
     val (getKeyVisible, setKeyVisible) = remember { mutableStateOf(false) }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(MainContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is MainContract.Effect.Navigation.ToSearch -> onNavigationRequested(effect)
-                is MainContract.Effect.Navigation.ToSpectator -> onNavigationRequested(effect)
-                is MainContract.Effect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
-                    message = effect.message,
+        onIntent(MainContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is MainContract.SideEffect.Navigation.ToSearch -> onNavigationRequested(sideEffect)
+                is MainContract.SideEffect.Navigation.ToSpectator -> onNavigationRequested(sideEffect)
+                is MainContract.SideEffect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
+                    message = sideEffect.message,
                     duration = SnackbarDuration.Short
                 )
-                is MainContract.Effect.MoveGetApiKey -> setKeyVisible(true)
+                is MainContract.SideEffect.MoveGetApiKey -> setKeyVisible(true)
             }
         }?.collect()
     }
@@ -73,7 +73,7 @@ fun MainScreen(
                     }
                 },
             ) {
-                IconButton(onClick = { onEvent(MainContract.Event.OnSearch) }) {
+                IconButton(onClick = { onIntent(MainContract.Intent.OnSearch) }) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = null,
@@ -88,17 +88,17 @@ fun MainScreen(
                 data = profileState,
                 apiKey = keyState,
                 onGetKey = {
-                    onEvent(MainContract.Event.Key.OnGet)
+                    onIntent(MainContract.Intent.Key.OnGet)
                 },
                 onAddKey = {
                     it.run {
                         if (isNotEmpty()) {
-                            onEvent(MainContract.Event.Key.OnAdd(it))
+                            onIntent(MainContract.Intent.Key.OnAdd(it))
                         }
                     }
                 },
                 onDeleteKey = {
-                    onEvent(MainContract.Event.Key.OnDelete)
+                    onIntent(MainContract.Intent.Key.OnDelete)
                 }
             )
         },
@@ -108,14 +108,14 @@ fun MainScreen(
     ) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(error = state.error.parseError()) { onEvent(MainContract.Event.OnLoad) }
+            state.error != null -> ErrorScreen(error = state.error.parseError()) { onIntent(MainContract.Intent.OnLoad) }
             else -> {
                 MainContent(
                     modifier = Modifier.padding(it),
                     data = state.data,
                     isRefreshing = state.isRefreshing,
-                ) { event ->
-                    onEvent(event)
+                ) { intent ->
+                    onIntent(intent)
                 }
                 state.profile?.also { profile ->
                     profileState = profile
@@ -133,8 +133,8 @@ fun MainScreen(
 private fun MainScreenPreview() {
     MainScreen(
         state = MainContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {}
     )
 }

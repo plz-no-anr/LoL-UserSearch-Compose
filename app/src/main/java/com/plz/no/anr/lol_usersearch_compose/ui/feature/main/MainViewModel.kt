@@ -2,6 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.main
 
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract.*
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
 import com.plznoanr.domain.usecase.key.GetKeyUseCase
@@ -30,22 +31,22 @@ class MainViewModel @Inject constructor(
     private val deleteKeyUseCase: DeleteKeyUseCase,
     private val readSummonerListUseCase: ReadSummonerListUseCase,
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
-) : BaseViewModel<MainContract.UiState, MainContract.Event, MainContract.Effect>() {
+) : BaseViewModel<UiState, Intent, SideEffect>() {
 
-    override fun setInitialState(): MainContract.UiState = MainContract.UiState.initial()
+    override fun setInitialState(): UiState = UiState.initial()
 
-    override fun handleEvents(event: MainContract.Event) {
-        when (event) {
-            is MainContract.Event.OnLoad -> onLoad()
-            is MainContract.Event.OnSearch -> setEffect { MainContract.Effect.Navigation.ToSearch }
-            is MainContract.Event.Refresh -> refreshSummonerList()
-            is MainContract.Event.Summoner.OnDeleteAll -> deleteAllSummoner()
-            is MainContract.Event.Summoner.OnDelete -> deleteSummoner(event.name)
-            is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
-            is MainContract.Event.Key.OnGet -> setEffect { MainContract.Effect.MoveGetApiKey }
-            is MainContract.Event.Key.OnAdd -> insertKey(event.key)
-            is MainContract.Event.Key.OnDelete -> deleteKey()
-            is MainContract.Event.Spectator.OnWatch -> setEffect { MainContract.Effect.Navigation.ToSpectator(event.name) }
+    override fun handleEvents(intent: Intent) {
+        when (intent) {
+            is Intent.OnLoad -> onLoad()
+            is Intent.OnSearch -> setEffect { SideEffect.Navigation.ToSearch }
+            is Intent.Refresh -> refreshSummonerList()
+            is Intent.Summoner.OnDeleteAll -> deleteAllSummoner()
+            is Intent.Summoner.OnDelete -> deleteSummoner(intent.name)
+            is Intent.Profile.OnAdd -> addProfile(intent.profile)
+            is Intent.Key.OnGet -> setEffect { SideEffect.MoveGetApiKey }
+            is Intent.Key.OnAdd -> insertKey(intent.key)
+            is Intent.Key.OnDelete -> deleteKey()
+            is Intent.Spectator.OnWatch -> setEffect { SideEffect.Navigation.ToSpectator(intent.name) }
         }
     }
 
@@ -96,7 +97,7 @@ class MainViewModel @Inject constructor(
                             )
                         }
                         setEffect {
-                            MainContract.Effect.Toast(it.message ?: "Error")
+                            SideEffect.Toast(it.message ?: "Error")
                         }
                     }
                 }

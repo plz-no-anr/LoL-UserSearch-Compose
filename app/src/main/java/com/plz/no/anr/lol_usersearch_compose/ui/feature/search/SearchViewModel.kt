@@ -2,6 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.search
 
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.search.SearchContract.*
 import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
 import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
 import com.plznoanr.domain.usecase.search.GetSearchUseCase
@@ -15,23 +16,22 @@ class SearchViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,
     private val deleteSearchUseCase: DeleteSearchUseCase,
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
-) : BaseViewModel<SearchContract.UiState, SearchContract.Event, SearchContract.Effect>() {
+) : BaseViewModel<UiState, Intent, SideEffect>() {
 
-    override fun setInitialState(): SearchContract.UiState =
-        SearchContract.UiState.initial()
+    override fun setInitialState(): UiState = UiState.initial()
 
-    override fun handleEvents(event: SearchContract.Event) {
-        when (event) {
-            is SearchContract.Event.OnLoad -> getSearch()
-            is SearchContract.Event.Refresh -> {}
-            is SearchContract.Event.Summoner.OnSearch -> {
-                if (event.name.isNotEmpty()) {
-                    setEffect { SearchContract.Effect.Navigation.ToSummoner(event.name.trim()) }
+    override fun handleEvents(intent: Intent) {
+        when (intent) {
+            is Intent.OnLoad -> getSearch()
+            is Intent.Refresh -> {}
+            is Intent.Summoner.OnSearch -> {
+                if (intent.name.isNotEmpty()) {
+                    setEffect { SideEffect.Navigation.ToSummoner(intent.name.trim()) }
                 }
             }
-            is SearchContract.Event.Navigation.Back -> setEffect { SearchContract.Effect.Navigation.Back }
-            is SearchContract.Event.Search.OnDelete -> deleteSearch(event.name)
-            is SearchContract.Event.Search.OnDeleteAll -> deleteAll()
+            is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
+            is Intent.Search.OnDelete -> deleteSearch(intent.name)
+            is Intent.Search.OnDeleteAll -> deleteAll()
         }
     }
 
