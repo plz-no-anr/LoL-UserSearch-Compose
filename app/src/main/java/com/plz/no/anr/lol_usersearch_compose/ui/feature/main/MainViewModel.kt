@@ -35,7 +35,7 @@ class MainViewModel @Inject constructor(
 
     override fun setInitialState(): UiState = UiState.initial()
 
-    override fun handleEvents(intent: Intent) {
+    override fun handleIntents(intent: Intent) {
         when (intent) {
             is Intent.OnLoad -> onLoad()
             is Intent.OnSearch -> setEffect { SideEffect.Navigation.ToSearch }

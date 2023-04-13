@@ -18,7 +18,7 @@ abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseCon
 
     abstract fun setInitialState(): UiState
 
-    abstract fun handleEvents(intent: Intent)
+    abstract fun handleIntents(intent: Intent)
 
     private val initialState: UiState by lazy { setInitialState() }
 
@@ -37,13 +37,13 @@ abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseCon
     }
 
     init {
-        subscribeToEvents()
+        subscribeToIntents()
     }
 
-    private fun subscribeToEvents() {
+    private fun subscribeToIntents() {
         viewModelScope.launch(exceptionHandler) {
             _intent.collect {
-                handleEvents(it)
+                handleIntents(it)
             }
         }
     }

@@ -23,7 +23,7 @@ class SummonerViewModel @Inject constructor(
 
     override fun setInitialState(): UiState = UiState.initial()
 
-    override fun handleEvents(intent: Intent) {
+    override fun handleIntents(intent: Intent) {
         when (intent) {
             is Intent.OnLoad -> requestSummonerData()
             is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
