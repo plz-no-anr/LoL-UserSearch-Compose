@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol_usersearch_compose
+package com.plznoanr.lol_usersearch_compose
 
 import org.junit.Test
 

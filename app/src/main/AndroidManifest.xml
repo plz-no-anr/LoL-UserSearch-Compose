@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.plz.no.anr.lol_usersearch_compose.LolApplication"
+        android:name="com.plznoanr.lol_usersearch_compose.LolApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,11 +18,11 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
         <activity
-            android:name="com.plz.no.anr.lol_usersearch_compose.ui.MainActivity"
+            android:name="com.plznoanr.lol_usersearch_compose.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LolUserSearchCompose"/>
         <activity
-            android:name="com.plz.no.anr.lol_usersearch_compose.ui.feature.splash.SplashActivity"
+            android:name="com.plznoanr.lol_usersearch_compose.ui.feature.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
