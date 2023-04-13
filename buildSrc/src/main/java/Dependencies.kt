@@ -45,7 +45,7 @@ object Dependencies {
     object AndroidX {
 
         object Version {
-            const val CORE_KTX = "1.9.0"
+            const val CORE_KTX = "1.10.0"
             const val APP_COMPAT = "1.6.1"
             const val LIFECYCLE = "2.6.1"
             const val NAVIGATION = "2.5.3"
@@ -103,7 +103,7 @@ object Dependencies {
     object ThirdParty {
 
         object Version {
-            const val ANDROID_MATERIAL = "1.6.0"
+            const val ANDROID_MATERIAL = "1.8.0"
             const val COROUTINES = "1.6.4"
             const val RETROFIT = "2.9.0"
             const val HILT = "2.45"
