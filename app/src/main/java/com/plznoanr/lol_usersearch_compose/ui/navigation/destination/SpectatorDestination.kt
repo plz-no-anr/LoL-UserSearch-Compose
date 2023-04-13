@@ -16,7 +16,7 @@ fun SpectatorDestination(
     SpectatorScreen(
         state = viewModel.state.value,
         sideEffectFlow = viewModel.sideEffect,
-        onIntent = viewModel::setIntent,
+        onIntent = viewModel::postIntent,
         onNavigationRequested = {
             if (it is SpectatorContract.SideEffect.Navigation.Back) {
                 navController.popBackStack()

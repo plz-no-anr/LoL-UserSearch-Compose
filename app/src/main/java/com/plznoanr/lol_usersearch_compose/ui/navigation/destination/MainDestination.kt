@@ -17,7 +17,7 @@ fun MainDestination(
     MainScreen(
         state = viewModel.state.value,
         sideEffectFlow = viewModel.sideEffect,
-        onIntent = viewModel::setIntent,
+        onIntent = viewModel::postIntent,
     ) {
         when (it) {
             is MainContract.SideEffect.Navigation.ToSearch -> navController.navigateToSearch()

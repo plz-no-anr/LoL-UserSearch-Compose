@@ -16,7 +16,7 @@ fun SummonerDestination(
     SummonerScreen(
         state = viewModel.state.value,
         sideEffectFlow = viewModel.sideEffect,
-        onIntent = viewModel::setIntent,
+        onIntent = viewModel::postIntent,
         onNavigationRequested = {
             when (it) {
                 is SummonerContract.SideEffect.Navigation.Back -> navController.popBackStack()

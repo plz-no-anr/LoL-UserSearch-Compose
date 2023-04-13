@@ -48,7 +48,7 @@ abstract class BaseViewModel<UiState : BaseContract.State, in Intent : BaseContr
         }
     }
 
-    fun setIntent(intent: Intent) {
+    fun postIntent(intent: Intent) {
         viewModelScope.launch(exceptionHandler) { _intent.emit(intent) }
     }
 
