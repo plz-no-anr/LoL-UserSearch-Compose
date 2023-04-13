@@ -3,7 +3,8 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
-import com.plz.no.anr.lol_usersearch_compose.ui.navigation.Navigation
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.summoner.SummonerContract.*
+import com.plz.no.anr.lol_usersearch_compose.ui.navigation.Route
 import com.plznoanr.domain.usecase.summoner.RequestSummonerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onStart
@@ -14,33 +15,37 @@ import javax.inject.Inject
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val requestSummonerUseCase: RequestSummonerUseCase
-) : BaseViewModel<SummonerContract.UiState, SummonerContract.Event, SummonerContract.Effect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
-    private val summonerName: String by lazy {
-        stateHandle.get<String>(Navigation.Args.SUMMONER_NAME) ?: ""
+    private val summonerName: String? by lazy {
+        stateHandle.get<String>(Route.Summoner.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): SummonerContract.UiState = SummonerContract.UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
-    override fun handleEvents(event: SummonerContract.Event) {
-        when (event) {
-            is SummonerContract.Event.OnLoad -> requestSummonerData()
-            is SummonerContract.Event.Navigation.Back -> setEffect { SummonerContract.Effect.Navigation.Back }
-            is SummonerContract.Event.Spectator.OnWatch -> setEffect { SummonerContract.Effect.Navigation.ToSpectator(event.name)}
+    override fun handleIntents(intent: Intent) {
+        when (intent) {
+            is Intent.OnLoad -> requestSummonerData()
+            is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name)}
         }
     }
 
     private fun requestSummonerData() {
         viewModelScope.launch {
-            requestSummonerUseCase(summonerName.trim())
-                .onStart { setState { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        setState { copy(data = it, isLoading = false) }
-                    }.onFailure {
-                        setState { copy(error = it.message, isLoading = false) }
+            summonerName?.let {
+                requestSummonerUseCase(it.trim())
+                    .onStart { reduce { copy(isLoading = true) } }
+                    .collect { result ->
+                        result.onSuccess {
+                            reduce { copy(data = it, isLoading = false) }
+                        }.onFailure {
+                            reduce { copy(error = it.message, isLoading = false) }
+                        }
                     }
-                }
+            } ?: run {
+                reduce { copy(error = "Summoner name is null", isLoading = false) }
+            }
         }
     }
 

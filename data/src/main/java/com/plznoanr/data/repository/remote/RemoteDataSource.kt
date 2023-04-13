@@ -4,7 +4,7 @@ import com.plznoanr.data.model.remote.LeagueResponse
 import com.plznoanr.data.model.remote.SpectatorResponse
 import com.plznoanr.data.model.remote.SummonerResponse
 
-interface RemoteDataSource {
+internal interface RemoteDataSource {
     suspend fun requestSummoner(name: String, apiKey: String): SummonerResponse
 
     suspend fun requestLeague(summonerId:String?, apiKey: String): Set<LeagueResponse>

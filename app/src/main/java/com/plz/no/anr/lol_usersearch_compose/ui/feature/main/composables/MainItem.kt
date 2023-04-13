@@ -30,7 +30,7 @@ import com.plznoanr.lol_usersearch_compose.R
 fun MainItem(
     modifier: Modifier = Modifier,
     summoner: Summoner,
-    onEvent: (MainContract.Event) -> Unit
+    onIntent: (MainContract.Intent) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -80,9 +80,9 @@ fun MainItem(
                     pointWinLose = summoner.getLeaguePoint(),
                     miniSeries = summoner.miniSeries,
                     isPlaying = summoner.isPlaying,
-                    onAdd = { onEvent(MainContract.Event.Profile.OnAdd(summoner.asProfile())) },
-                    onDelete = { onEvent(MainContract.Event.Summoner.OnDelete(summoner.name)) },
-                    onSpectator = { onEvent(MainContract.Event.Spectator.OnWatch(summoner.name)) }
+                    onAdd = { onIntent(MainContract.Intent.Profile.OnAdd(summoner.asProfile())) },
+                    onDelete = { onIntent(MainContract.Intent.Summoner.OnDelete(summoner.name)) },
+                    onSpectator = { onIntent(MainContract.Intent.Spectator.OnWatch(summoner.name)) }
                 )
             }
 

@@ -23,7 +23,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UseCaseModule {
+internal object UseCaseModule {
     @Provides
     @Singleton
     fun provideGetKeyUseCase(
@@ -114,7 +114,6 @@ object UseCaseModule {
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: AppRepository
     ) = DeleteSummonerUseCase(coroutineDispatcher, repository)
-
 
     @Provides
     @Singleton

@@ -1,8 +1,8 @@
 package com.plznoanr.data.model.remote
 
 import com.plznoanr.domain.model.Summoner
-
-data class LeagueResponse(
+@kotlinx.serialization.Serializable
+internal data class LeagueResponse(
     val leagueId: String,
     val summonerId: String,
     val summonerName: String,
@@ -16,9 +16,9 @@ data class LeagueResponse(
     val veteran: Boolean,
     val freshBlood: Boolean,
     val inactive: Boolean,
-    val miniSeries: MiniSeriesDTO?
-
-){
+    val miniSeries: MiniSeriesDTO? = null
+) {
+    @kotlinx.serialization.Serializable
     data class MiniSeriesDTO(
         val losses: Int,
         val target: Int,
@@ -32,5 +32,5 @@ data class LeagueResponse(
             progress = progress
         )
     }
-
 }
+

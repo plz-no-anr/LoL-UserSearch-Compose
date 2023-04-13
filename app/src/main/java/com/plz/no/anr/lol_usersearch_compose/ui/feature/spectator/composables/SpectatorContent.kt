@@ -2,17 +2,14 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.spectator.composables
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.plznoanr.domain.model.Spectator
 
 @Composable
-fun SpectatorView(
+fun SpectatorContent(
     modifier: Modifier = Modifier,
     data: Spectator
 ) {

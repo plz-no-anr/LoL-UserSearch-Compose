@@ -2,6 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.search
 
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.search.SearchContract.*
 import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
 import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
 import com.plznoanr.domain.usecase.search.GetSearchUseCase
@@ -15,40 +16,39 @@ class SearchViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,
     private val deleteSearchUseCase: DeleteSearchUseCase,
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
-) : BaseViewModel<SearchContract.UiState, SearchContract.Event, SearchContract.Effect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
-    override fun setInitialState(): SearchContract.UiState =
-        SearchContract.UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
-    override fun handleEvents(event: SearchContract.Event) {
-        when (event) {
-            is SearchContract.Event.OnLoad -> getSearch()
-            is SearchContract.Event.Refresh -> {}
-            is SearchContract.Event.Summoner.OnSearch -> {
-                if (event.name.isNotEmpty()) {
-                    setEffect { SearchContract.Effect.Navigation.ToSummoner(event.name.trim()) }
+    override fun handleIntents(intent: Intent) {
+        when (intent) {
+            is Intent.OnLoad -> getSearch()
+            is Intent.Refresh -> {}
+            is Intent.Summoner.OnSearch -> {
+                if (intent.name.isNotEmpty()) {
+                    postSideEffect { SideEffect.Navigation.ToSummoner(intent.name.trim()) }
                 }
             }
-            is SearchContract.Event.Navigation.Back -> setEffect { SearchContract.Effect.Navigation.Back }
-            is SearchContract.Event.Search.OnDelete -> deleteSearch(event.name)
-            is SearchContract.Event.Search.OnDeleteAll -> deleteAll()
+            is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
+            is Intent.Search.OnDelete -> deleteSearch(intent.name)
+            is Intent.Search.OnDeleteAll -> deleteAll()
         }
     }
 
     private fun getSearch() {
         viewModelScope.launch {
             getSearchUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = it.asReversed(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -62,17 +62,17 @@ class SearchViewModel @Inject constructor(
     private fun deleteSearch(name: String) {
         viewModelScope.launch {
             deleteSearchUseCase(name)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = data.filter { it.name != name },
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -86,17 +86,17 @@ class SearchViewModel @Inject constructor(
     private fun deleteAll() {
         viewModelScope.launch {
             deleteSearchAllUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = emptyList(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false

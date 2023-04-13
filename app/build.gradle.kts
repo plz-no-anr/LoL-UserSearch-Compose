@@ -64,60 +64,35 @@ kapt {
 dependencies {
     implementation(data)
     implementation(domain)
-
     implementation(Dependencies.AndroidX.CORE_KTX)
     implementation(Dependencies.AndroidX.APP_COMPAT)
-
     // Splash
     implementation(Dependencies.AndroidX.SPLASH_SCREEN)
-
     // Compose
     implementationCompose()
-
     // Lifecycle
-    implementation(Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX)
-    implementation(Dependencies.AndroidX.LIFECYCLE_VIEWMODEL_KTX)
-    implementation(Dependencies.AndroidX.LIFECYCLE_RUNTIME_KTX)
-    implementation(Dependencies.AndroidX.LIFECYCLE_EXTENSIONS)
-
+    implementationLifeCycle()
     // Coroutines
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID)
-
+    implementationCoroutines()
     // Retrofit
-    implementation(Dependencies.ThirdParty.RETROFIT)
-    implementation(Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON)
-
+    implementationRetrofit()
     // Room
-    implementation(Dependencies.AndroidX.ROOM)
-    implementation(Dependencies.AndroidX.ROOM_RUNTIME)
-    kapt(Dependencies.AndroidX.ROOM_COMPILER)
-
+    implementationRoom()
     // Hilt
-    implementation(Dependencies.ThirdParty.HILT_ANDROID)
-    kapt(Dependencies.ThirdParty.HILT_ANDROID_COMPILER)
-
+    implementationHilt()
     // Timber
     implementation(Dependencies.ThirdParty.TIMBER)
-
     // Theme Adapter
-    implementation(Dependencies.ThirdParty.THEME_ADAPTER_APPCOMPAT)
-    implementation(Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL)
-    implementation(Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL3)
-
+    implementationThemeAdapter()
     // Image load
     implementation(Dependencies.ThirdParty.COIL)
-
     // Lottie
     implementation(Dependencies.ThirdParty.LOTTIE_COMPOSE)
-
     // ViewPager
     implementation(Dependencies.ThirdParty.VIEW_PAGER)
     implementation(Dependencies.ThirdParty.VIEW_PAGER_INDICATORS)
-
     // UnitTest
     implementationUnitTest()
-
     // Android Test
     implementationAndroidTest()
 }

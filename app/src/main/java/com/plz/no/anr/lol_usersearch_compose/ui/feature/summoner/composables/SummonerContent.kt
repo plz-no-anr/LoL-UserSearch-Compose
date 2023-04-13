@@ -29,10 +29,10 @@ import com.plznoanr.domain.model.getDummySummoner
 import com.plznoanr.lol_usersearch_compose.R
 
 @Composable
-fun SummonerView(
+fun SummonerContent(
     modifier: Modifier = Modifier,
     data: Summoner,
-    onEvent: (SummonerContract.Event) -> Unit
+    onIntent: (SummonerContract.Intent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -58,7 +58,7 @@ fun SummonerView(
             tierIcon = getTierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
             isPlaying = data.isPlaying,
-            onSpectator = { onEvent(SummonerContract.Event.Spectator.OnWatch(data.name)) }
+            onSpectator = { onIntent(SummonerContract.Intent.Spectator.OnWatch(data.name)) }
         )
 
     }
@@ -225,5 +225,5 @@ private fun SpectatorView(
 @Preview
 @Composable
 private fun SummonerViewPreview() {
-    SummonerView(data = getDummySummoner()) {}
+    SummonerContent(data = getDummySummoner()) {}
 }

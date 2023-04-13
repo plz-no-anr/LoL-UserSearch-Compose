@@ -5,14 +5,14 @@ import com.plznoanr.domain.model.Summoner
 
 class SummonerContract : BaseContract() {
 
-    data class UiState(
+    data class State(
         val data: Summoner?,
         val isLoading: Boolean,
         val error: String?
-    ) : ViewState {
+    ) : BaseContract.State {
 
             companion object {
-                fun initial() = UiState(
+                fun initial() = State(
                     data = null,
                     isLoading = false,
                     error = null
@@ -20,25 +20,25 @@ class SummonerContract : BaseContract() {
             }
     }
 
-    sealed class Event : ViewEvent {
+    sealed class Intent : BaseContract.Intent {
 
-        object OnLoad : Event()
+        object OnLoad : Intent()
 
-        sealed class Navigation : Event() {
+        sealed class Navigation : Intent() {
             object Back : Navigation()
         }
 
-        sealed class Spectator : Event() {
+        sealed class Spectator : Intent() {
             data class OnWatch(val name: String) : Spectator()
         }
 
     }
 
-    sealed class Effect : ViewSideEffect {
+    sealed class SideEffect : BaseContract.SideEffect {
 
-        data class Toast(val msg: String) : Effect()
+        data class Toast(val msg: String) : SideEffect()
 
-        sealed class Navigation : Effect() {
+        sealed class Navigation : SideEffect() {
             object Back : Navigation()
 
             data class ToSpectator(val name: String) : Navigation()

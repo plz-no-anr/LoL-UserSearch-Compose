@@ -41,26 +41,18 @@ kapt {
 
 dependencies {
     implementation(domain)
-
     // Coroutines
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID)
+    implementationCoroutines()
     // Retrofit
-    implementation(Dependencies.ThirdParty.RETROFIT)
-    implementation(Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON)
-
+    implementationRetrofit()
     // Room
-    implementation(Dependencies.AndroidX.ROOM)
-    implementation(Dependencies.AndroidX.ROOM_RUNTIME)
-    kapt(Dependencies.AndroidX.ROOM_COMPILER)
-
+    implementationRoom()
     // Hilt
-    implementation(Dependencies.ThirdParty.HILT_ANDROID)
-    kapt(Dependencies.ThirdParty.HILT_ANDROID_COMPILER)
-
+    implementationHilt()
     // Timber
     implementation(Dependencies.ThirdParty.TIMBER)
-
+    // Serialization
     implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
+
     implementationUnitTest()
 }

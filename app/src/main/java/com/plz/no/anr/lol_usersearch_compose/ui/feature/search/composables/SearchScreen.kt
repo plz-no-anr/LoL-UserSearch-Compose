@@ -12,7 +12,6 @@ import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.error.ErrorScreen
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol_usersearch_compose.ui.feature.search.SearchContract
 import com.plznoanr.data.model.common.parseError
-import com.plznoanr.domain.model.Search
 import com.plznoanr.lol_usersearch_compose.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -21,10 +20,10 @@ import kotlinx.coroutines.flow.onEach
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    state: SearchContract.UiState,
-    effectFlow: Flow<SearchContract.Effect>?,
-    onEvent: (SearchContract.Event) -> Unit,
-    onNavigationRequested: (SearchContract.Effect.Navigation) -> Unit,
+    state: SearchContract.State,
+    sideEffectFlow: Flow<SearchContract.SideEffect>?,
+    onIntent: (SearchContract.Intent) -> Unit,
+    onNavigationRequested: (SearchContract.SideEffect.Navigation) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -33,15 +32,15 @@ fun SearchScreen(
     var name by remember { mutableStateOf("") }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(SearchContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is SearchContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = effect.msg,
+        onIntent(SearchContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is SearchContract.SideEffect.Toast -> snackbarHostState.showSnackbar(
+                    message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SearchContract.Effect.Navigation.Back -> onNavigationRequested(effect)
-                is SearchContract.Effect.Navigation.ToSummoner -> onNavigationRequested(effect)
+                is SearchContract.SideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
+                is SearchContract.SideEffect.Navigation.ToSummoner -> onNavigationRequested(sideEffect)
             }
         }?.collect()
     }
@@ -52,7 +51,7 @@ fun SearchScreen(
             TopAppBar(
                 title = stringResource(id = R.string.search_title),
                 isBackPressVisible = true,
-                onBackPressed = { onEvent(SearchContract.Event.Navigation.Back) }
+                onBackPressed = { onIntent(SearchContract.Intent.Navigation.Back) }
             )
         }
     ) {
@@ -60,13 +59,13 @@ fun SearchScreen(
             state.isLoading -> { AppProgressBar() }
             state.error != null -> ErrorScreen(error = state.error.parseError()) {}
             else -> {
-                SearchView(
+                SearchContent(
                     modifier = Modifier
                         .padding(it),
                     data = state.data,
                     name = name,
                     onNameChange = { summonerName -> name = summonerName },
-                    onEvent = onEvent,
+                    onIntent = onIntent,
                 )
             }
         }
@@ -79,9 +78,9 @@ fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        state = SearchContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        state = SearchContract.State.initial(),
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {}
     )
 }

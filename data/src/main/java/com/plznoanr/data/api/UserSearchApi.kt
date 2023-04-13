@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface UserSearchApi {
+internal interface UserSearchApi {
     @GET(Endpoints.GET_SUMMONER)
     suspend fun getSummoner(
         @Path("summonerName") summonerName: String,

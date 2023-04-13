@@ -14,13 +14,13 @@ fun SummonerDestination(
     navController: NavController
 ) {
     SummonerScreen(
-        state = viewModel.uiState.value,
-        effectFlow = viewModel.effect,
-        onEvent = viewModel::setEvent,
+        state = viewModel.state.value,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::setIntent,
         onNavigationRequested = {
             when (it) {
-                is SummonerContract.Effect.Navigation.Back -> navController.popBackStack()
-                is SummonerContract.Effect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
+                is SummonerContract.SideEffect.Navigation.Back -> navController.popBackStack()
+                is SummonerContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
             }
         }
     )

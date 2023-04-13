@@ -49,9 +49,10 @@ object Dependencies {
             const val APP_COMPAT = "1.4.1"
             const val LIFECYCLE = "2.5.0-rc01"
             const val LIFECYCLE_EXTENSION = "2.2.0"
+            const val LIFECYCLE_COMPOSE = "2.6.1"
             const val NAVIGATION = "2.5.3"
             const val ROOM = "2.5.0"
-            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.01.00"
+            const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.04.00"
         }
 
         const val CORE_KTX = "androidx.core:core-ktx:${Version.CORE_KTX}"
@@ -91,9 +92,9 @@ object Dependencies {
             // Android Studio Preview support
             const val UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
 
-            const val ACTIVITY = "androidx.activity:activity-compose:1.6.1"
-            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
-            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:2.6.0"
+            const val ACTIVITY = "androidx.activity:activity-compose:1.7.0"
+            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.LIFECYCLE_COMPOSE}"
+            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:${Version.LIFECYCLE_COMPOSE}"
             const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
             const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
@@ -106,7 +107,7 @@ object Dependencies {
 
         object Version {
             const val ANDROID_MATERIAL = "1.6.0"
-            const val COROUTINES = "1.6.0"
+            const val COROUTINES = "1.6.4"
             const val RETROFIT = "2.9.0"
             const val HILT = "2.45"
             const val GLIDE = "4.14.2"
@@ -121,6 +122,7 @@ object Dependencies {
         // Retrofit
         const val RETROFIT = "com.squareup.retrofit2:retrofit:${Version.RETROFIT}"
         const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Version.RETROFIT}"
+        const val RETROFIT_CONVERTER_SERIALIZATION = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
 
         const val ANDROID_MATERIAL = "com.google.android.material:material:${Version.ANDROID_MATERIAL}"
 
@@ -185,6 +187,11 @@ object Dependencies {
     }
 }
 
+fun DependencyHandler.implementationHilt() {
+    add("implementation", Dependencies.ThirdParty.HILT_ANDROID)
+    add("kapt", Dependencies.ThirdParty.HILT_ANDROID_COMPILER)
+}
+
 fun DependencyHandler.implementationCompose(
 ) {
     arrayOf(
@@ -208,6 +215,49 @@ fun DependencyHandler.implementationCompose(
     add("debugImplementation", Dependencies.AndroidTest.Compose.UI_MANIFEST)
     add("androidTestImplementation", Dependencies.AndroidTest.Compose.UI_JUNIT4)
 }
+
+fun DependencyHandler.implementationLifeCycle() {
+    arrayOf(
+        Dependencies.AndroidX.LIFECYCLE_EXTENSIONS,
+        Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX,
+        Dependencies.AndroidX.LIFECYCLE_RUNTIME_KTX,
+        Dependencies.AndroidX.LIFECYCLE_VIEWMODEL_KTX
+    ).forEach { add("implementation", it) }
+}
+
+
+fun DependencyHandler.implementationCoroutines() {
+    arrayOf(
+        Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE,
+        Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID
+    ).forEach { add("implementation", it) }
+}
+
+fun DependencyHandler.implementationRetrofit() {
+    arrayOf(
+        Dependencies.ThirdParty.RETROFIT,
+        Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON,
+        Dependencies.ThirdParty.RETROFIT_CONVERTER_SERIALIZATION
+    ).forEach { add("implementation", it) }
+}
+
+fun DependencyHandler.implementationRoom() {
+    arrayOf(
+        Dependencies.AndroidX.ROOM,
+        Dependencies.AndroidX.ROOM_RUNTIME
+    ).forEach { add("implementation", it) }
+    add("kapt", Dependencies.AndroidX.ROOM_COMPILER)
+}
+
+fun DependencyHandler.implementationThemeAdapter() {
+    arrayOf(
+        Dependencies.ThirdParty.THEME_ADAPTER_APPCOMPAT,
+        Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL,
+        Dependencies.ThirdParty.THEME_ADAPTER_MATERIAL3,
+    ).forEach { add("implementation", it) }
+}
+
+
 
 fun DependencyHandler.implementationUnitTest() {
     arrayOf(

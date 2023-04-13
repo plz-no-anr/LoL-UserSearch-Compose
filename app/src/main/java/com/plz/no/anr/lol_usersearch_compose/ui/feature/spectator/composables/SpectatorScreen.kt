@@ -22,24 +22,24 @@ import kotlinx.coroutines.flow.onEach
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpectatorScreen(
-    state: SpectatorContract.UiState,
-    effectFlow: Flow<SpectatorContract.Effect>?,
-    onEvent: (SpectatorContract.Event) -> Unit,
-    onNavigationRequested: (SpectatorContract.Effect.Navigation) -> Unit,
+    state: SpectatorContract.State,
+    sideEffectFlow: Flow<SpectatorContract.SideEffect>?,
+    onIntent: (SpectatorContract.Intent) -> Unit,
+    onNavigationRequested: (SpectatorContract.SideEffect.Navigation) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onEvent(SpectatorContract.Event.OnLoad)
-        effectFlow?.onEach { effect ->
-            when (effect) {
-                is SpectatorContract.Effect.Toast -> snackbarHostState.showSnackbar(
-                    message = effect.msg,
+        onIntent(SpectatorContract.Intent.OnLoad)
+        sideEffectFlow?.onEach { sideEffect ->
+            when (sideEffect) {
+                is SpectatorContract.SideEffect.Toast -> snackbarHostState.showSnackbar(
+                    message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SpectatorContract.Effect.Navigation.Back -> onNavigationRequested(effect)
+                is SpectatorContract.SideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
             }
         }?.collect()
     }
@@ -50,7 +50,7 @@ fun SpectatorScreen(
             TopAppBar(
                 title = stringResource(id = R.string.spectator_title),
                 isBackPressVisible = true,
-                onBackPressed = { onEvent(SpectatorContract.Event.Navigation.Back) }
+                onBackPressed = { onIntent(SpectatorContract.Intent.Navigation.Back) }
             )
         }) {
         when {
@@ -58,7 +58,7 @@ fun SpectatorScreen(
             state.error != null -> ErrorScreen(error = state.error.parseError())
             else -> {
                 state.data?.let { data ->
-                    SpectatorView(
+                    SpectatorContent(
                         modifier = Modifier
                             .padding(it),
                         data = data
@@ -75,9 +75,9 @@ fun SpectatorScreen(
 @Composable
 private fun SpectatorScreenPreview() {
     SpectatorScreen(
-        state = SpectatorContract.UiState.initial(),
-        effectFlow = null,
-        onEvent = {},
+        state = SpectatorContract.State.initial(),
+        sideEffectFlow = null,
+        onIntent = {},
         onNavigationRequested = {},
     )
 }

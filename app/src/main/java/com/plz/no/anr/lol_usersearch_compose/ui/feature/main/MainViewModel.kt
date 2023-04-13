@@ -2,6 +2,7 @@ package com.plz.no.anr.lol_usersearch_compose.ui.feature.main
 
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol_usersearch_compose.ui.base.BaseViewModel
+import com.plz.no.anr.lol_usersearch_compose.ui.feature.main.MainContract.*
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
 import com.plznoanr.domain.usecase.key.GetKeyUseCase
@@ -30,22 +31,22 @@ class MainViewModel @Inject constructor(
     private val deleteKeyUseCase: DeleteKeyUseCase,
     private val readSummonerListUseCase: ReadSummonerListUseCase,
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
-) : BaseViewModel<MainContract.UiState, MainContract.Event, MainContract.Effect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
-    override fun setInitialState(): MainContract.UiState = MainContract.UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
-    override fun handleEvents(event: MainContract.Event) {
-        when (event) {
-            is MainContract.Event.OnLoad -> onLoad()
-            is MainContract.Event.OnSearch -> setEffect { MainContract.Effect.Navigation.ToSearch }
-            is MainContract.Event.Refresh -> refreshSummonerList()
-            is MainContract.Event.Summoner.OnDeleteAll -> deleteAllSummoner()
-            is MainContract.Event.Summoner.OnDelete -> deleteSummoner(event.name)
-            is MainContract.Event.Profile.OnAdd -> addProfile(event.profile)
-            is MainContract.Event.Key.OnGet -> setEffect { MainContract.Effect.MoveGetApiKey }
-            is MainContract.Event.Key.OnAdd -> insertKey(event.key)
-            is MainContract.Event.Key.OnDelete -> deleteKey()
-            is MainContract.Event.Spectator.OnWatch -> setEffect { MainContract.Effect.Navigation.ToSpectator(event.name) }
+    override fun handleIntents(intent: Intent) {
+        when (intent) {
+            is Intent.OnLoad -> onLoad()
+            is Intent.OnSearch -> postSideEffect { SideEffect.Navigation.ToSearch }
+            is Intent.Refresh -> refreshSummonerList()
+            is Intent.Summoner.OnDeleteAll -> deleteAllSummoner()
+            is Intent.Summoner.OnDelete -> deleteSummoner(intent.name)
+            is Intent.Profile.OnAdd -> addProfile(intent.profile)
+            is Intent.Key.OnGet -> postSideEffect { SideEffect.MoveGetApiKey }
+            is Intent.Key.OnAdd -> insertKey(intent.key)
+            is Intent.Key.OnDelete -> deleteKey()
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name) }
         }
     }
 
@@ -62,9 +63,9 @@ class MainViewModel @Inject constructor(
                     } else {
                         null to null to emptyList()
                     }
-                }.onStart { setState { copy(isLoading = true) } }
+                }.onStart { reduce { copy(isLoading = true) } }
                     .collect {
-                        setState {
+                        reduce {
                             copy(
                                 key = it.first.first,
                                 profile = it.first.second,
@@ -80,23 +81,23 @@ class MainViewModel @Inject constructor(
     private fun refreshSummonerList() {
         viewModelScope.launch {
             refreshSummonerListUseCase(Unit)
-                .onStart { setState { copy(isRefreshing = true) } }
+                .onStart { reduce { copy(isRefreshing = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = it.asReversed(),
                                 isRefreshing = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 isRefreshing = false
                             )
                         }
-                        setEffect {
-                            MainContract.Effect.Toast(it.message ?: "Error")
+                        postSideEffect {
+                            SideEffect.Toast(it.message ?: "Error")
                         }
                     }
                 }
@@ -106,17 +107,17 @@ class MainViewModel @Inject constructor(
     private fun deleteAllSummoner() {
         viewModelScope.launch {
             deleteAllSummonerUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = emptyList(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -131,17 +132,17 @@ class MainViewModel @Inject constructor(
     private fun deleteSummoner(name: String) {
         viewModelScope.launch {
             deleteSummonerUseCase(name)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = data.filter { it.name != name }.asReversed(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -156,17 +157,17 @@ class MainViewModel @Inject constructor(
     private fun addProfile(profile: Profile) {
         viewModelScope.launch {
             insertProfileUseCase(profile)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 profile = profile,
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -181,17 +182,17 @@ class MainViewModel @Inject constructor(
     private fun insertKey(key: String) {
         viewModelScope.launch {
             insertKeyUseCase(key)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 key = key,
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -206,17 +207,17 @@ class MainViewModel @Inject constructor(
     private fun deleteKey() {
         viewModelScope.launch {
             deleteKeyUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 key = null,
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false

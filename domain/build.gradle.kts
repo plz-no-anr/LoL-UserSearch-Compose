@@ -2,7 +2,6 @@ plugins {
     javaLib
     kotlin
     kotlinSerialization
-
 }
 
 java {
@@ -12,7 +11,6 @@ java {
 
 dependencies {
     // Coroutines
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID)
+    implementationCoroutines()
     implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
 }

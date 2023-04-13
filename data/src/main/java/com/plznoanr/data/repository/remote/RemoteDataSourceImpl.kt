@@ -4,10 +4,9 @@ import com.plznoanr.data.api.UserSearchApi
 import com.plznoanr.data.model.remote.LeagueResponse
 import com.plznoanr.data.model.remote.SpectatorResponse
 import com.plznoanr.data.model.remote.SummonerResponse
-import kotlinx.coroutines.delay
 import retrofit2.Response
 
-class RemoteDataSourceImpl (
+internal class RemoteDataSourceImpl (
     private val api: UserSearchApi
 ): RemoteDataSource {
     override suspend fun requestSummoner(name: String, apiKey: String): SummonerResponse {

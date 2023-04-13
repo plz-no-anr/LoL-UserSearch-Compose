@@ -7,7 +7,6 @@ import com.plznoanr.data.model.local.json.ChampEntity
 import com.plznoanr.data.model.local.json.MapEntity
 import com.plznoanr.data.model.local.json.RuneEntity
 import com.plznoanr.data.model.local.json.SpellEntity
-
 interface LocalDataSource {
     // Lol
     suspend fun getSearch() : List<SearchEntity>

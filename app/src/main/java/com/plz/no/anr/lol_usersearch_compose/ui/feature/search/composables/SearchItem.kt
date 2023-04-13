@@ -52,8 +52,8 @@ fun SearchItem(
 private fun SearchItemPreview() {
     SearchItem(
         Search(
-            name = "박상군",
-            date = "2021-10-10"
+            name = "Hide On Bush",
+            date = "2023-04-10"
         )
     )
 }

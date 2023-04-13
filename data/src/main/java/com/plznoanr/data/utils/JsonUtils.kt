@@ -15,9 +15,9 @@ import timber.log.Timber
 
 class JsonUtils(
     private val context: Context,
-    @CoroutineQualifiers.DefaultDispatcher private val coroutineDispatcher: CoroutineDispatcher
+    @CoroutineQualifiers.DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) {
-    suspend fun getLocalJson(): LocalJson? = withContext(coroutineDispatcher) {
+    suspend fun getLocalJson(): LocalJson? = withContext(defaultDispatcher) {
         try {
             val json = Json { ignoreUnknownKeys = true }
             val mapString = context.assets.open(JsonFileName.MAP).reader().readText()

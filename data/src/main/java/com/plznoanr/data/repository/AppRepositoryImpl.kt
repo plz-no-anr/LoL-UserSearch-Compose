@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
-class AppRepositoryImpl(
-    @CoroutineQualifiers.IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
+internal class AppRepositoryImpl(
+    @CoroutineQualifiers.IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val preferenceDataSource: PreferenceDataSource,
@@ -161,7 +161,6 @@ class AppRepositoryImpl(
     override fun readSummonerList(): Flow<Result<List<Summoner>>> = flow {
         try {
             val key = getAuthKey()
-
             val result = requestSummonerList(key)
             emit(Result.success(result))
         } catch (e: Exception) {
@@ -304,7 +303,7 @@ class AppRepositoryImpl(
     }
 
     private fun Long.toTeam() = if (this.toString() == "100") Team.BLUE else Team.RED
-    private suspend fun Long.toMap(): String = withContext(coroutineDispatcher) {
+    private suspend fun Long.toMap(): String = withContext(ioDispatcher) {
         localDataSource.getMaps().forEach {
             if (it.mapId == this@toMap.toString()) {
                 return@withContext it.mapName
@@ -314,7 +313,7 @@ class AppRepositoryImpl(
     }
 
     private suspend fun Long.toChampInfo(): Pair<String, String> =
-        withContext(coroutineDispatcher) {
+        withContext(ioDispatcher) {
             localDataSource.getChamps().forEach {
                 if (this@toChampInfo == (-1).toLong()) return@withContext "NoBan" to "NoBan"
                 if (it.key == this@toChampInfo.toString()) {
@@ -325,7 +324,7 @@ class AppRepositoryImpl(
         }
 
     private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
-        withContext(coroutineDispatcher) {
+        withContext(ioDispatcher) {
             localDataSource.getRunes().forEach {
                 if (it.id == this@toRuneStyle) {
                     return@withContext Spectator.SpectatorInfo.Rune(it.name, it.icon)
@@ -334,7 +333,7 @@ class AppRepositoryImpl(
             return@withContext Spectator.SpectatorInfo.Rune(defaultText, defaultText)
         }
 
-    private suspend fun Long.toSpellImage(): String = withContext(coroutineDispatcher) {
+    private suspend fun Long.toSpellImage(): String = withContext(ioDispatcher) {
         localDataSource.getSpells().forEach {
             if (it.key == this@toSpellImage.toString()) {
                 return@withContext it.image.full.toSpellImage()
@@ -344,7 +343,7 @@ class AppRepositoryImpl(
     }
 
     private suspend fun getMainRune(perkStyle: Long, perks: Long): String =
-        withContext(coroutineDispatcher) {
+        withContext(ioDispatcher) {
             localDataSource.getRunes().forEach {
                 if (it.id == perkStyle) {
                     it.slots.forEach { slot ->
@@ -364,7 +363,7 @@ class AppRepositoryImpl(
         perkStyle: Long,
         subStyle: Long,
         perks: List<Long>
-    ): List<Spectator.SpectatorInfo.Rune> = withContext(coroutineDispatcher) {
+    ): List<Spectator.SpectatorInfo.Rune> = withContext(ioDispatcher) {
         val runeNames = MutableList(6) { Spectator.SpectatorInfo.Rune("", "") }
 
         localDataSource.getRunes().forEach {

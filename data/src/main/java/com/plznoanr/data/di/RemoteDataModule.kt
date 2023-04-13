@@ -1,6 +1,6 @@
 package com.plznoanr.data.di
 
-import com.plznoanr.data.api.Endpoints
+import com.plznoanr.data.api.RetrofitGenerator
 import com.plznoanr.data.api.UserSearchApi
 import com.plznoanr.data.repository.remote.RemoteDataSource
 import com.plznoanr.data.repository.remote.RemoteDataSourceImpl
@@ -9,20 +9,20 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteDataModule {
+internal object RemoteDataModule {
+
     @Provides
     @Singleton
-    fun provideApiService(): UserSearchApi =
-        Retrofit.Builder()
-            .baseUrl(Endpoints.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(UserSearchApi::class.java)
+    fun provideRetrofit(): Retrofit = RetrofitGenerator().client
+    @Provides
+    @Singleton
+    fun provideApiService(
+        retrofit: Retrofit
+    ): UserSearchApi = retrofit.create(UserSearchApi::class.java)
 
     @Provides
     @Singleton

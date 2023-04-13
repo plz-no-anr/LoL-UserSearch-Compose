@@ -19,7 +19,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Navigation.Routes.MAIN,
+        startDestination = Route.Main.path,
     ) {
         mainDestination(navController = navController)
 
@@ -33,24 +33,10 @@ fun AppNavigation() {
 
 }
 
-object Navigation {
-    object Args {
-        const val SUMMONER_NAME = "summoner_name"
-    }
-
-    object Routes {
-        const val MAIN = "main"
-        const val SEARCH = "search"
-        const val SUMMONER = "summoner/{${Args.SUMMONER_NAME}}"
-        const val SPECTATOR = "spectator/{${Args.SUMMONER_NAME}}"
-    }
-}
-
-
 fun NavGraphBuilder.mainDestination(
     navController: NavController,
 ) {
-    composable(route = Navigation.Routes.MAIN) {
+    composable(route = Route.Main.path) {
         MainDestination(navController = navController)
     }
 }
@@ -58,7 +44,7 @@ fun NavGraphBuilder.mainDestination(
 fun NavGraphBuilder.searchDestination(
     navController: NavController,
 ) {
-    composable(route = Navigation.Routes.SEARCH) {
+    composable(route = Route.Search.path) {
         SearchDestination(navController = navController)
     }
 }
@@ -67,8 +53,8 @@ fun NavGraphBuilder.summonerDestination(
     navController: NavController,
 ) {
     composable(
-        route = Navigation.Routes.SUMMONER,
-        arguments = listOf(navArgument(name = Navigation.Args.SUMMONER_NAME) {
+        route = Route.Summoner.argsPath,
+        arguments = listOf(navArgument(name = Route.Summoner.KEY_SUMMONER_NAME) {
             type = NavType.StringType
         })
     ) {
@@ -80,8 +66,8 @@ fun NavGraphBuilder.spectatorDestination(
     navController: NavController,
 ) {
     composable(
-        route = Navigation.Routes.SPECTATOR,
-        arguments = listOf(navArgument(name = Navigation.Args.SUMMONER_NAME) {
+        route = Route.Spectator.argsPath,
+        arguments = listOf(navArgument(name = Route.Spectator.KEY_SUMMONER_NAME) {
             type = NavType.StringType
         })
     ) {
@@ -90,17 +76,17 @@ fun NavGraphBuilder.spectatorDestination(
 }
 
 fun NavController.navigateToMain() {
-    navigate(route = Navigation.Routes.MAIN)
+    navigate(route = Route.Main.path)
 }
 
 fun NavController.navigateToSearch() {
-    navigate(route = Navigation.Routes.SEARCH)
+    navigate(route = Route.Search.path)
 }
 
 fun NavController.navigateToSpectator(name: String) {
-    navigate(route = "spectator/$name")
+    navigate(route = Route.Spectator.pathWithArgs(name))
 }
 
 fun NavController.navigateToSummoner(name: String) {
-    navigate(route = "summoner/$name")
+    navigate(route = Route.Summoner.pathWithArgs(name))
 }

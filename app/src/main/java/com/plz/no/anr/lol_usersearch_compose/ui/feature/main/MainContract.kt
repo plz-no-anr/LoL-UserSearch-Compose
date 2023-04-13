@@ -6,16 +6,16 @@ import com.plznoanr.domain.model.Summoner
 
 class MainContract : BaseContract() {
 
-    data class UiState(
+    data class State(
         val data: List<Summoner>,
         val profile: Profile?,
         val key: String?,
         val isLoading: Boolean,
         val isRefreshing: Boolean,
         val error: String?
-    ) : ViewState {
+    ) : BaseContract.State {
             companion object {
-                fun initial() = UiState(
+                fun initial() = State(
                     data = emptyList(),
                     profile = null,
                     key = null,
@@ -26,29 +26,29 @@ class MainContract : BaseContract() {
             }
     }
 
-    sealed class Event : ViewEvent {
+    sealed class Intent : BaseContract.Intent {
 
-        object OnLoad : Event()
+        object OnLoad : Intent()
 
-        object OnSearch : Event()
+        object OnSearch : Intent()
 
-        object Refresh : Event()
+        object Refresh : Intent()
 
-        sealed class Summoner : Event() {
+        sealed class Summoner : Intent() {
             data class OnDelete(val name: String) : Summoner()
             object OnDeleteAll: Summoner()
         }
 
-        sealed class Profile : Event() {
+        sealed class Profile : Intent() {
             data class OnAdd(val profile: com.plznoanr.domain.model.Profile) : Profile()
         }
 
-        sealed class Spectator : Event() {
+        sealed class Spectator : Intent() {
             data class OnWatch(val name: String) : Spectator()
 
         }
 
-        sealed class Key : Event() {
+        sealed class Key : Intent() {
 
             object OnGet : Key()
             data class OnAdd(val key: String) : Key()
@@ -57,13 +57,13 @@ class MainContract : BaseContract() {
 
     }
 
-    sealed class Effect : ViewSideEffect {
+    sealed class SideEffect : BaseContract.SideEffect {
 
-        data class Toast(val message: String) : Effect()
+        data class Toast(val message: String) : SideEffect()
 
-        object MoveGetApiKey : Effect()
+        object MoveGetApiKey : SideEffect()
 
-        sealed class Navigation : Effect() {
+        sealed class Navigation : SideEffect() {
             object ToSearch : Navigation()
             data class ToSpectator(val name: String) : Navigation()
         }

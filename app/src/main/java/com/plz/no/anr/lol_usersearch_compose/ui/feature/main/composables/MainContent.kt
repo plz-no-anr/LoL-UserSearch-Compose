@@ -32,13 +32,13 @@ import com.plznoanr.lol_usersearch_compose.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainView(
+fun MainContent(
     modifier: Modifier = Modifier,
     data: List<Summoner>,
     isRefreshing: Boolean,
-    onEvent: (MainContract.Event) -> Unit
+    onIntent: (MainContract.Intent) -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onEvent(MainContract.Event.Refresh) })
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(MainContract.Intent.Refresh) })
 
     Column(
         modifier = modifier
@@ -49,7 +49,7 @@ fun MainView(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(top = 16.dp, end = 16.dp)
-                .clickable { onEvent(MainContract.Event.Summoner.OnDeleteAll) },
+                .clickable { onIntent(MainContract.Intent.Summoner.OnDeleteAll) },
         )
         Box(
             modifier = Modifier
@@ -58,7 +58,7 @@ fun MainView(
             LazyColumn {
                 items(data) {
                     MainItem(summoner = it) { event ->
-                        onEvent(event)
+                        onIntent(event)
                     }
                 }
             }
