@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpectatorScreen(
-    state: SpectatorContract.UiState,
+    state: SpectatorContract.State,
     sideEffectFlow: Flow<SpectatorContract.SideEffect>?,
     onIntent: (SpectatorContract.Intent) -> Unit,
     onNavigationRequested: (SpectatorContract.SideEffect.Navigation) -> Unit,
@@ -75,7 +75,7 @@ fun SpectatorScreen(
 @Composable
 private fun SpectatorScreenPreview() {
     SpectatorScreen(
-        state = SpectatorContract.UiState.initial(),
+        state = SpectatorContract.State.initial(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {},

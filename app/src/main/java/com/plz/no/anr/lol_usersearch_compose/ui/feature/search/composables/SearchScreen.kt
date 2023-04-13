@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.onEach
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    state: SearchContract.UiState,
+    state: SearchContract.State,
     sideEffectFlow: Flow<SearchContract.SideEffect>?,
     onIntent: (SearchContract.Intent) -> Unit,
     onNavigationRequested: (SearchContract.SideEffect.Navigation) -> Unit,
@@ -78,7 +78,7 @@ fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        state = SearchContract.UiState.initial(),
+        state = SearchContract.State.initial(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

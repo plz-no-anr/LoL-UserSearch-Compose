@@ -1,5 +1,6 @@
 package com.plznoanr.data.model.remote
 
+@kotlinx.serialization.Serializable
 internal data class SummonerResponse(
     val accountId: String,
     val profileIconId: Int,

@@ -6,16 +6,16 @@ import com.plznoanr.domain.model.Summoner
 
 class MainContract : BaseContract() {
 
-    data class UiState(
+    data class State(
         val data: List<Summoner>,
         val profile: Profile?,
         val key: String?,
         val isLoading: Boolean,
         val isRefreshing: Boolean,
         val error: String?
-    ) : BaseContract.UiState {
+    ) : BaseContract.State {
             companion object {
-                fun initial() = UiState(
+                fun initial() = State(
                     data = emptyList(),
                     profile = null,
                     key = null,

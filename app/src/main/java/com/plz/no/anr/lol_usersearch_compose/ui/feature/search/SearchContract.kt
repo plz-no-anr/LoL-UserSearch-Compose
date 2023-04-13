@@ -5,14 +5,14 @@ import com.plznoanr.domain.model.Search
 
 sealed class SearchContract : BaseContract() {
 
-    data class UiState(
+    data class State(
         val data: List<Search>,
         val isLoading: Boolean,
         val error: String?
-    ) : BaseContract.UiState {
+    ) : BaseContract.State {
 
             companion object {
-                fun initial() = UiState(
+                fun initial() = State(
                     data = emptyList(),
                     isLoading = false,
                     error = null

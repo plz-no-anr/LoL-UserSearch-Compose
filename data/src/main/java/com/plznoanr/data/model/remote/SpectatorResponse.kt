@@ -1,5 +1,6 @@
 package com.plznoanr.data.model.remote
 
+@kotlinx.serialization.Serializable
 internal data class SpectatorResponse(
     val gameId: Long,
     val gameType: String,
@@ -14,14 +15,19 @@ internal data class SpectatorResponse(
     val participants: List<CurrentGameParticipant> // 팀원 정보
 ){
 
+    @kotlinx.serialization.Serializable
     data class BannedChampion(
         val pickTurn: Int,
         val championId: Long,
         val teamId: Long
     )
+
+    @kotlinx.serialization.Serializable
     data class Observer(
         val encryptionKey: String
     )
+
+    @kotlinx.serialization.Serializable
     data class CurrentGameParticipant(
         val championId:	Long, // 챔프 정보
         val perks: Perks, // 룬
@@ -34,11 +40,15 @@ internal data class SpectatorResponse(
         val spell2Id: Long, // 스펠2
         val gameCustomizationObjects: List<GameCustomizationObject>
     ) {
+
+        @kotlinx.serialization.Serializable
         data class Perks(
             val perkIds: List<Long>, // 사용룬
             val perkStyle: Long, // 룬 정보
             val perkSubStyle: Long // 보조룬 정도
         )
+
+        @kotlinx.serialization.Serializable
         data class GameCustomizationObject(
             val category: String,
             val content: String

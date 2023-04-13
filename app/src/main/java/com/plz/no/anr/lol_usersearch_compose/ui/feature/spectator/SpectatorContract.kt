@@ -5,14 +5,14 @@ import com.plznoanr.domain.model.Spectator
 
 class SpectatorContract : BaseContract() {
 
-    data class UiState(
+    data class State(
         val data: Spectator?,
         val isLoading: Boolean,
         val error: String?
-    ) : BaseContract.UiState {
+    ) : BaseContract.State {
 
             companion object {
-                fun initial() = UiState(
+                fun initial() = State(
                     data = null,
                     isLoading = false,
                     error = null

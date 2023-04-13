@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseContract.Intent, SideEffect : BaseContract.SideEffect>
+abstract class BaseViewModel<UiState : BaseContract.State, in Intent : BaseContract.Intent, SideEffect : BaseContract.SideEffect>
     : ViewModel() {
 
     abstract fun setInitialState(): UiState
@@ -22,8 +22,8 @@ abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseCon
 
     private val initialState: UiState by lazy { setInitialState() }
 
-    private val _uiState: MutableState<UiState> = mutableStateOf(initialState)
-    val uiState: State<UiState> = _uiState
+    private val _state: MutableState<UiState> = mutableStateOf(initialState)
+    val state: State<UiState> = _state
 
     private val _intent: MutableSharedFlow<Intent> = MutableSharedFlow()
 
@@ -52,12 +52,12 @@ abstract class BaseViewModel<UiState : BaseContract.UiState, in Intent : BaseCon
         viewModelScope.launch(exceptionHandler) { _intent.emit(intent) }
     }
 
-    protected fun setState(reducer: UiState.() -> UiState) {
-        val newState = uiState.value.reducer()
-        _uiState.value = newState
+    protected fun reduce(reducer: UiState.() -> UiState) {
+        val newState = state.value.reducer()
+        _state.value = newState
     }
 
-    protected fun setEffect(builder: () -> SideEffect) {
+    protected fun postSideEffect(builder: () -> SideEffect) {
         val effectValue = builder()
         viewModelScope.launch(exceptionHandler) { _sideEffect.send(effectValue) }
     }

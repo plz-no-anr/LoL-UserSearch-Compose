@@ -49,6 +49,7 @@ object Dependencies {
             const val APP_COMPAT = "1.4.1"
             const val LIFECYCLE = "2.5.0-rc01"
             const val LIFECYCLE_EXTENSION = "2.2.0"
+            const val LIFECYCLE_COMPOSE = "2.6.1"
             const val NAVIGATION = "2.5.3"
             const val ROOM = "2.5.0"
             const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.04.00"
@@ -92,8 +93,8 @@ object Dependencies {
             const val UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
 
             const val ACTIVITY = "androidx.activity:activity-compose:1.7.0"
-            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.LIFECYCLE_COMPOSE}"
+            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:${Version.LIFECYCLE_COMPOSE}"
             const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
             const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
@@ -106,7 +107,7 @@ object Dependencies {
 
         object Version {
             const val ANDROID_MATERIAL = "1.6.0"
-            const val COROUTINES = "1.6.0"
+            const val COROUTINES = "1.6.4"
             const val RETROFIT = "2.9.0"
             const val HILT = "2.45"
             const val GLIDE = "4.14.2"
@@ -121,6 +122,7 @@ object Dependencies {
         // Retrofit
         const val RETROFIT = "com.squareup.retrofit2:retrofit:${Version.RETROFIT}"
         const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Version.RETROFIT}"
+        const val RETROFIT_CONVERTER_SERIALIZATION = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
 
         const val ANDROID_MATERIAL = "com.google.android.material:material:${Version.ANDROID_MATERIAL}"
 
@@ -234,7 +236,8 @@ fun DependencyHandler.implementationCoroutines() {
 fun DependencyHandler.implementationRetrofit() {
     arrayOf(
         Dependencies.ThirdParty.RETROFIT,
-        Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON
+        Dependencies.ThirdParty.RETROFIT_CONVERTER_GSON,
+        Dependencies.ThirdParty.RETROFIT_CONVERTER_SERIALIZATION
     ).forEach { add("implementation", it) }
 }
 

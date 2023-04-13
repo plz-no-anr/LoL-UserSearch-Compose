@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
-    state: MainContract.UiState,
+    state: MainContract.State,
     sideEffectFlow: Flow<MainContract.SideEffect>?,
     onIntent: (MainContract.Intent) -> Unit,
     onNavigationRequested: (MainContract.SideEffect.Navigation) -> Unit,
@@ -132,7 +132,7 @@ fun MainScreen(
 @Composable
 private fun MainScreenPreview() {
     MainScreen(
-        state = MainContract.UiState.initial(),
+        state = MainContract.State.initial(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

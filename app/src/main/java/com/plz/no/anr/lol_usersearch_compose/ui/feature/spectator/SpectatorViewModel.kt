@@ -15,17 +15,17 @@ import javax.inject.Inject
 class SpectatorViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val requestSpectatorUseCase: RequestSpectatorUseCase
-) : BaseViewModel<UiState, Intent, SideEffect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
     private val summonerName: String? by lazy {
         stateHandle.get<String>(Route.Spectator.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): UiState = UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {
-            is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
+            is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
             is Intent.OnLoad -> getSpectator()
         }
     }
@@ -34,16 +34,16 @@ class SpectatorViewModel @Inject constructor(
         viewModelScope.launch {
             summonerName?.let {
                 requestSpectatorUseCase(it.trim())
-                    .onStart { setState { copy(isLoading = true) } }
+                    .onStart { reduce { copy(isLoading = true) } }
                     .collect { result ->
                         result.onSuccess {
-                            setState { copy(data = it, isLoading = false) }
+                            reduce { copy(data = it, isLoading = false) }
                         }.onFailure {
-                            setState { copy(error = it.message, isLoading = false) }
+                            reduce { copy(error = it.message, isLoading = false) }
                         }
                     }
             } ?: run {
-                setState { copy(error = "Summoner name is null", isLoading = false) }
+                reduce { copy(error = "Summoner name is null", isLoading = false) }
             }
         }
     }

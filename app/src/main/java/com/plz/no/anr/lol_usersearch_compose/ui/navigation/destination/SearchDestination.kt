@@ -14,7 +14,7 @@ fun SearchDestination(
     navController: NavController
 ) {
     SearchScreen(
-        state = viewModel.uiState.value,
+        state = viewModel.state.value,
         sideEffectFlow = viewModel.sideEffect,
         onIntent = viewModel::setIntent,
         onNavigationRequested = {

@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SummonerScreen(
-    state: SummonerContract.UiState,
+    state: SummonerContract.State,
     sideEffectFlow: Flow<SummonerContract.SideEffect>?,
     onIntent: (SummonerContract.Intent) -> Unit,
     onNavigationRequested: (SummonerContract.SideEffect.Navigation) -> Unit
@@ -76,7 +76,7 @@ fun SummonerScreen(
 @Composable
 private fun SummonerScreenPreview() {
     SummonerScreen(
-        state = SummonerContract.UiState.initial(),
+        state = SummonerContract.State.initial(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

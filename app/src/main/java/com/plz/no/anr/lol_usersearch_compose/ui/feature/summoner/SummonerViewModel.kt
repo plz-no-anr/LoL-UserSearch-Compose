@@ -15,19 +15,19 @@ import javax.inject.Inject
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val requestSummonerUseCase: RequestSummonerUseCase
-) : BaseViewModel<UiState, Intent, SideEffect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
     private val summonerName: String? by lazy {
         stateHandle.get<String>(Route.Summoner.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): UiState = UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {
             is Intent.OnLoad -> requestSummonerData()
-            is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
-            is Intent.Spectator.OnWatch -> setEffect { SideEffect.Navigation.ToSpectator(intent.name)}
+            is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name)}
         }
     }
 
@@ -35,16 +35,16 @@ class SummonerViewModel @Inject constructor(
         viewModelScope.launch {
             summonerName?.let {
                 requestSummonerUseCase(it.trim())
-                    .onStart { setState { copy(isLoading = true) } }
+                    .onStart { reduce { copy(isLoading = true) } }
                     .collect { result ->
                         result.onSuccess {
-                            setState { copy(data = it, isLoading = false) }
+                            reduce { copy(data = it, isLoading = false) }
                         }.onFailure {
-                            setState { copy(error = it.message, isLoading = false) }
+                            reduce { copy(error = it.message, isLoading = false) }
                         }
                     }
             } ?: run {
-                setState { copy(error = "Summoner name is null", isLoading = false) }
+                reduce { copy(error = "Summoner name is null", isLoading = false) }
             }
         }
     }

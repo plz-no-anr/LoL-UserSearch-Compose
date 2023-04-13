@@ -16,9 +16,9 @@ class SearchViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,
     private val deleteSearchUseCase: DeleteSearchUseCase,
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
-) : BaseViewModel<UiState, Intent, SideEffect>() {
+) : BaseViewModel<State, Intent, SideEffect>() {
 
-    override fun setInitialState(): UiState = UiState.initial()
+    override fun setInitialState(): State = State.initial()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {
@@ -26,10 +26,10 @@ class SearchViewModel @Inject constructor(
             is Intent.Refresh -> {}
             is Intent.Summoner.OnSearch -> {
                 if (intent.name.isNotEmpty()) {
-                    setEffect { SideEffect.Navigation.ToSummoner(intent.name.trim()) }
+                    postSideEffect { SideEffect.Navigation.ToSummoner(intent.name.trim()) }
                 }
             }
-            is Intent.Navigation.Back -> setEffect { SideEffect.Navigation.Back }
+            is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
             is Intent.Search.OnDelete -> deleteSearch(intent.name)
             is Intent.Search.OnDeleteAll -> deleteAll()
         }
@@ -38,17 +38,17 @@ class SearchViewModel @Inject constructor(
     private fun getSearch() {
         viewModelScope.launch {
             getSearchUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = it.asReversed(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -62,17 +62,17 @@ class SearchViewModel @Inject constructor(
     private fun deleteSearch(name: String) {
         viewModelScope.launch {
             deleteSearchUseCase(name)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = data.filter { it.name != name },
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
@@ -86,17 +86,17 @@ class SearchViewModel @Inject constructor(
     private fun deleteAll() {
         viewModelScope.launch {
             deleteSearchAllUseCase(Unit)
-                .onStart { setState { copy(isLoading = true) } }
+                .onStart { reduce { copy(isLoading = true) } }
                 .collect { result ->
                     result.onSuccess {
-                        setState {
+                        reduce {
                             copy(
                                 data = emptyList(),
                                 isLoading = false
                             )
                         }
                     }.onFailure {
-                        setState {
+                        reduce {
                             copy(
                                 error = it.message,
                                 isLoading = false
