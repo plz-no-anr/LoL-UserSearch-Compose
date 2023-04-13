@@ -45,11 +45,9 @@ object Dependencies {
     object AndroidX {
 
         object Version {
-            const val CORE_KTX = "1.7.0"
-            const val APP_COMPAT = "1.4.1"
-            const val LIFECYCLE = "2.5.0-rc01"
-            const val LIFECYCLE_EXTENSION = "2.2.0"
-            const val LIFECYCLE_COMPOSE = "2.6.1"
+            const val CORE_KTX = "1.9.0"
+            const val APP_COMPAT = "1.6.1"
+            const val LIFECYCLE = "2.6.1"
             const val NAVIGATION = "2.5.3"
             const val ROOM = "2.5.0"
             const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.04.00"
@@ -62,7 +60,6 @@ object Dependencies {
         const val LIFECYCLE_LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:${Version.LIFECYCLE}"
         const val LIFECYCLE_VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.LIFECYCLE}"
         const val LIFECYCLE_RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.LIFECYCLE}"
-        const val LIFECYCLE_EXTENSIONS = "androidx.lifecycle:lifecycle-extensions:${Version.LIFECYCLE_EXTENSION}"
 
         // Room
         const val ROOM = "androidx.room:room-ktx:${Version.ROOM}"
@@ -93,8 +90,8 @@ object Dependencies {
             const val UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
 
             const val ACTIVITY = "androidx.activity:activity-compose:1.7.0"
-            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.LIFECYCLE_COMPOSE}"
-            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:${Version.LIFECYCLE_COMPOSE}"
+            const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Version.LIFECYCLE}"
+            const val RUNTIME = "androidx.lifecycle:lifecycle-runtime-compose:${Version.LIFECYCLE}"
             const val NAVIGATION = "androidx.navigation:navigation-compose:2.5.3"
             const val HILT = "androidx.hilt:hilt-navigation-compose:1.0.0"
         }
@@ -110,14 +107,13 @@ object Dependencies {
             const val COROUTINES = "1.6.4"
             const val RETROFIT = "2.9.0"
             const val HILT = "2.45"
-            const val GLIDE = "4.14.2"
             const val VIEW_PAGER = "0.20.1"
             const val ACCOMPANIST = "0.28.0"
         }
 
         // Coroutines
         const val KOTLINX_COROUTINES_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.COROUTINES}"
-        const val KOTLINX_COROUTENS_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.COROUTINES}"
+        const val KOTLINX_COROUTINES_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.COROUTINES}"
 
         // Retrofit
         const val RETROFIT = "com.squareup.retrofit2:retrofit:${Version.RETROFIT}"
@@ -218,7 +214,6 @@ fun DependencyHandler.implementationCompose(
 
 fun DependencyHandler.implementationLifeCycle() {
     arrayOf(
-        Dependencies.AndroidX.LIFECYCLE_EXTENSIONS,
         Dependencies.AndroidX.LIFECYCLE_LIVEDATA_KTX,
         Dependencies.AndroidX.LIFECYCLE_RUNTIME_KTX,
         Dependencies.AndroidX.LIFECYCLE_VIEWMODEL_KTX
@@ -229,7 +224,7 @@ fun DependencyHandler.implementationLifeCycle() {
 fun DependencyHandler.implementationCoroutines() {
     arrayOf(
         Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE,
-        Dependencies.ThirdParty.KOTLINX_COROUTENS_ANDROID
+        Dependencies.ThirdParty.KOTLINX_COROUTINES_ANDROID
     ).forEach { add("implementation", it) }
 }
 

@@ -11,6 +11,6 @@ java {
 
 dependencies {
     // Coroutines
-    implementationCoroutines()
+    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
     implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
 }
