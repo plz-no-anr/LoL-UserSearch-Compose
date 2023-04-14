@@ -43,18 +43,18 @@ fun SummonerContent(
         SummonerInfoView(
             icon = data.icon,
             name = data.name,
-            level = data.getLevels()
+            level = data.levelInfo
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         LeagueInfoView(
-            pointWinLose = data.getLeaguePoint(),
+            pointWinLose = data.lpWinLose,
         )
         Spacer(modifier = Modifier.height(20.dp))
 
         TierRankView(
-            tierRank = data.getTierRank(),
+            tierRank = data.tierRank,
             tierIcon = getTierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
             isPlaying = data.isPlaying,

@@ -24,13 +24,12 @@ internal data class LeagueResponse(
         val target: Int,
         val wins: Int,
         val progress: String
-    ) {
-        fun toDomain() = Summoner.MiniSeries(
-            losses = losses,
-            target = target,
-            wins = wins,
-            progress = progress
-        )
-    }
+    )
 }
 
+internal fun LeagueResponse.MiniSeriesDTO.toDomain() = Summoner.MiniSeries(
+    losses = this.losses,
+    target = this.target,
+    wins = this.wins,
+    progress = this.progress
+)

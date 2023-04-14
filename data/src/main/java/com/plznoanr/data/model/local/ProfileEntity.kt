@@ -10,10 +10,9 @@ data class ProfileEntity(
     val name: String,
     val level: String,
     val icon: String
-){
-    fun toDomain() = Profile(
-        name = name,
-        level = level,
-        icon = icon
-    )
-}
+)
+fun ProfileEntity.toDomain() = Profile(
+    name = name,
+    level = level,
+    icon = icon
+)

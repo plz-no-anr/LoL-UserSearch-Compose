@@ -28,18 +28,14 @@ object LocalDataModule {
             .build()
 
     @Provides
-    @Singleton
     fun provideAppDao(database: AppDatabase): AppDao = database.appDao()
 
     @Provides
-    @Singleton
     fun provideJsonDao(database: AppDatabase): JsonDao = database.jsonDao()
 
     @Provides
-    @Singleton
     fun provideLocalData(appDao: AppDao, jsonDao: JsonDao): LocalDataSource = LocalDataSourceImpl(appDao, jsonDao)
     @Provides
-    @Singleton
     fun providePreferenceData(@ApplicationContext context: Context): PreferenceDataSource = PreferenceDataSource(context)
 
 }

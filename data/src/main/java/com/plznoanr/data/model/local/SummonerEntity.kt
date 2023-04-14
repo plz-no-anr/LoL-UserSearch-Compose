@@ -27,25 +27,24 @@ data class SummonerEntity(
         val target: Int,
         val wins: Int,
         val progress: String
-    ) {
-        fun toDomain() = Summoner.MiniSeries(
-            losses = losses,
-            target = target,
-            wins = wins,
-            progress = progress
-        )
-    }
-    fun toDomain() = Summoner(
-        name = name,
-        level = level,
-        icon = icon,
-        tier = tier,
-        leaguePoints = leaguePoints,
-        rank = rank,
-        wins = wins,
-        losses = losses,
-        miniSeries = miniSeries?.toDomain(),
-        isPlaying = isPlaying
     )
-
+    fun MiniSeries.toDomain() = Summoner.MiniSeries(
+        losses = losses,
+        target = target,
+        wins = wins,
+        progress = progress
+    )
 }
+
+fun SummonerEntity.toDomain() = Summoner(
+    name = name,
+    level = level,
+    icon = icon,
+    tier = tier,
+    leaguePoints = leaguePoints,
+    rank = rank,
+    wins = wins,
+    losses = losses,
+    miniSeries = miniSeries?.toDomain(),
+    isPlaying = isPlaying
+)

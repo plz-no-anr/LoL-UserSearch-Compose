@@ -7,6 +7,7 @@ import com.plznoanr.data.model.local.json.ChampEntity
 import com.plznoanr.data.model.local.json.MapEntity
 import com.plznoanr.data.model.local.json.RuneEntity
 import com.plznoanr.data.model.local.json.SpellEntity
+import com.plznoanr.data.model.local.toDomain
 import com.plznoanr.domain.model.Profile
 import com.plznoanr.domain.model.Search
 import com.plznoanr.domain.model.Summoner
