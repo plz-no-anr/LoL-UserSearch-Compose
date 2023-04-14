@@ -19,11 +19,11 @@ data class Summoner(
         var progress: String
     )
 
-    fun getLevels() = "LV: $level"
+    val levelInfo = "LV: $level"
 
-    fun getLeaguePoint() = "$leaguePoints LP / ${wins}승 ${losses}패"
+    val lpWinLose = "$leaguePoints LP / ${wins}승 ${losses}패"
 
-    fun getTierRank() = "$tier $rank"
+    val tierRank = "$tier $rank"
 
     fun asProfile() = Profile(
         name = name,

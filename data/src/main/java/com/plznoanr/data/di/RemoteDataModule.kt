@@ -25,6 +25,5 @@ internal object RemoteDataModule {
     ): UserSearchApi = retrofit.create(UserSearchApi::class.java)
 
     @Provides
-    @Singleton
     fun provideRemoteData(api: UserSearchApi): RemoteDataSource = RemoteDataSourceImpl(api)
 }

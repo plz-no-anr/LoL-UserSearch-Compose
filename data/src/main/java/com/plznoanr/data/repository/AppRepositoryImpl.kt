@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.plznoanr.data.di.CoroutineQualifiers
 import com.plznoanr.data.model.common.AppError
 import com.plznoanr.data.model.local.SearchEntity
+import com.plznoanr.data.model.local.toDomain
 import com.plznoanr.data.model.remote.*
 import com.plznoanr.data.repository.local.LocalDataSource
 import com.plznoanr.data.repository.local.PreferenceDataSource

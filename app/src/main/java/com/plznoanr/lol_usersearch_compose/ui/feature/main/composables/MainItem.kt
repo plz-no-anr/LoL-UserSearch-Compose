@@ -50,7 +50,7 @@ fun MainItem(
             SummonerView(
                 icon = summoner.icon,
                 name = summoner.name,
-                level = summoner.getLevels()
+                level = summoner.levelInfo
             )
 
             Divider(
@@ -68,7 +68,7 @@ fun MainItem(
                 TierView(
                     modifier = modifier
                         .weight(1f),
-                    tierRank = summoner.getTierRank(),
+                    tierRank = summoner.tierRank,
                     tierIcon = getTierIcon(summoner.tier)
                 )
 
@@ -77,7 +77,7 @@ fun MainItem(
                 LeagueInfoView(
                     modifier = modifier
                         .weight(1f),
-                    pointWinLose = summoner.getLeaguePoint(),
+                    pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
                     isPlaying = summoner.isPlaying,
                     onAdd = { onIntent(MainContract.Intent.Profile.OnAdd(summoner.asProfile())) },

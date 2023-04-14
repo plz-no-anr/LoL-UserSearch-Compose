@@ -2,7 +2,6 @@ package com.plznoanr.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.plznoanr.data.db.dao.AppDao
 import com.plznoanr.data.db.dao.JsonDao

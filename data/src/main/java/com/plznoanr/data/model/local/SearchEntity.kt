@@ -9,9 +9,8 @@ data class SearchEntity(
     @PrimaryKey
     val name: String,
     val date: String
-) {
-    fun toDomain() = Search(
-        name = name,
-        date = date
-    )
-}
+)
+fun SearchEntity.toDomain() = Search(
+    name = name,
+    date = date
+)
