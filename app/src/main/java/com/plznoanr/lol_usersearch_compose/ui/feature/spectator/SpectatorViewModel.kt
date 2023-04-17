@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.plznoanr.domain.usecase.spectator.RequestSpectatorUseCase
 import com.plznoanr.lol_usersearch_compose.ui.base.BaseViewModel
 import com.plznoanr.lol_usersearch_compose.ui.feature.spectator.SpectatorContract.*
-import com.plznoanr.lol_usersearch_compose.ui.navigation.Route
+import com.plznoanr.lol_usersearch_compose.ui.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ class SpectatorViewModel @Inject constructor(
 ) : BaseViewModel<State, Intent, SideEffect>() {
 
     private val summonerName: String? by lazy {
-        stateHandle.get<String>(Route.Spectator.KEY_SUMMONER_NAME)
+        stateHandle.get<String>(Destination.Spectator.Args.KEY_SUMMONER_NAME)
     }
 
     override fun setInitialState(): State = State.initial()
