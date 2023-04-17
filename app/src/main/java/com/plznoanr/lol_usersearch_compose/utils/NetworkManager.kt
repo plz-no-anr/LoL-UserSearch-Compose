@@ -16,7 +16,7 @@ sealed class NetworkState {
 }
 
 class NetworkManager @Inject constructor(
-    private val appContext: Context
+    appContext: Context
 ) {
     private val _networkState = MutableStateFlow<NetworkState>(NetworkState.None)
     val networkState: StateFlow<NetworkState> = _networkState
