@@ -3,4 +3,4 @@
 > 클린 아키텍처 + MVI + 멀티 모듈 + Dagger-Hilt + Kotlin dsl
 
 
-🛠️ CleanArchitecture, MVI-Pattern, MultiModule, Compose, Kotlin-dsl, Dagger-Hilt
+🛠️ CleanArchitecture, MVI-Pattern, Multi-Module, Compose, Kotlin-dsl, Dagger-Hilt
