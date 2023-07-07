@@ -2,19 +2,23 @@ import org.gradle.api.JavaVersion
 
 object AppConfig {
 
-    const val COMPILE_SDK_VERSION = 33
-    const val MIN_SDK_VERSION = 23
-    const val TARGET_SDK_VERSION = 33
-    const val APPLICATION_ID = "com.plznoanr.lol_usersearch_compose"
-    const val VERSION_CODE = 1
-    const val VERSION_NAME = "1.0.0"
-    const val ANDROID_TEST_INSTRUMENTATION = "androidx.test.runner.AndroidJUnitRunner"
+    const val applicationId = "com.plz.no.anr.lol"
+    const val compileSdkVersion = 33
+    const val minSdkVersion = 23
+    const val targetSdkVersion = 33
+    const val versionCode = 1
+    const val versionName = "1.0.0"
+    const val androidTestInstrumentation = "androidx.test.runner.AndroidJUnitRunner"
 
-    val JAVA_JVM_TARGET = JavaVersion.VERSION_11.toString()
-    val JAVA_COMPATIBILITY = JavaVersion.VERSION_11
+    val jvmTarget = JavaVersion.VERSION_17.toString()
+    val javaCompatibility = JavaVersion.VERSION_17
 
-    const val KOTLIN_COMPILER_EXTENTION = "1.4.2"
+    const val kotlinCompilerExtention = "1.4.7"
 
-    const val PROGUARD_FILE_NAME = "proguard-android-optimize.txt"
-    const val PROGUARD_RULES = "proguard-rules.pro"
+    const val proguardFileName = "proguard-android-optimize.txt"
+    const val proguardRules = "proguard-rules.pro"
+}
+
+object NameSpace {
+    const val data = "com.plz.no.anr.lol.data"
 }

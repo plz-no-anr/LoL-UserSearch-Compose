@@ -5,12 +5,15 @@ plugins {
 }
 
 java {
-    sourceCompatibility = AppConfig.JAVA_COMPATIBILITY
-    targetCompatibility = AppConfig.JAVA_COMPATIBILITY
+    sourceCompatibility = AppConfig.javaCompatibility
+    targetCompatibility = AppConfig.javaCompatibility
+}
+
+kotlin {
 }
 
 dependencies {
     // Coroutines
-    implementation(Dependencies.ThirdParty.KOTLINX_COROUTINES_CORE)
-    implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
+    implementation(Dependencies.ThirdParty.coroutinesCore)
+    implementation(Dependencies.ThirdParty.kotlinSerialization)
 }

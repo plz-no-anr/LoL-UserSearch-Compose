@@ -1,4 +1,4 @@
-rootProject.name = "lol-user-search-compose-mvi"
+rootProject.name = "lol"
 include (":app", ":data", ":domain")
 
 dependencyResolutionManagement {

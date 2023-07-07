@@ -1,4 +1,3 @@
-
 plugins {
     androidApplication
     kotlinAndroid
@@ -8,21 +7,21 @@ plugins {
 }
 
 android {
-    namespace = AppConfig.APPLICATION_ID
-    compileSdk = AppConfig.COMPILE_SDK_VERSION
+    namespace = AppConfig.applicationId
+    compileSdk = AppConfig.compileSdkVersion
 
     buildFeatures {
         compose = true
     }
 
     defaultConfig {
-        applicationId = AppConfig.APPLICATION_ID
-        minSdk = AppConfig.MIN_SDK_VERSION
-        targetSdk = AppConfig.TARGET_SDK_VERSION
-        versionCode = AppConfig.VERSION_CODE
-        versionName = AppConfig.VERSION_NAME
+        applicationId = AppConfig.applicationId
+        minSdk = AppConfig.minSdkVersion
+        targetSdk = AppConfig.targetSdkVersion
+        versionCode = AppConfig.versionCode
+        versionName = AppConfig.versionName
 
-        testInstrumentationRunner = AppConfig.ANDROID_TEST_INSTRUMENTATION
+        testInstrumentationRunner = AppConfig.androidTestInstrumentation
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -30,22 +29,24 @@ android {
 
     buildTypes {
         debug {
-
+            isShrinkResources = false
+            isMinifyEnabled = false
         }
         release {
-            isMinifyEnabled = false
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile(AppConfig.PROGUARD_FILE_NAME),
-                AppConfig.PROGUARD_RULES
+                getDefaultProguardFile(AppConfig.proguardFileName),
+                AppConfig.proguardRules
             )
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.JAVA_COMPATIBILITY
-        targetCompatibility = AppConfig.JAVA_COMPATIBILITY
+        sourceCompatibility = AppConfig.javaCompatibility
+        targetCompatibility = AppConfig.javaCompatibility
     }
     kotlinOptions {
-        jvmTarget = AppConfig.JAVA_JVM_TARGET
+        jvmTarget = AppConfig.jvmTarget
     }
     testOptions {
         unitTests.apply {
@@ -53,7 +54,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = AppConfig.KOTLIN_COMPILER_EXTENTION
+        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtention
     }
 }
 
@@ -64,33 +65,33 @@ kapt {
 dependencies {
     implementation(data)
     implementation(domain)
-    implementation(Dependencies.AndroidX.CORE_KTX)
-    implementation(Dependencies.AndroidX.APP_COMPAT)
+    implementation(Dependencies.AndroidX.core)
+    implementation(Dependencies.AndroidX.appcompat)
     // Splash
-    implementation(Dependencies.AndroidX.SPLASH_SCREEN)
+    implementation(Dependencies.AndroidX.splashscreen)
     // Compose
     implementationCompose()
     // Lifecycle
-    implementationLifeCycle()
+    implementationLifecycle()
     // Coroutines
-    implementationCoroutines()
+//    implementationCoroutines()
     // Retrofit
-    implementationRetrofit()
+//    implementationRetrofit()
     // Room
-    implementationRoom()
+//    implementationRoom()
     // Hilt
     implementationHilt()
     // Timber
-    implementation(Dependencies.ThirdParty.TIMBER)
+    implementation(Dependencies.ThirdParty.timber)
     // Theme Adapter
     implementationThemeAdapter()
     // Image load
-    implementation(Dependencies.ThirdParty.COIL)
+    implementation(Dependencies.ThirdParty.coil)
     // Lottie
-    implementation(Dependencies.ThirdParty.LOTTIE_COMPOSE)
+    implementation(Dependencies.ThirdParty.lottieCompose)
     // ViewPager
-    implementation(Dependencies.ThirdParty.VIEW_PAGER)
-    implementation(Dependencies.ThirdParty.VIEW_PAGER_INDICATORS)
+    implementation(Dependencies.ThirdParty.viewPager)
+    implementation(Dependencies.ThirdParty.viewPagerIndicators)
     // UnitTest
     implementationUnitTest()
     // Android Test
