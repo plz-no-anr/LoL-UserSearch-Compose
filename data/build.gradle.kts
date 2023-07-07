@@ -8,30 +8,30 @@ plugins {
 }
 
 android {
-    namespace= AppConfig.APPLICATION_ID
-    compileSdk = AppConfig.COMPILE_SDK_VERSION
+    namespace = NameSpace.data
+    compileSdk = AppConfig.compileSdkVersion
 
     defaultConfig {
-        minSdk = AppConfig.MIN_SDK_VERSION
+        minSdk = AppConfig.minSdkVersion
 
-        testInstrumentationRunner = AppConfig.ANDROID_TEST_INSTRUMENTATION
+        testInstrumentationRunner = AppConfig.androidTestInstrumentation
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile(AppConfig.PROGUARD_FILE_NAME),
-                AppConfig.PROGUARD_RULES
+                getDefaultProguardFile(AppConfig.proguardFileName),
+                AppConfig.proguardRules
             )
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.JAVA_COMPATIBILITY
-        targetCompatibility = AppConfig.JAVA_COMPATIBILITY
+        sourceCompatibility = AppConfig.javaCompatibility
+        targetCompatibility = AppConfig.javaCompatibility
     }
     kotlinOptions {
-        jvmTarget = AppConfig.JAVA_JVM_TARGET
+        jvmTarget = AppConfig.jvmTarget
     }
 }
 
@@ -42,7 +42,7 @@ kapt {
 dependencies {
     implementation(domain)
     // Coroutines
-    implementationCoroutines()
+    api(Dependencies.ThirdParty.coroutinesAndroid)
     // Retrofit
     implementationRetrofit()
     // Room
@@ -50,9 +50,11 @@ dependencies {
     // Hilt
     implementationHilt()
     // Timber
-    implementation(Dependencies.ThirdParty.TIMBER)
+    implementation(Dependencies.ThirdParty.timber)
     // Serialization
-    implementation(Dependencies.ThirdParty.KOTLIN_SERIALIZATION)
+    implementation(Dependencies.ThirdParty.kotlinSerialization)
 
     implementationUnitTest()
+
+    implementationAndroidTest()
 }

@@ -5,10 +5,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(Dependencies.ClassPath.GRADLE)
-        classpath(Dependencies.ClassPath.HILT_PLUGIN)
-        classpath(kotlin(Dependencies.ClassPath.KOTLIN_GRADLE, version = Dependencies.ClassPath.Version.KOTLIN_VERSION))
-        classpath(kotlin(Dependencies.ClassPath.SERIALIZATION, version = Dependencies.ClassPath.Version.KOTLIN_VERSION))
+        classpath(Dependencies.Plugin.gradle)
+        classpath(Dependencies.Plugin.hilt)
+        classpath(kotlin(Dependencies.Plugin.kotlinGradle, version = Version.Plugin.kotlin))
+        classpath(kotlin(Dependencies.Plugin.serialization, version = Version.Plugin.kotlin))
     }
 }
 
