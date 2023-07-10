@@ -19,8 +19,8 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
                 context,
                 PreferenceDataSource.LOL_APP,
                 setOf( // 마이그레이션 하고자 하는 키 모음
-                    DataStoreManager.API_KEY.name,
-                    DataStoreManager.INIT_KEY.name
+                    PreferenceDataSource.API_KEY,
+                    PreferenceDataSource.INIT_KEY
                 )
             )
         )
@@ -33,6 +33,14 @@ class DataStoreManager(
     companion object {
         val API_KEY = stringPreferencesKey("API_KEY")
         val INIT_KEY = booleanPreferencesKey("INIT_KEY")
+    }
+
+    val apiKeyFlow: Flow<String?> = context.dataStore.data.map {
+        it[API_KEY]
+    }
+
+    val initFlow: Flow<Boolean?> = context.dataStore.data.map {
+        it[INIT_KEY]
     }
 
     suspend fun storeApiKey(apiKey: String) {
@@ -52,14 +60,5 @@ class DataStoreManager(
             preferences.remove(API_KEY)
         }
     }
-
-    val apiKeyFlow: Flow<String?> = context.dataStore.data.map {
-        it[API_KEY]
-    }
-    val initFlow: Flow<Boolean?> = context.dataStore.data.map {
-        it[INIT_KEY]
-    }
-
-
 
 }
