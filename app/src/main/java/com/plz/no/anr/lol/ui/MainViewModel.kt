@@ -38,7 +38,8 @@ class MainViewModel @Inject constructor(
             initLocalJson()
         }
     }
-    suspend fun initLocalJson() {
+
+    private suspend fun initLocalJson() {
         withContext(Dispatchers.IO) {
             initialLocalJsonUseCase(Unit)
                 .collect {

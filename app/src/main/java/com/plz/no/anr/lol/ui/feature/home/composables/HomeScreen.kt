@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol.ui.feature.main.composables
+package com.plz.no.anr.lol.ui.feature.home.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +30,7 @@ import com.plz.no.anr.lol.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol.ui.feature.common.GetApiKeyView
 import com.plz.no.anr.lol.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol.ui.feature.common.error.ErrorScreen
-import com.plz.no.anr.lol.ui.feature.main.HomeContract
+import com.plz.no.anr.lol.ui.feature.home.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

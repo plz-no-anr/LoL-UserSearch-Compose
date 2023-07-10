@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol.ui.feature.main
+package com.plz.no.anr.lol.ui.feature.home
 
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Summoner

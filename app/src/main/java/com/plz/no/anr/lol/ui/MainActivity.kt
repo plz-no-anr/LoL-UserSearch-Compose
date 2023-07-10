@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.plz.no.anr.lol.ui.navigation.AppNavigation
+import com.plz.no.anr.lol.ui.navigation.AppNavGraph
 import com.plz.no.anr.lol.ui.theme.LolUserSearchComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
+                    AppNavGraph()
                 }
             }
         }
@@ -43,6 +43,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     LolUserSearchComposeTheme {
-        AppNavigation()
+        AppNavGraph()
     }
 }

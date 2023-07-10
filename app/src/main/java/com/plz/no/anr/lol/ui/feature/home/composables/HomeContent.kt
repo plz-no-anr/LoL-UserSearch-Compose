@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol.ui.feature.main.composables
+package com.plz.no.anr.lol.ui.feature.home.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,7 +27,7 @@ import com.plz.no.anr.lol.R
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.ui.feature.common.IconImage
-import com.plz.no.anr.lol.ui.feature.main.HomeContract
+import com.plz.no.anr.lol.ui.feature.home.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 
 @OptIn(ExperimentalMaterialApi::class)
