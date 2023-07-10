@@ -27,18 +27,18 @@ import com.plz.no.anr.lol.R
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.ui.feature.common.IconImage
-import com.plz.no.anr.lol.ui.feature.main.MainContract
+import com.plz.no.anr.lol.ui.feature.main.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainContent(
+fun HomeContent(
     modifier: Modifier = Modifier,
     data: List<Summoner>,
     isRefreshing: Boolean,
-    onIntent: (MainContract.Intent) -> Unit
+    onIntent: (HomeContract.Intent) -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(MainContract.Intent.Refresh) })
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(HomeContract.Intent.Refresh) })
 
     Column(
         modifier = modifier
@@ -49,7 +49,7 @@ fun MainContent(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(top = 16.dp, end = 16.dp)
-                .clickable { onIntent(MainContract.Intent.Summoner.OnDeleteAll) },
+                .clickable { onIntent(HomeContract.Intent.Summoner.OnDeleteAll) },
         )
         Box(
             modifier = Modifier
@@ -57,7 +57,7 @@ fun MainContent(
         ) {
             LazyColumn {
                 items(data) {
-                    MainItem(summoner = it) { event ->
+                    HomeItem(summoner = it) { event ->
                         onIntent(event)
                     }
                 }

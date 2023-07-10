@@ -30,7 +30,7 @@ import com.plz.no.anr.lol.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol.ui.feature.common.GetApiKeyView
 import com.plz.no.anr.lol.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol.ui.feature.common.error.ErrorScreen
-import com.plz.no.anr.lol.ui.feature.main.MainContract
+import com.plz.no.anr.lol.ui.feature.main.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -39,11 +39,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(
-    state: MainContract.State,
-    sideEffectFlow: Flow<MainContract.SideEffect>?,
-    onIntent: (MainContract.Intent) -> Unit,
-    onNavigationRequested: (MainContract.SideEffect.Navigation) -> Unit,
+fun HomeScreen(
+    state: HomeContract.State,
+    sideEffectFlow: Flow<HomeContract.SideEffect>?,
+    onIntent: (HomeContract.Intent) -> Unit,
+    onNavigationRequested: (HomeContract.SideEffect.Navigation) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
@@ -57,16 +57,16 @@ fun MainScreen(
     val (getKeyVisible, setKeyVisible) = remember { mutableStateOf(false) }
 
     LaunchedEffect(SIDE_EFFECTS_KEY) {
-        onIntent(MainContract.Intent.OnLoad)
+        onIntent(HomeContract.Intent.OnLoad)
         sideEffectFlow?.onEach { sideEffect ->
             when (sideEffect) {
-                is MainContract.SideEffect.Navigation.ToSearch -> onNavigationRequested(sideEffect)
-                is MainContract.SideEffect.Navigation.ToSpectator -> onNavigationRequested(sideEffect)
-                is MainContract.SideEffect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
+                is HomeContract.SideEffect.Navigation.ToSearch -> onNavigationRequested(sideEffect)
+                is HomeContract.SideEffect.Navigation.ToSpectator -> onNavigationRequested(sideEffect)
+                is HomeContract.SideEffect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
                     message = sideEffect.message,
                     duration = SnackbarDuration.Short
                 )
-                is MainContract.SideEffect.MoveGetApiKey -> setKeyVisible(true)
+                is HomeContract.SideEffect.MoveGetApiKey -> setKeyVisible(true)
             }
         }?.collect()
     }
@@ -84,7 +84,7 @@ fun MainScreen(
                     }
                 },
             ) {
-                IconButton(onClick = { onIntent(MainContract.Intent.OnSearch) }) {
+                IconButton(onClick = { onIntent(HomeContract.Intent.OnSearch) }) {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = null,
@@ -99,17 +99,17 @@ fun MainScreen(
                 data = profileState,
                 apiKey = keyState,
                 onGetKey = {
-                    onIntent(MainContract.Intent.Key.OnGet)
+                    onIntent(HomeContract.Intent.Key.OnGet)
                 },
                 onAddKey = {
                     it.run {
                         if (isNotEmpty()) {
-                            onIntent(MainContract.Intent.Key.OnAdd(it))
+                            onIntent(HomeContract.Intent.Key.OnAdd(it))
                         }
                     }
                 },
                 onDeleteKey = {
-                    onIntent(MainContract.Intent.Key.OnDelete)
+                    onIntent(HomeContract.Intent.Key.OnDelete)
                 }
             )
         },
@@ -119,9 +119,9 @@ fun MainScreen(
     ) {
         when {
             state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(error = state.error.parseError()) { onIntent(MainContract.Intent.OnLoad) }
+            state.error != null -> ErrorScreen(error = state.error.parseError()) { onIntent(HomeContract.Intent.OnLoad) }
             else -> {
-                MainContent(
+                HomeContent(
                     modifier = Modifier.padding(it),
                     data = state.data,
                     isRefreshing = state.isRefreshing,
@@ -141,9 +141,9 @@ fun MainScreen(
 
 @Preview
 @Composable
-private fun MainScreenPreview() {
-    MainScreen(
-        state = MainContract.State.initial(),
+private fun HomeScreenPreview() {
+    HomeScreen(
+        state = HomeContract.State.initial(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

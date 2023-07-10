@@ -40,14 +40,14 @@ import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.domain.model.getDummySummoner
 import com.plz.no.anr.lol.ui.feature.common.IconImage
 import com.plz.no.anr.lol.ui.feature.common.summoner.getTierIcon
-import com.plz.no.anr.lol.ui.feature.main.MainContract
+import com.plz.no.anr.lol.ui.feature.main.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 
 @Composable
-fun MainItem(
+fun HomeItem(
     modifier: Modifier = Modifier,
     summoner: Summoner,
-    onIntent: (MainContract.Intent) -> Unit
+    onIntent: (HomeContract.Intent) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -97,9 +97,9 @@ fun MainItem(
                     pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
                     isPlaying = summoner.isPlaying,
-                    onAdd = { onIntent(MainContract.Intent.Profile.OnAdd(summoner.asProfile())) },
-                    onDelete = { onIntent(MainContract.Intent.Summoner.OnDelete(summoner.name)) },
-                    onSpectator = { onIntent(MainContract.Intent.Spectator.OnWatch(summoner.name)) }
+                    onAdd = { onIntent(HomeContract.Intent.Profile.OnAdd(summoner.asProfile())) },
+                    onDelete = { onIntent(HomeContract.Intent.Summoner.OnDelete(summoner.name)) },
+                    onSpectator = { onIntent(HomeContract.Intent.Spectator.OnWatch(summoner.name)) }
                 )
             }
 
@@ -322,8 +322,8 @@ private fun SpectatorView(
 
 @Preview
 @Composable
-private fun MainItemPreview() {
-    MainItem(
+private fun HomeItemPreview() {
+    HomeItem(
         summoner = getDummySummoner()
     ) {}
 }

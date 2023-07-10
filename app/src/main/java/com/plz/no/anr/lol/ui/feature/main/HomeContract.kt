@@ -4,7 +4,7 @@ import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.ui.base.BaseContract
 
-class MainContract : BaseContract() {
+class HomeContract : BaseContract() {
 
     data class State(
         val data: List<Summoner>,

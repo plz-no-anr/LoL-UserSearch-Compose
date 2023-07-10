@@ -6,7 +6,7 @@ import com.plz.no.anr.lol.data.model.local.SearchEntity
 import com.plz.no.anr.lol.data.model.local.SummonerEntity
 
 @Dao
-interface AppDao {
+interface LolDao {
     @Query("SELECT * FROM Search")
     suspend fun getSearch(): List<SearchEntity>
 
@@ -36,10 +36,13 @@ interface AppDao {
 
     @Query("SELECT * FROM Summoner")
     suspend fun getSummoner() : List<SummonerEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
+
     @Update
     suspend fun updateSummoner(summonerEntity: SummonerEntity)
+
     @Query("DELETE FROM Summoner WHERE name = :summonerName")
     suspend fun deleteSummoner(summonerName: String)
 

@@ -1,6 +1,9 @@
 package com.plz.no.anr.lol.data.di
 
 import com.plz.no.anr.lol.domain.repository.AppRepository
+import com.plz.no.anr.lol.domain.repository.ProfileRepository
+import com.plz.no.anr.lol.domain.repository.SearchRepository
+import com.plz.no.anr.lol.domain.repository.SummonerRepository
 import com.plz.no.anr.lol.domain.usecase.json.InitialLocalJsonUseCase
 import com.plz.no.anr.lol.domain.usecase.key.DeleteKeyUseCase
 import com.plz.no.anr.lol.domain.usecase.key.GetKeyUseCase
@@ -14,7 +17,6 @@ import com.plz.no.anr.lol.domain.usecase.search.GetSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.search.InsertSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.spectator.RequestSpectatorUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.*
-import com.plz.no.anr.lol.data.di.CoroutineQualifiers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,79 +35,79 @@ internal object UseCaseModule {
     @Provides
     fun provideGetSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SearchRepository
     ) = GetSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideInsertSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SearchRepository
     ) = InsertSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SearchRepository
     ) = DeleteSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteAllSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SearchRepository
     ) = DeleteAllSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideGetProfileUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: ProfileRepository
     ) = GetProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideInsertProfileUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: ProfileRepository
     ) = InsertProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteProfileUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: ProfileRepository
     ) = DeleteProfileUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideRequestSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = RequestSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideRequestSummonerListUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = ReadSummonerListUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideRefreshSummonerListUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = RefreshSummonerListUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideInsertSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = InsertSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = DeleteSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteAllSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = DeleteAllSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
@@ -123,7 +125,7 @@ internal object UseCaseModule {
     @Provides
     fun provideRequestSpectatorUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
-        repository: AppRepository
+        repository: SummonerRepository
     ) = RequestSpectatorUseCase(coroutineDispatcher, repository)
 
     @Provides

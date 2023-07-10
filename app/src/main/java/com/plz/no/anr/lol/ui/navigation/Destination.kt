@@ -24,7 +24,7 @@ sealed class Destination(open val route: String) {
 
         override val route: String
         get() = "${super.route}?{${Args.KEY_SUMMONER_NAME}}"
-        fun pathWithArgs(summonerName: String) = "${super.route}?$summonerName"
+        fun routeWithArgs(summonerName: String) = "${super.route}?$summonerName"
     }
 
 }

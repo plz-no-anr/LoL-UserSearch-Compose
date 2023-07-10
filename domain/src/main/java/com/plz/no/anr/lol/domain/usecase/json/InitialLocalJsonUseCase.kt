@@ -5,6 +5,11 @@ import com.plz.no.anr.lol.domain.usecase.base.BaseUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * 초기 inital시 true
+ * else
+ * false
+ */
 class InitialLocalJsonUseCase(
     coroutineDispatcher: CoroutineDispatcher,
     private val repository: AppRepository

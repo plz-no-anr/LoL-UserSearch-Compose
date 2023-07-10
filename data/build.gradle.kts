@@ -54,6 +54,8 @@ dependencies {
     // Serialization
     implementation(Dependencies.ThirdParty.kotlinSerialization)
 
+    implmentationDataStore()
+
     implementationUnitTest()
 
     implementationAndroidTest()
