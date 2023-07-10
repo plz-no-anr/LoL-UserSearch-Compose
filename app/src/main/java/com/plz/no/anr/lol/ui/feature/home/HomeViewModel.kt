@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol.ui.feature.main
+package com.plz.no.anr.lol.ui.feature.home
 
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol.domain.model.Profile
@@ -12,9 +12,9 @@ import com.plz.no.anr.lol.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.RefreshSummonerListUseCase
 import com.plz.no.anr.lol.ui.base.BaseViewModel
-import com.plz.no.anr.lol.ui.feature.main.HomeContract.Intent
-import com.plz.no.anr.lol.ui.feature.main.HomeContract.SideEffect
-import com.plz.no.anr.lol.ui.feature.main.HomeContract.State
+import com.plz.no.anr.lol.ui.feature.home.HomeContract.Intent
+import com.plz.no.anr.lol.ui.feature.home.HomeContract.SideEffect
+import com.plz.no.anr.lol.ui.feature.home.HomeContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine

@@ -1,4 +1,4 @@
-package com.plz.no.anr.lol.ui.feature.main.composables
+package com.plz.no.anr.lol.ui.feature.home.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -40,7 +40,7 @@ import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.domain.model.getDummySummoner
 import com.plz.no.anr.lol.ui.feature.common.IconImage
 import com.plz.no.anr.lol.ui.feature.common.summoner.getTierIcon
-import com.plz.no.anr.lol.ui.feature.main.HomeContract
+import com.plz.no.anr.lol.ui.feature.home.HomeContract
 import com.plz.no.anr.lol.ui.theme.sky
 
 @Composable
