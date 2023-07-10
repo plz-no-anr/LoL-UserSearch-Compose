@@ -84,7 +84,7 @@ fun NavController.navigateToSearch() {
 }
 
 fun NavController.navigateToSpectator(name: String) {
-    navigate(route = Destination.Spectator.pathWithArgs(name))
+    navigate(route = Destination.Spectator.routeWithArgs(name))
 }
 
 fun NavController.navigateToSummoner(name: String) {

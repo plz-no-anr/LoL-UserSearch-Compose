@@ -12,9 +12,9 @@ import com.plz.no.anr.lol.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.RefreshSummonerListUseCase
 import com.plz.no.anr.lol.ui.base.BaseViewModel
-import com.plz.no.anr.lol.ui.feature.main.MainContract.Intent
-import com.plz.no.anr.lol.ui.feature.main.MainContract.SideEffect
-import com.plz.no.anr.lol.ui.feature.main.MainContract.State
+import com.plz.no.anr.lol.ui.feature.main.HomeContract.Intent
+import com.plz.no.anr.lol.ui.feature.main.HomeContract.SideEffect
+import com.plz.no.anr.lol.ui.feature.main.HomeContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val deleteAllSummonerUseCase: DeleteAllSummonerUseCase,
     private val deleteSummonerUseCase: DeleteSummonerUseCase,
     private val getProfileUseCase: GetProfileUseCase,
@@ -60,12 +60,8 @@ class MainViewModel @Inject constructor(
                     getKeyUseCase(Unit),
                     getProfileUseCase(Unit),
                     readSummonerListUseCase(Unit)
-                ) { k, p, r ->
-                    if (k.isSuccess && p.isSuccess && r.isSuccess) {
-                        k.getOrNull() to p.getOrNull() to r.getOrElse { emptyList() }
-                    } else {
-                        null to null to emptyList()
-                    }
+                ) { key, profile, summoners ->
+                    key.getOrNull() to profile.getOrNull() to summoners.getOrElse { emptyList() }
                 }.onStart { reduce { copy(isLoading = true) } }
                     .collect {
                         reduce {

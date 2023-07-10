@@ -15,6 +15,7 @@ object Version {
         const val room = "2.5.2"
         const val activity = "1.7.2"
         const val splash = "1.0.0"
+        const val dataStore = "1.0.0"
         const val compose = "androidx.compose:compose-bom:2023.04.00"
     }
 

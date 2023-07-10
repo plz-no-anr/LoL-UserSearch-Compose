@@ -2,28 +2,27 @@ package com.plz.no.anr.lol.data.repository.local
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.plz.no.anr.lol.data.utils.DEFAULT_API_KEY
 
 class PreferenceDataSource (
     context: Context
 ) {
     companion object {
-        private const val LOL_APP = "LOL_APP"
+        const val LOL_APP = "LOL_APP"
         const val API_KEY = "API_KEY"
-        const val LOCAL_DATA_INIT = "LOCAL_DATA_INIT"
+        const val INIT_KEY = "INIT_KEY"
     }
     private val prefs: SharedPreferences =
         context.getSharedPreferences(LOL_APP, Context.MODE_PRIVATE)
 
     var apiKey: String?
-        get() = prefs.getString(API_KEY, DEFAULT_API_KEY)
+        get() = prefs.getString(API_KEY, "DEFAULT_API_KEY")
         set(value) {
             prefs.edit().putString(API_KEY, value).apply()
         }
 
     var isInit: Boolean
-        get() = prefs.getBoolean(LOCAL_DATA_INIT, false)
+        get() = prefs.getBoolean(INIT_KEY, false)
         set(value) {
-            prefs.edit().putBoolean(LOCAL_DATA_INIT, value).apply()
+            prefs.edit().putBoolean(INIT_KEY, value).apply()
         }
 }

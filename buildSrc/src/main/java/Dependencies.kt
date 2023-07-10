@@ -53,6 +53,10 @@ object Dependencies {
         const val roomRuntime = "androidx.room:room-runtime:${Version.AndroidX.room}"
         const val roomCompiler = "androidx.room:room-compiler:${Version.AndroidX.room}"
 
+        // DataStore
+        const val dataStore = "androidx.datastore:datastore-preferences:${Version.AndroidX.dataStore}"
+        const val dataStoreCore = "androidx.datastore:datastore-preferences-core:${Version.AndroidX.dataStore}"
+
         object Compose {
             // Compose
             // Choose one of the following:
@@ -230,4 +234,11 @@ fun DependencyHandler.implementationAndroidTest() {
         Dependencies.AndroidTest.junit,
         Dependencies.AndroidTest.espresso,
     ).forEach { add("androidTestImplementation", it) }
+}
+
+fun DependencyHandler.implmentationDataStore() {
+    arrayOf(
+        Dependencies.AndroidX.dataStore,
+        Dependencies.AndroidX.dataStoreCore,
+    ).forEach { add("implementation", it) }
 }

@@ -3,25 +3,25 @@ package com.plz.no.anr.lol.ui.navigation.destination
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.plz.no.anr.lol.ui.feature.main.MainContract
-import com.plz.no.anr.lol.ui.feature.main.MainViewModel
-import com.plz.no.anr.lol.ui.feature.main.composables.MainScreen
+import com.plz.no.anr.lol.ui.feature.main.HomeContract
+import com.plz.no.anr.lol.ui.feature.main.HomeViewModel
+import com.plz.no.anr.lol.ui.feature.main.composables.HomeScreen
 import com.plz.no.anr.lol.ui.navigation.navigateToSearch
 import com.plz.no.anr.lol.ui.navigation.navigateToSpectator
 
 @Composable
 fun MainDestination(
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    MainScreen(
+    HomeScreen(
         state = viewModel.state.value,
         sideEffectFlow = viewModel.sideEffect,
         onIntent = viewModel::postIntent,
     ) {
         when (it) {
-            is MainContract.SideEffect.Navigation.ToSearch -> navController.navigateToSearch()
-            is MainContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
+            is HomeContract.SideEffect.Navigation.ToSearch -> navController.navigateToSearch()
+            is HomeContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
         }
 
     }
