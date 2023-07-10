@@ -33,8 +33,8 @@ class JsonUtils(
             return@withContext LocalJson(champJson, mapJson, runeJson, summonerJson)
         } catch (e: Exception) {
             Timber.e(e)
+            return@withContext null
         }
-        return@withContext null
     }
 
 }
