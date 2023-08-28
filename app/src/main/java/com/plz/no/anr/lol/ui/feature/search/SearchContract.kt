@@ -6,19 +6,11 @@ import com.plz.no.anr.lol.ui.base.BaseContract
 sealed class SearchContract : BaseContract() {
 
     data class State(
-        val data: List<Search>,
-        val isLoading: Boolean,
-        val error: String?
-    ) : BaseContract.State {
-
-            companion object {
-                fun initial() = State(
-                    data = emptyList(),
-                    isLoading = false,
-                    error = null
-                )
-            }
-    }
+        val data: List<Search>? = null,
+        val name: String = "",
+        val isLoading: Boolean = false,
+        val error: String? = null
+    ) : BaseContract.State
 
     sealed class Intent :
         BaseContract.Intent {
@@ -29,6 +21,8 @@ sealed class SearchContract : BaseContract() {
 
         sealed class Summoner : Intent() {
             data class OnSearch(val name: String) : Summoner()
+
+            data class OnNameChanged(val name: String) : Summoner()
         }
 
         sealed class Search : Intent() {

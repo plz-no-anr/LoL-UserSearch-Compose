@@ -6,19 +6,10 @@ import com.plz.no.anr.lol.ui.base.BaseContract
 class SpectatorContract : BaseContract() {
 
     data class State(
-        val data: Spectator?,
-        val isLoading: Boolean,
-        val error: String?
-    ) : BaseContract.State {
-
-            companion object {
-                fun initial() = State(
-                    data = null,
-                    isLoading = false,
-                    error = null
-                )
-            }
-    }
+        val data: Spectator? = null,
+        val isLoading: Boolean = false,
+        val error: String? = null
+    ) : BaseContract.State
 
     sealed class Intent : BaseContract.Intent {
 

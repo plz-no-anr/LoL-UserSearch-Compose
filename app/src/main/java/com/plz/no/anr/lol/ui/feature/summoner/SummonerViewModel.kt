@@ -23,7 +23,7 @@ class SummonerViewModel @Inject constructor(
         stateHandle.get<String>(Destination.Summoner.Args.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): State = State.initial()
+    override fun setInitialState(): State = State()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {

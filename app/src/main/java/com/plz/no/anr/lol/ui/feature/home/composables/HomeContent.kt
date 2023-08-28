@@ -34,7 +34,7 @@ import com.plz.no.anr.lol.ui.theme.sky
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    data: List<Summoner>,
+    data: List<Summoner>? = null,
     isRefreshing: Boolean,
     onIntent: (HomeContract.Intent) -> Unit
 ) {
@@ -55,13 +55,16 @@ fun HomeContent(
             modifier = Modifier
                 .pullRefresh(state = pullRefreshState)
         ) {
-            LazyColumn {
-                items(data) {
-                    HomeItem(summoner = it) { event ->
-                        onIntent(event)
+            data?.let { list ->
+                LazyColumn {
+                    items(list) {
+                        HomeItem(summoner = it) { event ->
+                            onIntent(event)
+                        }
                     }
                 }
             }
+
             PullRefreshIndicator(
                 isRefreshing,
                 pullRefreshState,

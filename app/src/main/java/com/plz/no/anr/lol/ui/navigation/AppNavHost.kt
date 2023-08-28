@@ -8,39 +8,39 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.plz.no.anr.lol.ui.navigation.destination.MainDestination
+import com.plz.no.anr.lol.ui.navigation.destination.HomeRoute
 import com.plz.no.anr.lol.ui.navigation.destination.SearchDestination
-import com.plz.no.anr.lol.ui.navigation.destination.SpectatorDestination
-import com.plz.no.anr.lol.ui.navigation.destination.SummonerDestination
+import com.plz.no.anr.lol.ui.navigation.destination.SpectatorRoute
+import com.plz.no.anr.lol.ui.navigation.destination.SummonerRoute
 
 @Composable
-fun AppNavGraph() {
+fun AppNavHost() {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
         startDestination = Destination.Main.route,
     ) {
-        mainDestination(navController = navController)
+        mainScreen(navController = navController)
 
-        searchDestination(navController = navController)
+        searchScreen(navController = navController)
 
-        summonerDestination(navController = navController)
+        summonerScreen(navController = navController)
 
-        spectatorDestination(navController = navController)
+        spectatorScreen(navController = navController)
     }
 
 }
 
-private fun NavGraphBuilder.mainDestination(
+private fun NavGraphBuilder.mainScreen(
     navController: NavController,
 ) {
     composable(route = Destination.Main.route) {
-        MainDestination(navController = navController)
+        HomeRoute(navController = navController)
     }
 }
 
-private fun NavGraphBuilder.searchDestination(
+private fun NavGraphBuilder.searchScreen(
     navController: NavController,
 ) {
     composable(route = Destination.Search.route) {
@@ -48,7 +48,7 @@ private fun NavGraphBuilder.searchDestination(
     }
 }
 
-private fun NavGraphBuilder.summonerDestination(
+private fun NavGraphBuilder.summonerScreen(
     navController: NavController,
 ) {
     composable(
@@ -57,11 +57,11 @@ private fun NavGraphBuilder.summonerDestination(
             type = NavType.StringType
         })
     ) {
-        SummonerDestination(navController = navController)
+        SummonerRoute(navController = navController)
     }
 }
 
-private fun NavGraphBuilder.spectatorDestination(
+private fun NavGraphBuilder.spectatorScreen(
     navController: NavController,
 ) {
     composable(
@@ -70,6 +70,6 @@ private fun NavGraphBuilder.spectatorDestination(
             type = NavType.StringType
         })
     ) {
-        SpectatorDestination(navController = navController)
+        SpectatorRoute(navController = navController)
     }
 }

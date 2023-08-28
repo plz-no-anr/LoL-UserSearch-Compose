@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = "app_prefs",
+    name = DataStoreManager.DATASTORE_NAME,
     produceMigrations = { context ->
         listOf(
             SharedPreferencesMigration(
-                context,
-                PreferenceDataSource.LOL_APP,
-                setOf( // 마이그레이션 하고자 하는 키 모음
+                context = context,
+                sharedPreferencesName = PreferenceDataSource.LOL_APP,
+                keysToMigrate = setOf( // 마이그레이션 하고자 하는 키 모음
                     PreferenceDataSource.API_KEY,
                     PreferenceDataSource.INIT_KEY
                 )
@@ -31,6 +31,7 @@ class DataStoreManager(
     private val context: Context
 ) {
     companion object {
+        const val DATASTORE_NAME = "app_prefs"
         val API_KEY = stringPreferencesKey("API_KEY")
         val INIT_KEY = booleanPreferencesKey("INIT_KEY")
     }

@@ -47,12 +47,6 @@ fun HomeScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    var profileState by remember {
-        mutableStateOf(getDummyProfile())
-    }
-    var keyState by remember {
-        mutableStateOf<String?>(null)
-    }
 
     val (getKeyVisible, setKeyVisible) = remember { mutableStateOf(false) }
 
@@ -96,8 +90,8 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         drawerContent = {
             Drawers(
-                data = profileState,
-                apiKey = keyState,
+                data = state.profile ?: getDummyProfile(),
+                apiKey = state.key,
                 onGetKey = {
                     onIntent(HomeContract.Intent.Key.OnGet)
                 },
@@ -128,10 +122,6 @@ fun HomeScreen(
                 ) { intent ->
                     onIntent(intent)
                 }
-                state.profile?.also { profile ->
-                    profileState = profile
-                }
-                keyState = state.key
             }
         }
         if (getKeyVisible) GetApiKeyView()
@@ -143,7 +133,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     HomeScreen(
-        state = HomeContract.State.initial(),
+        state = HomeContract.State(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}
