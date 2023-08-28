@@ -29,8 +29,6 @@ fun SearchScreen(
         SnackbarHostState()
     }
 
-    var name by remember { mutableStateOf("") }
-
     LaunchedEffect(SIDE_EFFECTS_KEY) {
         onIntent(SearchContract.Intent.OnLoad)
         sideEffectFlow?.onEach { sideEffect ->
@@ -63,8 +61,8 @@ fun SearchScreen(
                     modifier = Modifier
                         .padding(it),
                     data = state.data,
-                    name = name,
-                    onNameChange = { summonerName -> name = summonerName },
+                    name = state.name,
+                    onNameChange = { summonerName -> onIntent(SearchContract.Intent.Summoner.OnNameChanged(summonerName)) },
                     onIntent = onIntent,
                 )
             }
@@ -78,7 +76,7 @@ fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        state = SearchContract.State.initial(),
+        state = SearchContract.State(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

@@ -20,7 +20,7 @@ class SearchViewModel @Inject constructor(
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
 ) : BaseViewModel<State, Intent, SideEffect>() {
 
-    override fun setInitialState(): State = State.initial()
+    override fun setInitialState(): State = State()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {
@@ -34,6 +34,7 @@ class SearchViewModel @Inject constructor(
             is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
             is Intent.Search.OnDelete -> deleteSearch(intent.name)
             is Intent.Search.OnDeleteAll -> deleteAll()
+            is Intent.Summoner.OnNameChanged -> reduce { copy(name = intent.name) }
         }
     }
 
@@ -69,7 +70,7 @@ class SearchViewModel @Inject constructor(
                     result.onSuccess {
                         reduce {
                             copy(
-                                data = data.filter { it.name != name },
+                                data = data?.filter { it.name != name },
                                 isLoading = false
                             )
                         }

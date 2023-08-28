@@ -7,24 +7,13 @@ import com.plz.no.anr.lol.ui.base.BaseContract
 class HomeContract : BaseContract() {
 
     data class State(
-        val data: List<Summoner>,
-        val profile: Profile?,
-        val key: String?,
-        val isLoading: Boolean,
-        val isRefreshing: Boolean,
-        val error: String?
-    ) : BaseContract.State {
-            companion object {
-                fun initial() = State(
-                    data = emptyList(),
-                    profile = null,
-                    key = null,
-                    isLoading = false,
-                    isRefreshing = false,
-                    error = null
-                )
-            }
-    }
+        val data: List<Summoner>? = null,
+        val profile: Profile? = null,
+        val key: String? = null,
+        val isLoading: Boolean = false,
+        val isRefreshing: Boolean = false,
+        val error: String? = null
+    ) : BaseContract.State
 
     sealed class Intent : BaseContract.Intent {
 

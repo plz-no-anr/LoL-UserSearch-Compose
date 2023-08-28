@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,8 +24,8 @@ abstract class BaseViewModel<UiState : BaseContract.State, in Intent : BaseContr
 
     private val initialState: UiState by lazy { setInitialState() }
 
-    private val _state: MutableState<UiState> = mutableStateOf(initialState)
-    val state: State<UiState> = _state
+    private val _state: MutableStateFlow<UiState> = MutableStateFlow(initialState)
+    val state: StateFlow<UiState> = _state
 
     private val _intent: MutableSharedFlow<Intent> = MutableSharedFlow()
 

@@ -36,7 +36,7 @@ class HomeViewModel @Inject constructor(
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
 ) : BaseViewModel<State, Intent, SideEffect>() {
 
-    override fun setInitialState(): State = State.initial()
+    override fun setInitialState(): State = State()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {
@@ -136,7 +136,7 @@ class HomeViewModel @Inject constructor(
                     result.onSuccess {
                         reduce {
                             copy(
-                                data = data.filter { it.name != name }.asReversed(),
+                                data = data?.filter { it.name != name }?.asReversed(),
                                 isLoading = false
                             )
                         }

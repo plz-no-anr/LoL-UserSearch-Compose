@@ -76,7 +76,7 @@ fun SummonerScreen(
 @Composable
 private fun SummonerScreenPreview() {
     SummonerScreen(
-        state = SummonerContract.State.initial(),
+        state = SummonerContract.State(),
         sideEffectFlow = null,
         onIntent = {},
         onNavigationRequested = {}

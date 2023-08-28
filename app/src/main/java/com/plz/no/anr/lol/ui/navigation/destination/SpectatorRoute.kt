@@ -1,20 +1,24 @@
 package com.plz.no.anr.lol.ui.navigation.destination
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.plz.no.anr.lol.ui.feature.spectator.SpectatorContract
 import com.plz.no.anr.lol.ui.feature.spectator.SpectatorViewModel
 import com.plz.no.anr.lol.ui.feature.spectator.composables.SpectatorScreen
 
 @Composable
-fun SpectatorDestination(
+fun SpectatorRoute(
     viewModel: SpectatorViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     SpectatorScreen(
-        state = viewModel.state.value,
+        state = state,
         sideEffectFlow = viewModel.sideEffect,
         onIntent = viewModel::postIntent,
         onNavigationRequested = {

@@ -23,7 +23,7 @@ class SpectatorViewModel @Inject constructor(
         stateHandle.get<String>(Destination.Spectator.Args.KEY_SUMMONER_NAME)
     }
 
-    override fun setInitialState(): State = State.initial()
+    override fun setInitialState(): State = State()
 
     override fun handleIntents(intent: Intent) {
         when (intent) {

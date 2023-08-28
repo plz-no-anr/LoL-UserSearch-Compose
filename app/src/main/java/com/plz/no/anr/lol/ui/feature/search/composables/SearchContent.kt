@@ -23,8 +23,8 @@ import com.plz.no.anr.lol.ui.feature.search.SearchContract
 @Composable
 fun SearchContent(
     modifier: Modifier = Modifier,
-    data: List<Search>,
-    name: String,
+    data: List<Search>? = null,
+    name: String? = null,
     onNameChange: (String) -> Unit,
     onIntent: (SearchContract.Intent) -> Unit,
 ) {
@@ -34,7 +34,7 @@ fun SearchContent(
             .fillMaxSize()
     ) {
         TextField(
-            value = name,
+            value = name ?: "",
             onValueChange = onNameChange,
             label = { Text( text = stringResource(id = R.string.summoner_name) ) },
             modifier = Modifier
@@ -42,7 +42,11 @@ fun SearchContent(
                 .height(60.dp),
             trailingIcon = {
                 IconButton(
-                    onClick = { onIntent(SearchContract.Intent.Summoner.OnSearch(name)) }
+                    onClick = {
+                        name?.let {
+                            onIntent(SearchContract.Intent.Summoner.OnSearch(it))
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -54,9 +58,8 @@ fun SearchContent(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search
-            ),
-
             )
+        )
 
         TextButton(
             modifier = Modifier
@@ -69,18 +72,24 @@ fun SearchContent(
             Text(text = stringResource(id = R.string.delete_all))
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-        ) {
-            items(data) { search ->
-                SearchItem(
-                    data = search,
-                    onSearch = { onIntent(SearchContract.Intent.Summoner.OnSearch(search.name)) },
-                    onDelete = { onIntent(SearchContract.Intent.Search.OnDelete(search.name)) }
-                )
+        data?.let { list ->
+            if (list.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                ) {
+                    items(data) { search ->
+                        SearchItem(
+                            data = search,
+                            onSearch = { onIntent(SearchContract.Intent.Summoner.OnSearch(search.name)) },
+                            onDelete = { onIntent(SearchContract.Intent.Search.OnDelete(search.name)) }
+                        )
+                    }
+                }
             }
+
         }
+
     }
 }
