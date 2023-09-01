@@ -43,6 +43,8 @@ dependencies {
     implementation(domain)
     // Coroutines
     api(Dependencies.ThirdParty.coroutinesAndroid)
+    // OkHttp
+    implementationOkHttp()
     // Retrofit
     implementationRetrofit()
     // Room
