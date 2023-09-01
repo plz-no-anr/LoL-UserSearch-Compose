@@ -9,16 +9,16 @@ import retrofit2.Response
 internal class RemoteDataSourceImpl (
     private val api: UserSearchApi
 ): RemoteDataSource {
-    override suspend fun requestSummoner(name: String, apiKey: String): SummonerResponse {
-        return api.getSummoner(name, apiKey).asResult()
+    override suspend fun requestSummoner(header: HashMap<String, String>, name: String): SummonerResponse {
+        return api.getSummoner(header, name).asResult()
     }
 
-    override suspend fun requestLeague(summonerId: String?, apiKey: String): Set<LeagueResponse> {
-        return api.getLeague(summonerId, apiKey).asResult()
+    override suspend fun requestLeague(header: HashMap<String, String>, summonerId: String?): Set<LeagueResponse> {
+        return api.getLeague(header, summonerId).asResult()
     }
 
-    override suspend fun requestSpectator(summonerId: String?, apiKey: String): SpectatorResponse? {
-        return api.getSpectator(summonerId, apiKey).run {
+    override suspend fun requestSpectator(header: HashMap<String, String>, summonerId: String?): SpectatorResponse? {
+        return api.getSpectator(header, summonerId).run {
             if (isSuccessful) {
                 body()
             } else {

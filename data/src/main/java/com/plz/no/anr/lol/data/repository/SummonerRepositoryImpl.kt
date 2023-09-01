@@ -98,8 +98,8 @@ internal class SummonerRepositoryImpl(
     override fun requestSpectator(name: String): Flow<Result<Spectator>> = flow {
         try {
             val key = getAuthKey()
-            val summoner = remoteDataSource.requestSummoner(name, key)
-            val spectator = remoteDataSource.requestSpectator(summoner.id, key)
+            val summoner = remoteDataSource.requestSummoner(key.toHeader(), name)
+            val spectator = remoteDataSource.requestSpectator(key.toHeader(), summoner.id)
             val spectatorResult = spectator?.let { response ->
                 Spectator(
                     map = response.mapId.toMap(),
@@ -140,14 +140,14 @@ internal class SummonerRepositoryImpl(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun requestSummoner(name: String, key: String): Summoner? {
-        val summoner = remoteDataSource.requestSummoner(name, key)
-        val league = remoteDataSource.requestLeague(summoner.id, key)
-        val spectator = remoteDataSource.requestSpectator(summoner.id, key)
-        var summonerResult: Summoner? = null
+        val header = key.toHeader()
+        val summoner = remoteDataSource.requestSummoner(header, name)
+        val league = remoteDataSource.requestLeague(header, key)
+        val spectator = remoteDataSource.requestSpectator(header, key)
 
         league.forEach {
             if (it.queueType == QueueType.SOLO_RANK) {
-                summonerResult = Summoner(
+                return Summoner(
                     name = summoner.name,
                     level = summoner.summonerLevel.toString(),
                     icon = summoner.profileIconId.toIcon(),
@@ -161,7 +161,7 @@ internal class SummonerRepositoryImpl(
                 )
             }
         }
-        return summonerResult
+        return null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -332,6 +332,10 @@ internal class SummonerRepositoryImpl(
             }
         }
         return@withContext runeNames
+    }
+
+    private fun String.toHeader() = HashMap<String, String>().apply {
+        put("X-Riot-Token", this@toHeader)
     }
 
 }

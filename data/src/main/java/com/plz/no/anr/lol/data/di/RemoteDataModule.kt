@@ -2,6 +2,7 @@ package com.plz.no.anr.lol.data.di
 
 import com.plz.no.anr.lol.data.api.RetrofitGenerator
 import com.plz.no.anr.lol.data.api.UserSearchApi
+import com.plz.no.anr.lol.data.api.config.ApiConfiguration
 import com.plz.no.anr.lol.data.repository.remote.RemoteDataSource
 import com.plz.no.anr.lol.data.repository.remote.RemoteDataSourceImpl
 import dagger.Module
@@ -17,7 +18,14 @@ internal object RemoteDataModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit = RetrofitGenerator().client
+    fun provideApiConfiguration() = ApiConfiguration()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        apiConfiguration: ApiConfiguration
+    ): Retrofit = RetrofitGenerator(apiConfiguration).client
+
     @Provides
     @Singleton
     fun provideApiService(
