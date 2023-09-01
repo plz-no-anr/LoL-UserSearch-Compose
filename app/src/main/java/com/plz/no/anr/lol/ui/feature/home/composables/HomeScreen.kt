@@ -12,11 +12,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.plz.no.anr.lol.R
 import com.plz.no.anr.lol.data.model.common.parseError
 import com.plz.no.anr.lol.domain.model.Profile
-import com.plz.no.anr.lol.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol.ui.feature.common.GetApiKeyView
 import com.plz.no.anr.lol.ui.feature.common.TopAppBar
@@ -50,7 +47,7 @@ fun HomeScreen(
 
     val (getKeyVisible, setKeyVisible) = remember { mutableStateOf(false) }
 
-    LaunchedEffect(SIDE_EFFECTS_KEY) {
+    LaunchedEffect(Unit) {
         onIntent(HomeContract.Intent.OnLoad)
         sideEffectFlow?.onEach { sideEffect ->
             when (sideEffect) {

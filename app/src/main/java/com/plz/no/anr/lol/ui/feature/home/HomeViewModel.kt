@@ -11,7 +11,6 @@ import com.plz.no.anr.lol.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.RefreshSummonerListUseCase
-import com.plz.no.anr.lol.ui.base.BaseViewModel
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.Intent
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.State
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
     private val deleteKeyUseCase: DeleteKeyUseCase,
     private val readSummonerListUseCase: ReadSummonerListUseCase,
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
-) : BaseViewModel<State, Intent, SideEffect>() {
+) : ComaViewModel<State, Intent, SideEffect>() {
 
     override fun setInitialState(): State = State()
 
@@ -102,7 +102,6 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
-
     private fun deleteAllSummoner() {
         viewModelScope.launch {
             deleteAllSummonerUseCase(Unit)
@@ -127,7 +126,6 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
-
     private fun deleteSummoner(name: String) {
         viewModelScope.launch {
             deleteSummonerUseCase(name)

@@ -4,13 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol.domain.usecase.search.DeleteAllSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.search.DeleteSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.search.GetSearchUseCase
-import com.plz.no.anr.lol.ui.base.BaseViewModel
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.Intent
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +18,7 @@ class SearchViewModel @Inject constructor(
     private val getSearchUseCase: GetSearchUseCase,
     private val deleteSearchUseCase: DeleteSearchUseCase,
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
-) : BaseViewModel<State, Intent, SideEffect>() {
+) : ComaViewModel<State, Intent, SideEffect>() {
 
     override fun setInitialState(): State = State()
 

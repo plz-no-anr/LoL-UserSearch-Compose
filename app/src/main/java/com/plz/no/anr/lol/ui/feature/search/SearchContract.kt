@@ -1,19 +1,18 @@
 package com.plz.no.anr.lol.ui.feature.search
 
 import com.plz.no.anr.lol.domain.model.Search
-import com.plz.no.anr.lol.ui.base.BaseContract
+import plznoanr.coma.core.ComaContract
 
-sealed class SearchContract : BaseContract() {
+sealed class SearchContract : ComaContract() {
 
     data class State(
         val data: List<Search>? = null,
         val name: String = "",
         val isLoading: Boolean = false,
         val error: String? = null
-    ) : BaseContract.State
+    ) : ComaContract.State
 
-    sealed class Intent :
-        BaseContract.Intent {
+    sealed class Intent : ComaContract.Intent {
 
         object OnLoad : Intent()
 
@@ -35,8 +34,7 @@ sealed class SearchContract : BaseContract() {
         }
     }
 
-    sealed class SideEffect :
-        BaseContract.SideEffect {
+    sealed class SideEffect : ComaContract.SideEffect {
 
         data class Toast(val msg: String) : SideEffect()
 
