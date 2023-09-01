@@ -2,9 +2,9 @@ package com.plz.no.anr.lol.ui.feature.home
 
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Summoner
-import com.plz.no.anr.lol.ui.base.BaseContract
+import plznoanr.coma.core.ComaContract
 
-class HomeContract : BaseContract() {
+class HomeContract : ComaContract() {
 
     data class State(
         val data: List<Summoner>? = null,
@@ -13,9 +13,9 @@ class HomeContract : BaseContract() {
         val isLoading: Boolean = false,
         val isRefreshing: Boolean = false,
         val error: String? = null
-    ) : BaseContract.State
+    ) : ComaContract.State
 
-    sealed class Intent : BaseContract.Intent {
+    sealed class Intent : ComaContract.Intent {
 
         object OnLoad : Intent()
 
@@ -46,7 +46,7 @@ class HomeContract : BaseContract() {
 
     }
 
-    sealed class SideEffect : BaseContract.SideEffect {
+    sealed class SideEffect : ComaContract.SideEffect {
 
         data class Toast(val message: String) : SideEffect()
 

@@ -1,17 +1,17 @@
 package com.plz.no.anr.lol.ui.feature.summoner
 
 import com.plz.no.anr.lol.domain.model.Summoner
-import com.plz.no.anr.lol.ui.base.BaseContract
+import plznoanr.coma.core.ComaContract
 
-class SummonerContract : BaseContract() {
+class SummonerContract : ComaContract() {
 
     data class State(
         val data: Summoner? = null,
         val isLoading: Boolean = false,
         val error: String? = null
-    ) : BaseContract.State
+    ) : ComaContract.State
 
-    sealed class Intent : BaseContract.Intent {
+    sealed class Intent : ComaContract.Intent {
 
         object OnLoad : Intent()
 
@@ -25,7 +25,7 @@ class SummonerContract : BaseContract() {
 
     }
 
-    sealed class SideEffect : BaseContract.SideEffect {
+    sealed class SideEffect : ComaContract.SideEffect {
 
         data class Toast(val msg: String) : SideEffect()
 
