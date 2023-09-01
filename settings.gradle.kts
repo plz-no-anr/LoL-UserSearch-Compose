@@ -1,6 +1,10 @@
-rootProject.name = "lol"
-include (":app", ":data", ":domain")
-
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -8,4 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
+rootProject.name = "lol"
+include (":app", ":data", ":domain")
