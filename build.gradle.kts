@@ -1,15 +1,10 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath(Dependencies.Plugin.gradle)
-        classpath(Dependencies.Plugin.hilt)
-        classpath(kotlin(Dependencies.Plugin.kotlinGradle, version = Version.Plugin.kotlin))
-        classpath(kotlin(Dependencies.Plugin.serialization, version = Version.Plugin.kotlin))
-    }
+
+plugins {
+    id(Dependencies.Plugin.application) version Versions.Plugin.agp apply false
+    kotlin(Dependencies.Plugin.kotlin) version Versions.Plugin.kotlin apply false
+    kotlin(Dependencies.Plugin.serialization) version Versions.Plugin.kotlin apply false
+    id(Dependencies.Plugin.hilt) version Versions.Plugin.hilt apply false
+    kotlin(Dependencies.Plugin.kapt) version Versions.Plugin.kotlin apply false
 }
 
 tasks {

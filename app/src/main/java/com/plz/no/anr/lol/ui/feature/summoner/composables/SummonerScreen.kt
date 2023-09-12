@@ -10,7 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.plz.no.anr.lol.R
 import com.plz.no.anr.lol.data.model.common.parseError
-import com.plz.no.anr.lol.ui.base.SIDE_EFFECTS_KEY
 import com.plz.no.anr.lol.ui.feature.common.AppProgressBar
 import com.plz.no.anr.lol.ui.feature.common.TopAppBar
 import com.plz.no.anr.lol.ui.feature.common.error.ErrorScreen
@@ -31,7 +30,7 @@ fun SummonerScreen(
         SnackbarHostState()
     }
 
-    LaunchedEffect(SIDE_EFFECTS_KEY) {
+    LaunchedEffect(Unit) {
         onIntent(SummonerContract.Intent.OnLoad)
         sideEffectFlow?.onEach { sideEffect ->
             when (sideEffect) {

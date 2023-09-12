@@ -14,6 +14,7 @@ sealed class Destination(open val route: String) {
 
         override val route: String
         get() = "${super.route}?{${Args.KEY_SUMMONER_NAME}}"
+
         fun routeWithArgs(summonerName: String) = "${super.route}?$summonerName"
     }
 
@@ -24,15 +25,14 @@ sealed class Destination(open val route: String) {
 
         override val route: String
         get() = "${super.route}?{${Args.KEY_SUMMONER_NAME}}"
+
         fun routeWithArgs(summonerName: String) = "${super.route}?$summonerName"
     }
 
 }
 
-private fun generateArgsRoute(route: String, args: List<String>): String {
-    var routeWithArgs = route
-    args.forEach {
-        routeWithArgs += "?{$it}"
+private fun generateArgsRoute(route: String, args: List<String>): String = route.let {
+    args.fold(it) { r, arg ->
+        r.plus("?{$arg}")
     }
-    return routeWithArgs
 }

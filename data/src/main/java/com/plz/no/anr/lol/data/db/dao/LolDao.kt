@@ -7,6 +7,7 @@ import com.plz.no.anr.lol.data.model.local.SummonerEntity
 
 @Dao
 interface LolDao {
+
     @Query("SELECT * FROM Search")
     suspend fun getSearch(): List<SearchEntity>
 

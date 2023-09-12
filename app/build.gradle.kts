@@ -54,7 +54,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtention
+        kotlinCompilerExtensionVersion = Versions.kotlinCompilerExtention
     }
 }
 
@@ -89,6 +89,8 @@ dependencies {
     implementation(Dependencies.ThirdParty.coil)
     // Lottie
     implementation(Dependencies.ThirdParty.lottieCompose)
+    // Coma
+    implementation(Dependencies.ThirdParty.coma)
     // ViewPager
     implementation(Dependencies.ThirdParty.viewPager)
     implementation(Dependencies.ThirdParty.viewPagerIndicators)

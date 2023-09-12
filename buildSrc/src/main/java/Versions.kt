@@ -1,10 +1,13 @@
-object Version {
+object Versions {
 
     object Plugin {
-        const val gradle = "8.0.2"
+        const val agp = "8.1.1"
         const val kotlin = "1.8.21"
-        const val hilt = "2.45"
+        const val hilt = "2.48"
+        const val ksp = "1.9.10-1.0.13"
     }
+
+    const val kotlinCompilerExtention = "1.4.7"
 
     object AndroidX {
         const val coreKtx = "1.10.0"
@@ -16,12 +19,13 @@ object Version {
         const val activity = "1.7.2"
         const val splash = "1.0.0"
         const val dataStore = "1.0.0"
-        const val compose = "androidx.compose:compose-bom:2023.04.00"
+        const val compose = "androidx.compose:compose-bom:2023.08.00"
     }
 
     object ThirdParty {
         const val material = "1.8.0"
         const val coroutine = "1.7.1"
+        const val okHttp = "4.11.0"
         const val retrofit = "2.9.0"
         const val viewPager = "0.20.1"
         const val accompanist = "0.28.0"

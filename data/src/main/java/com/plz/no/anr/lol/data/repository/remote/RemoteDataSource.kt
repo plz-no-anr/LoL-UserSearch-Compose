@@ -5,9 +5,9 @@ import com.plz.no.anr.lol.data.model.remote.SpectatorResponse
 import com.plz.no.anr.lol.data.model.remote.SummonerResponse
 
 internal interface RemoteDataSource {
-    suspend fun requestSummoner(name: String, apiKey: String): SummonerResponse
+    suspend fun requestSummoner(header: HashMap<String, String>, name: String): SummonerResponse
 
-    suspend fun requestLeague(summonerId:String?, apiKey: String): Set<LeagueResponse>
+    suspend fun requestLeague(header: HashMap<String, String>, summonerId:String?): Set<LeagueResponse>
 
-    suspend fun requestSpectator(summonerId:String?, apiKey: String): SpectatorResponse?
+    suspend fun requestSpectator(header: HashMap<String, String>, summonerId:String?): SpectatorResponse?
 }
