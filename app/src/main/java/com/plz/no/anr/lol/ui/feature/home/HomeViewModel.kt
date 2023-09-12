@@ -61,15 +61,19 @@ class HomeViewModel @Inject constructor(
                     getProfileUseCase(Unit),
                     readSummonerListUseCase(Unit)
                 ) { key, profile, summoners ->
-                    key.getOrNull() to profile.getOrNull() to summoners.getOrElse { emptyList() }
+                    State(
+                        key = key.getOrNull(),
+                        profile = profile.getOrNull(),
+                        data = summoners.getOrElse { emptyList() }
+                    )
                 }.onStart { reduce { copy(isLoading = true) } }
                     .collect {
                         reduce {
                             copy(
-                                key = it.first.first,
-                                profile = it.first.second,
-                                data = it.second.asReversed(),
-                                isLoading = false
+                                isLoading = false,
+                                key = it.key,
+                                profile = it.profile,
+                                data = it.data?.asReversed(),
                             )
                         }
                     }
