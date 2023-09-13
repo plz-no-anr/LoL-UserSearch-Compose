@@ -8,13 +8,13 @@ import com.plz.no.anr.lol.data.utils.JsonUtils
 import com.plz.no.anr.lol.data.utils.toEntity
 import com.plz.no.anr.lol.domain.repository.AppRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 
 internal class AppRepositoryImpl(
     private val appLocalDataSource: AppLocalDataSource,
-    private val preferenceDataSource: PreferenceDataSource,
     private val dataStoreManager: DataStoreManager,
     private val jsonUtils: JsonUtils,
 ) : AppRepository {
@@ -41,8 +41,9 @@ internal class AppRepositoryImpl(
     }
 
     override fun initLocalJson(): Flow<Result<Boolean>> = flow {
-        Timber.d("isInit: ${getLocalInit()}")
-        if (!getLocalInit()) {
+        val init = getLocalInit()
+        Timber.d("isInit: $init")
+        if (!init) {
             val json = getJson()
 
             json.map.data.values.forEach {
@@ -62,6 +63,8 @@ internal class AppRepositoryImpl(
         } else {
             emit(Result.success(false))
         }
+    }.catch {
+        emit(Result.failure(it))
     }
 
 

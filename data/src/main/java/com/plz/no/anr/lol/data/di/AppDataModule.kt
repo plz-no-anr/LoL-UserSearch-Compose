@@ -27,12 +27,10 @@ object AppDataModule {
     @Provides
     fun provideAppRepository(
         appLocalDataSource: AppLocalDataSource,
-        preferenceDataSource: PreferenceDataSource,
         dataStoreManager: DataStoreManager,
         jsonUtils: JsonUtils
     ) : AppRepository = AppRepositoryImpl(
         appLocalDataSource,
-        preferenceDataSource,
         dataStoreManager,
         jsonUtils
     )
