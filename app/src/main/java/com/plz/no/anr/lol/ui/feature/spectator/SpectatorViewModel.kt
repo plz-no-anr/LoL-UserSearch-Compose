@@ -8,8 +8,9 @@ import com.plz.no.anr.lol.ui.feature.spectator.SpectatorContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.spectator.SpectatorContract.State
 import com.plz.no.anr.lol.ui.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -33,20 +34,18 @@ class SpectatorViewModel @Inject constructor(
     }
 
     private fun getSpectator() {
-        viewModelScope.launch {
-            summonerName?.let {
-                requestSpectatorUseCase(it.trim())
-                    .onStart { reduce { copy(isLoading = true) } }
-                    .collect { result ->
-                        result.onSuccess {
-                            reduce { copy(data = it, isLoading = false) }
-                        }.onFailure {
-                            reduce { copy(error = it.message, isLoading = false) }
-                        }
+        summonerName?.let {
+            requestSpectatorUseCase(it.trim())
+                .onStart { reduce { copy(isLoading = true) } }
+                .onEach { result ->
+                    result.onSuccess {
+                        reduce { copy(data = it, isLoading = false) }
+                    }.onFailure {
+                        reduce { copy(error = it.message, isLoading = false) }
                     }
-            } ?: run {
-                reduce { copy(error = "Summoner name is null", isLoading = false) }
-            }
+                }.launchIn(viewModelScope)
+        } ?: run {
+            reduce { copy(error = "Summoner name is null", isLoading = false) }
         }
     }
 

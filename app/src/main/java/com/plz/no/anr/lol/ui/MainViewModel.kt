@@ -6,10 +6,11 @@ import com.plz.no.anr.lol.domain.usecase.json.InitialLocalJsonUseCase
 import com.plz.no.anr.lol.utils.NetworkManager
 import com.plz.no.anr.lol.utils.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,22 +33,17 @@ class MainViewModel @Inject constructor(
     init {
         Timber.w("$this created.")
         viewModelScope.launch {
-            initLocalJson()
-        }
-    }
+            val init = initialLocalJsonUseCase(Unit)
+                .onEach {
+                    Timber.d("initialLocalJsonUseCase : $it")
+                }.catch { _appState.emit(AppState.Error(it)) }
+                .first()
 
-    private suspend fun initLocalJson() {
-        withContext(Dispatchers.IO) {
-            initialLocalJsonUseCase(Unit)
-                .collect {
-                    it.onSuccess { result ->
-                        Timber.d("initialLocalJson result : $result")
-                        _appState.emit(AppState.Success(result))
-                    }.onFailure { t ->
-                        Timber.d("Initial LocalJson fail")
-                        _appState.emit(AppState.Error(t))
-                    }
-                }
+            init.onSuccess {
+                _appState.emit(AppState.Success(true))
+            }.onFailure {
+                _appState.emit(AppState.Error(it))
+            }
         }
     }
 

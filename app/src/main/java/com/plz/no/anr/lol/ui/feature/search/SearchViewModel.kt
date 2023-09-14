@@ -8,8 +8,9 @@ import com.plz.no.anr.lol.ui.feature.search.SearchContract.Intent
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -31,6 +32,7 @@ class SearchViewModel @Inject constructor(
                     postSideEffect { SideEffect.Navigation.ToSummoner(intent.name.trim()) }
                 }
             }
+
             is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
             is Intent.Search.OnDelete -> deleteSearch(intent.name)
             is Intent.Search.OnDeleteAll -> deleteAll()
@@ -39,75 +41,69 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getSearch() {
-        viewModelScope.launch {
-            getSearchUseCase(Unit)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = it.asReversed(),
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        getSearchUseCase(Unit)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = it.asReversed(),
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
                     }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
     private fun deleteSearch(name: String) {
-        viewModelScope.launch {
-            deleteSearchUseCase(name)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = data?.filter { it.name != name },
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        deleteSearchUseCase(name)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = data?.filter { it.name != name },
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
                     }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
     private fun deleteAll() {
-        viewModelScope.launch {
-            deleteSearchAllUseCase(Unit)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = emptyList(),
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        deleteSearchAllUseCase(Unit)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = emptyList(),
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
                     }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
 }

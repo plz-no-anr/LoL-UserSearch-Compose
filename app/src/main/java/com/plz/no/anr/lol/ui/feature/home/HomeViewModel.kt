@@ -15,11 +15,10 @@ import com.plz.no.anr.lol.ui.feature.home.HomeContract.Intent
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -54,180 +53,161 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun onLoad() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                combine(
-                    getKeyUseCase(Unit),
-                    getProfileUseCase(Unit),
-                    readSummonerListUseCase(Unit)
-                ) { key, profile, summoners ->
-                    State(
-                        key = key.getOrNull(),
-                        profile = profile.getOrNull(),
-                        data = summoners.getOrElse { emptyList() }
+        combine(
+            getKeyUseCase(Unit),
+            getProfileUseCase(Unit),
+            readSummonerListUseCase(Unit)
+        ) { key, profile, summoners ->
+            State(
+                key = key.getOrNull(),
+                profile = profile.getOrNull(),
+                data = summoners.getOrElse { emptyList() }
+            )
+        }.onStart { reduce { copy(isLoading = true) } }
+            .onEach {
+                reduce {
+                    copy(
+                        isLoading = false,
+                        key = it.key,
+                        profile = it.profile,
+                        data = it.data?.asReversed(),
                     )
-                }.onStart { reduce { copy(isLoading = true) } }
-                    .collect {
-                        reduce {
-                            copy(
-                                isLoading = false,
-                                key = it.key,
-                                profile = it.profile,
-                                data = it.data?.asReversed(),
-                            )
-                        }
-                    }
-            }
-        }
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun refreshSummonerList() {
-        viewModelScope.launch {
-            refreshSummonerListUseCase(Unit)
-                .onStart { reduce { copy(isRefreshing = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = it.asReversed(),
-                                isRefreshing = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                isRefreshing = false
-                            )
-                        }
-                        postSideEffect {
-                            SideEffect.Toast(it.message ?: "Error")
-                        }
+        refreshSummonerListUseCase(Unit)
+            .onStart { reduce { copy(isRefreshing = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = it.asReversed(),
+                            isRefreshing = false
+                        )
+                    }
+                }.onFailure {
+                    reduce {
+                        copy(
+                            isRefreshing = false
+                        )
+                    }
+                    postSideEffect {
+                        SideEffect.Toast(it.message ?: "Error")
                     }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
+
     private fun deleteAllSummoner() {
-        viewModelScope.launch {
-            deleteAllSummonerUseCase(Unit)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = emptyList(),
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        deleteAllSummonerUseCase(Unit)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = emptyList(),
+                            isLoading = false
+                        )
                     }
-
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
-    private fun deleteSummoner(name: String) {
-        viewModelScope.launch {
-            deleteSummonerUseCase(name)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                data = data?.filter { it.name != name }?.asReversed(),
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
-                    }
 
+    private fun deleteSummoner(name: String) {
+        deleteSummonerUseCase(name)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            data = data?.filter { it.name != name }?.asReversed(),
+                            isLoading = false
+                        )
+                    }
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
     private fun addProfile(profile: Profile) {
-        viewModelScope.launch {
-            insertProfileUseCase(profile)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                profile = profile,
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        insertProfileUseCase(profile)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            profile = profile,
+                            isLoading = false
+                        )
                     }
-
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
     private fun insertKey(key: String) {
-        viewModelScope.launch {
-            insertKeyUseCase(key)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                key = key,
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        insertKeyUseCase(key)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            key = key,
+                            isLoading = false
+                        )
                     }
-
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
     private fun deleteKey() {
-        viewModelScope.launch {
-            deleteKeyUseCase(Unit)
-                .onStart { reduce { copy(isLoading = true) } }
-                .collect { result ->
-                    result.onSuccess {
-                        reduce {
-                            copy(
-                                key = null,
-                                isLoading = false
-                            )
-                        }
-                    }.onFailure {
-                        reduce {
-                            copy(
-                                error = it.message,
-                                isLoading = false
-                            )
-                        }
+        deleteKeyUseCase(Unit)
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce {
+                        copy(
+                            key = null,
+                            isLoading = false
+                        )
                     }
-
+                }.onFailure {
+                    reduce {
+                        copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-        }
+            }.launchIn(viewModelScope)
     }
 
 }
