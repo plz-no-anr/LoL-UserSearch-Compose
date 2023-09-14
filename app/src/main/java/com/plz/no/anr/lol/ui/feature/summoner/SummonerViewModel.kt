@@ -8,8 +8,9 @@ import com.plz.no.anr.lol.ui.feature.summoner.SummonerContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.summoner.SummonerContract.State
 import com.plz.no.anr.lol.ui.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -29,25 +30,23 @@ class SummonerViewModel @Inject constructor(
         when (intent) {
             is Intent.OnLoad -> requestSummonerData()
             is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
-            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name)}
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name) }
         }
     }
 
     private fun requestSummonerData() {
-        viewModelScope.launch {
-            summonerName?.let {
-                requestSummonerUseCase(it.trim())
-                    .onStart { reduce { copy(isLoading = true) } }
-                    .collect { result ->
-                        result.onSuccess {
-                            reduce { copy(data = it, isLoading = false) }
-                        }.onFailure {
-                            reduce { copy(error = it.message, isLoading = false) }
-                        }
+        summonerName?.let {
+            requestSummonerUseCase(it.trim())
+                .onStart { reduce { copy(isLoading = true) } }
+                .onEach { result ->
+                    result.onSuccess {
+                        reduce { copy(data = it, isLoading = false) }
+                    }.onFailure {
+                        reduce { copy(error = it.message, isLoading = false) }
                     }
-            } ?: run {
-                reduce { copy(error = "Summoner name is null", isLoading = false) }
-            }
+                }.launchIn(viewModelScope)
+        } ?: run {
+            reduce { copy(error = "Summoner name is null", isLoading = false) }
         }
     }
 
