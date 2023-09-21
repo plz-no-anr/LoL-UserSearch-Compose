@@ -142,8 +142,8 @@ internal class SummonerRepositoryImpl(
     private suspend fun requestSummoner(name: String, key: String): Summoner? {
         val header = key.toHeader()
         val summoner = remoteDataSource.requestSummoner(header, name)
-        val league = remoteDataSource.requestLeague(header, key)
-        val spectator = remoteDataSource.requestSpectator(header, key)
+        val league = remoteDataSource.requestLeague(header, summoner.id)
+        val spectator = remoteDataSource.requestSpectator(header, summoner.id)
 
         league.forEach {
             if (it.queueType == QueueType.SOLO_RANK) {
