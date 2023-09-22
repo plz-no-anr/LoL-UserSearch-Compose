@@ -2,21 +2,22 @@ package com.plz.no.anr.lol.data.repository
 
 import com.plz.no.anr.lol.data.model.common.AppError
 import com.plz.no.anr.lol.data.repository.local.DataStoreManager
-import com.plz.no.anr.lol.data.repository.local.PreferenceDataSource
 import com.plz.no.anr.lol.data.repository.local.app.AppLocalDataSource
 import com.plz.no.anr.lol.data.utils.JsonUtils
-import com.plz.no.anr.lol.data.utils.toEntity
+import com.plz.no.anr.lol.data.utils.asEntity
 import com.plz.no.anr.lol.domain.repository.AppRepository
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class AppRepositoryImpl(
     private val appLocalDataSource: AppLocalDataSource,
     private val dataStoreManager: DataStoreManager,
-    private val jsonUtils: JsonUtils,
+    private val jsonUtils: JsonUtils
 ) : AppRepository {
 
     override fun getApiKey(): Flow<Result<String?>> = flow {
@@ -34,34 +35,43 @@ internal class AppRepositoryImpl(
         emit(Result.success(Unit))
     }
 
-    private suspend fun getLocalInit() = dataStoreManager.initFlow.first() ?: false
+    private suspend fun isLocalInitialize() = dataStoreManager.initFlow.first() ?: false
 
     private suspend fun getJson() = requireNotNull(jsonUtils.getLocalJson()) {
         throw Exception(AppError.NoJsonData.parse())
     }
 
     override fun initLocalJson(): Flow<Result<Boolean>> = flow {
-        val init = getLocalInit()
+        val init = isLocalInitialize()
         Timber.d("isInit: $init")
-        if (!init) {
-            val json = getJson()
-
-            json.map.data.values.forEach {
-                appLocalDataSource.insertMap(it.toEntity())
+        coroutineScope {
+            if (!init) {
+                val json = getJson()
+                launch {
+                    json.map.data.values.forEach {
+                        appLocalDataSource.insertMap(it.asEntity())
+                    }
+                }
+                launch {
+                    json.champ.data.values.forEach {
+                        appLocalDataSource.insertChamp(it.asEntity())
+                    }
+                }
+                launch {
+                    json.rune.forEach {
+                        appLocalDataSource.insertRune(it.asEntity())
+                    }
+                }
+                launch {
+                    json.summoner.data.values.forEach {
+                        appLocalDataSource.insertSpell(it.asEntity())
+                    }
+                }
+                dataStoreManager.storeInit(true)
+                emit(Result.success(true))
+            } else {
+                emit(Result.success(false))
             }
-            json.champ.data.values.forEach {
-                appLocalDataSource.insertChamp(it.toEntity())
-            }
-            json.rune.forEach {
-                appLocalDataSource.insertRune(it.toEntity())
-            }
-            json.summoner.data.values.forEach {
-                appLocalDataSource.insertSpell(it.toEntity())
-            }
-            dataStoreManager.storeInit(true)
-            emit(Result.success(true))
-        } else {
-            emit(Result.success(false))
         }
     }.catch {
         emit(Result.failure(it))

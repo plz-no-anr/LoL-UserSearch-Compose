@@ -8,7 +8,9 @@ import com.plz.no.anr.lol.domain.model.common.json.MapJson
 import com.plz.no.anr.lol.domain.model.common.json.RuneJson
 import com.plz.no.anr.lol.domain.model.common.json.SummonerJson
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import timber.log.Timber
@@ -17,24 +19,35 @@ class JsonUtils(
     private val context: Context,
     @CoroutineQualifiers.DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ) {
-    suspend fun getLocalJson(): LocalJson? = withContext(defaultDispatcher) {
-        try {
-            val json = Json { ignoreUnknownKeys = true }
-            val mapString = context.assets.open(JsonFileName.MAP).reader().readText()
-            val champString = context.assets.open(JsonFileName.CHAMPION).reader().readText()
-            val runeString = context.assets.open(JsonFileName.RUNE).reader().readText()
-            val jsonString = context.assets.open(JsonFileName.SUMMONER).reader().readText()
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Timber.e(throwable)
+    }
+    suspend fun getLocalJson(): LocalJson = runBlocking(defaultDispatcher + coroutineExceptionHandler) {
+        val json = Json { ignoreUnknownKeys = true }
 
-            val mapJson = json.decodeFromString<MapJson>(mapString)
-            val champJson = json.decodeFromString<ChampionJson>(champString)
-            val runeJson = json.decodeFromString<List<RuneJson>>(runeString)
-            val summonerJson = json.decodeFromString<SummonerJson>(jsonString)
-
-            return@withContext LocalJson(champJson, mapJson, runeJson, summonerJson)
-        } catch (e: Exception) {
-            Timber.e(e)
-            return@withContext null
+        val mapJsonJob = async {
+            val map = context.assets.open(JsonFileName.MAP).reader().readText()
+            json.decodeFromString<MapJson>(map)
         }
+        val champJsonJob = async {
+            val champ = context.assets.open(JsonFileName.CHAMPION).reader().readText()
+            json.decodeFromString<ChampionJson>(champ)
+        }
+        val runeJsonJob = async {
+            val rune = context.assets.open(JsonFileName.RUNE).reader().readText()
+            json.decodeFromString<List<RuneJson>>(rune)
+        }
+        val summonerJsonJob = async {
+            val summoner = context.assets.open(JsonFileName.SUMMONER).reader().readText()
+            json.decodeFromString<SummonerJson>(summoner)
+        }
+
+        return@runBlocking LocalJson(
+            champJsonJob.await(),
+            mapJsonJob.await(),
+            runeJsonJob.await(),
+            summonerJsonJob.await()
+        )
     }
 
 }
