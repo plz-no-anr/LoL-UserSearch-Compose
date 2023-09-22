@@ -6,13 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface SummonerRepository {
 
-    fun requestSummoner(name: String): Flow<Result<Summoner>>
+    fun requestSummoner(name: String): Flow<Result<Unit>>
 
-    fun readSummonerList(): Flow<Result<List<Summoner>>>
+    fun getSummonerList(): Flow<Result<List<Summoner>>>
 
-    fun refreshSummonerList(): Flow<Result<List<Summoner>>>
-
-    fun requestSpectator(name: String): Flow<Result<Spectator>>
+    fun requestSpectator(summonerId: String): Flow<Result<Spectator>>
 
     fun insertSummoner(summoner: Summoner): Flow<Result<Unit>>
 

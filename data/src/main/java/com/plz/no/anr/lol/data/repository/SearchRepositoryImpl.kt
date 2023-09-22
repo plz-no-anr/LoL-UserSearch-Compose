@@ -1,7 +1,7 @@
 package com.plz.no.anr.lol.data.repository
 
 import com.plz.no.anr.lol.data.repository.local.search.SearchLocalDataSource
-import com.plz.no.anr.lol.data.utils.toEntity
+import com.plz.no.anr.lol.data.utils.asEntity
 import com.plz.no.anr.lol.data.utils.toSearchList
 import com.plz.no.anr.lol.domain.model.Search
 import com.plz.no.anr.lol.domain.repository.SearchRepository
@@ -17,7 +17,7 @@ internal class SearchRepositoryImpl(
     }
 
     override fun insertSearch(search: Search): Flow<Result<Unit>> = flow {
-        localDataSource.insertSearch(search.toEntity()).run {
+        localDataSource.insertSearch(search.asEntity()).run {
             emit(Result.success(Unit))
         }
     }

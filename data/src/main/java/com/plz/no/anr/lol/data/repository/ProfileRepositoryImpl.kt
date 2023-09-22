@@ -2,7 +2,7 @@ package com.plz.no.anr.lol.data.repository
 
 import com.plz.no.anr.lol.data.model.local.toDomain
 import com.plz.no.anr.lol.data.repository.local.profle.ProfileLocalDataSource
-import com.plz.no.anr.lol.data.utils.toEntity
+import com.plz.no.anr.lol.data.utils.asEntity
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +19,7 @@ class ProfileRepositoryImpl (
     }
 
     override fun insertProfile(profile: Profile): Flow<Result<Unit>> = flow {
-        localDataSource.insertProfile(profile.toEntity()).run {
+        localDataSource.insertProfile(profile.asEntity()).run {
             emit(Result.success(Unit))
         }
     }

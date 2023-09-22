@@ -9,7 +9,7 @@ import com.plz.no.anr.lol.domain.usecase.profile.GetProfileUseCase
 import com.plz.no.anr.lol.domain.usecase.profile.InsertProfileUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.DeleteSummonerUseCase
-import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerListUseCase
+import com.plz.no.anr.lol.domain.usecase.summoner.GetSummonerListUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.RefreshSummonerListUseCase
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.Intent
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.SideEffect
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     private val getKeyUseCase: GetKeyUseCase,
     private val insertKeyUseCase: InsertKeyUseCase,
     private val deleteKeyUseCase: DeleteKeyUseCase,
-    private val readSummonerListUseCase: ReadSummonerListUseCase,
+    private val getSummonerListUseCase: GetSummonerListUseCase,
     private val refreshSummonerListUseCase: RefreshSummonerListUseCase
 ) : ComaViewModel<State, Intent, SideEffect>() {
 
@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
         combine(
             getKeyUseCase(Unit),
             getProfileUseCase(Unit),
-            readSummonerListUseCase(Unit)
+            getSummonerListUseCase(Unit)
         ) { key, profile, summoners ->
             State(
                 key = key.getOrNull(),

@@ -5,24 +5,25 @@ import com.plz.no.anr.lol.data.model.local.json.ChampEntity
 import com.plz.no.anr.lol.data.model.local.json.MapEntity
 import com.plz.no.anr.lol.data.model.local.json.RuneEntity
 import com.plz.no.anr.lol.data.model.local.json.SpellEntity
+import kotlinx.coroutines.flow.Flow
 
 class AppLocalDataSourceImpl (
     private val jsonDao: JsonDao
 ) : AppLocalDataSource {
 
-    override suspend fun getChamps(): List<ChampEntity> {
+    override suspend fun getChamps(): Flow<List<ChampEntity>> {
         return jsonDao.getChamps()
     }
 
-    override suspend fun getSpells(): List<SpellEntity> {
+    override suspend fun getSpells(): Flow<List<SpellEntity>> {
         return jsonDao.getSpells()
     }
 
-    override suspend fun getRunes(): List<RuneEntity> {
+    override suspend fun getRunes(): Flow<List<RuneEntity>> {
         return jsonDao.getRunes()
     }
 
-    override suspend fun getMaps(): List<MapEntity> {
+    override suspend fun getMaps(): Flow<List<MapEntity>> {
         return jsonDao.getMaps()
     }
 

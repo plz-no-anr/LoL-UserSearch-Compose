@@ -9,29 +9,33 @@ import retrofit2.Response
 internal class RemoteDataSourceImpl (
     private val api: UserSearchApi
 ): RemoteDataSource {
-    override suspend fun requestSummoner(header: HashMap<String, String>, name: String): SummonerResponse {
+    override suspend fun requestSummoner(header: HashMap<String, String>, name: String): Result<SummonerResponse> {
         return api.getSummoner(header, name).asResult()
     }
 
-    override suspend fun requestLeague(header: HashMap<String, String>, summonerId: String?): Set<LeagueResponse> {
+    override suspend fun requestLeague(header: HashMap<String, String>, summonerId: String?): Result<Set<LeagueResponse>> {
         return api.getLeague(header, summonerId).asResult()
     }
 
-    override suspend fun requestSpectator(header: HashMap<String, String>, summonerId: String?): SpectatorResponse? {
-        return api.getSpectator(header, summonerId).run {
-            if (isSuccessful) {
-                body()
-            } else {
-                null
-            }
-        }
+    override suspend fun requestSpectator(header: HashMap<String, String>, summonerId: String?): Result<SpectatorResponse?> {
+        return api.getSpectator(header, summonerId).asResultOrNull()
     }
 }
 
-private fun <T> Response<T?>.asResult(): T {
-    if (isSuccessful && body() != null) {
-        return body()!!
+private fun <T> Response<T?>.asResult(): Result<T> {
+    return if (isSuccessful && body() != null) {
+        Result.success(body()!!)
     } else {
-        throw Exception("${code()}/${message()}")
+        Result.failure(
+            Exception("${code()}/${message()}")
+        )
+    }
+}
+
+private fun <T> Response<T?>.asResultOrNull(): Result<T?> {
+    return if (isSuccessful) {
+        Result.success(body())
+    } else {
+        Result.success(null)
     }
 }

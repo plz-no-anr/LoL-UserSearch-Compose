@@ -25,6 +25,8 @@ sealed class AppError(val code: Int, val message: String) {
         is NoMatchHistory -> "The summoner does not have a match for this season."
         is NoJsonData -> "Failed to load local json."
     }
+
+    fun exception() = Exception(this.toDescription())
 }
 
 fun String.parseError(): AppError = this.let {

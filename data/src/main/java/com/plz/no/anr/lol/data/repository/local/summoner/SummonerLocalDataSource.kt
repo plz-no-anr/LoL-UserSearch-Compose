@@ -1,10 +1,11 @@
 package com.plz.no.anr.lol.data.repository.local.summoner
 
 import com.plz.no.anr.lol.data.model.local.SummonerEntity
+import kotlinx.coroutines.flow.Flow
 
 interface SummonerLocalDataSource {
 
-    suspend fun getSummoner() : List<SummonerEntity>
+    fun getSummonerList(): Flow<List<SummonerEntity>?>
 
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
 

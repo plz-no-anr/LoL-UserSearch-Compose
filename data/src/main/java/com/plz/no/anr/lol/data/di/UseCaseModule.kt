@@ -84,7 +84,7 @@ internal object UseCaseModule {
     fun provideRequestSummonerListUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: SummonerRepository
-    ) = ReadSummonerListUseCase(coroutineDispatcher, repository)
+    ) = GetSummonerListUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideRefreshSummonerListUseCase(

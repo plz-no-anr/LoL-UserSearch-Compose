@@ -8,20 +8,21 @@ import com.plz.no.anr.lol.data.model.local.json.ChampEntity
 import com.plz.no.anr.lol.data.model.local.json.MapEntity
 import com.plz.no.anr.lol.data.model.local.json.RuneEntity
 import com.plz.no.anr.lol.data.model.local.json.SpellEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface JsonDao {
     @Query("SELECT * FROM Champ")
-    fun getChamps(): List<ChampEntity>
+    fun getChamps(): Flow<List<ChampEntity>>
 
     @Query("SELECT * FROM Spell")
-    fun getSpells(): List<SpellEntity>
+    fun getSpells(): Flow<List<SpellEntity>>
 
     @Query("SELECT * FROM Rune")
-    fun getRunes(): List<RuneEntity>
+    fun getRunes(): Flow<List<RuneEntity>>
 
     @Query("SELECT * FROM Map")
-    fun getMaps(): List<MapEntity>
+    fun getMaps(): Flow<List<MapEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertChamp(champEntity: ChampEntity)
