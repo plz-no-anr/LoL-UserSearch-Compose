@@ -180,7 +180,7 @@ internal class SummonerRepositoryImpl(
                 if (this@toChampInfo == (-1).toLong()) return@map "NoBan" to "NoBan"
                 champs.find { it.key == this.toString() }?.let {
                     it.name to it.image.full.toChampImage()
-                } ?: ("" to "")
+                } ?: ("Not Found" to "Not Found")
             }.first()
 
     private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
@@ -210,7 +210,7 @@ internal class SummonerRepositoryImpl(
             }.first()
 
 
-    private suspend fun getRunes( // todo
+    private suspend fun getRunes(
         perkStyle: Long,
         subStyle: Long,
         perks: List<Long>
@@ -242,11 +242,13 @@ internal class SummonerRepositoryImpl(
                     runeEntity.slots.map { it.runes }
                         .flatten()
                         .forEachIndexed { index, rune ->
-                            if ((index in 4..5) && (rune.id == perks[index])) {
-                                runeNames.add(
-                                    index,
-                                    Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
-                                )
+                            if (index in 4..5) {
+                                perks.find { it == rune.id }.let {
+                                    runeNames.add(
+                                        index,
+                                        Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                                    )
+                                }
                             }
                         }
                 }

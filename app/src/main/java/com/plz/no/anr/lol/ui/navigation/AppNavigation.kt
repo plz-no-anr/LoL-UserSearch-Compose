@@ -12,7 +12,11 @@ fun NavController.navigateToSearch() {
 }
 
 fun NavController.navigateToSpectator(id: String) {
-    navigate(route = Destination.Spectator.routeWithArgs(id))
+    navigate(route = Destination.Spectator.routeWithArgs(id)) {
+        popUpTo(Destination.Main.route) {
+            inclusive = false
+        }
+    }
 }
 
 fun NavController.navigateToSummoner(name: String) {
