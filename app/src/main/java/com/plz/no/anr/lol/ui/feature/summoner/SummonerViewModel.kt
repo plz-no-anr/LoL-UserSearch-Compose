@@ -2,7 +2,7 @@ package com.plz.no.anr.lol.ui.feature.summoner
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.plz.no.anr.lol.domain.usecase.summoner.RequestSummonerUseCase
+import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerUseCase
 import com.plz.no.anr.lol.ui.feature.summoner.SummonerContract.Intent
 import com.plz.no.anr.lol.ui.feature.summoner.SummonerContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.summoner.SummonerContract.State
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    private val requestSummonerUseCase: RequestSummonerUseCase
+    private val readSummonerUseCase: ReadSummonerUseCase
 ) : ComaViewModel<State, Intent, SideEffect>() {
 
     private val summonerName: String? by lazy {
@@ -36,7 +36,7 @@ class SummonerViewModel @Inject constructor(
 
     private fun requestSummonerData() {
         summonerName?.let {
-            requestSummonerUseCase(it.trim())
+            readSummonerUseCase(it.trim())
                 .onStart { reduce { copy(isLoading = true) } }
                 .onEach { result ->
                     result.onSuccess {

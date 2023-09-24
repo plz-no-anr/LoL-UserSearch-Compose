@@ -11,7 +11,7 @@ data class ProfileEntity(
     val level: String,
     val icon: String
 )
-fun ProfileEntity.toDomain() = Profile(
+fun ProfileEntity.asDomain() = Profile(
     name = name,
     level = level,
     icon = icon

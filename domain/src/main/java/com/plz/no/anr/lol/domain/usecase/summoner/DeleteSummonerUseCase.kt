@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 class DeleteSummonerUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: SummonerRepository
+    private val summonerRepository: SummonerRepository
 ): BaseUseCase<String, Unit>(coroutineDispatcher) {
 
     override fun execute(parameter: String): Flow<Result<Unit>> {
-        return appRepository.deleteSummoner(parameter)
+        return summonerRepository.deleteSummoner(parameter)
     }
 
 }

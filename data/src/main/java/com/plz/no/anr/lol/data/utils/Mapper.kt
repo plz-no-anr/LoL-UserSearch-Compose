@@ -3,11 +3,11 @@ package com.plz.no.anr.lol.data.utils
 import com.plz.no.anr.lol.data.model.local.ProfileEntity
 import com.plz.no.anr.lol.data.model.local.SearchEntity
 import com.plz.no.anr.lol.data.model.local.SummonerEntity
+import com.plz.no.anr.lol.data.model.local.asDomain
 import com.plz.no.anr.lol.data.model.local.json.ChampEntity
 import com.plz.no.anr.lol.data.model.local.json.MapEntity
 import com.plz.no.anr.lol.data.model.local.json.RuneEntity
 import com.plz.no.anr.lol.data.model.local.json.SpellEntity
-import com.plz.no.anr.lol.data.model.local.toDomain
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Search
 import com.plz.no.anr.lol.domain.model.Summoner
@@ -22,7 +22,7 @@ fun Search.asEntity() = SearchEntity(
     date = date
 )
 
-fun List<SearchEntity>.toSearchList() = map { it.toDomain() }
+fun List<SearchEntity>.asSearchList() = map { it.asDomain() }
 
 fun Summoner.asEntity() = SummonerEntity(
     name = name,
@@ -36,7 +36,7 @@ fun Summoner.asEntity() = SummonerEntity(
     miniSeries = miniSeries?.asEntity(),
 )
 
-fun List<SummonerEntity>.toSummonerList() = map { it.toDomain() }
+fun List<SummonerEntity>.asSummonerList() = map { it.asDomain() }
 
 fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
     losses = losses,
@@ -90,15 +90,15 @@ fun SummonerJson.Spell.asEntity() = SpellEntity(
 )
 
 
-private fun List<RuneJson.RuneInfo>.asEntity() = map { it.toRuneInfo() }
+private fun List<RuneJson.RuneInfo>.asEntity() = map { it.asRuneInfo() }
 
-private fun RuneJson.RuneInfo.toRuneInfo() = RuneEntity.RuneInfo(
-    runes = runes.toSubRuneList()
+private fun RuneJson.RuneInfo.asRuneInfo() = RuneEntity.RuneInfo(
+    runes = runes.asSubRuneList()
 )
 
-private fun List<RuneJson.RuneInfo.SubRune>.toSubRuneList() = map { it.toSubRune() }
+private fun List<RuneJson.RuneInfo.SubRune>.asSubRuneList() = map { it.asSubRune() }
 
-private fun RuneJson.RuneInfo.SubRune.toSubRune() = RuneEntity.RuneInfo.SubRune(
+private fun RuneJson.RuneInfo.SubRune.asSubRune() = RuneEntity.RuneInfo.SubRune(
     id = id,
     key = key,
     icon = icon,

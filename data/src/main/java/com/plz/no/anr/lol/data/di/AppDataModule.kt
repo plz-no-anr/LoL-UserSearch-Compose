@@ -3,7 +3,6 @@ package com.plz.no.anr.lol.data.di
 import com.plz.no.anr.lol.data.db.dao.JsonDao
 import com.plz.no.anr.lol.data.repository.AppRepositoryImpl
 import com.plz.no.anr.lol.data.repository.local.DataStoreManager
-import com.plz.no.anr.lol.data.repository.local.PreferenceDataSource
 import com.plz.no.anr.lol.data.repository.local.app.AppLocalDataSource
 import com.plz.no.anr.lol.data.repository.local.app.AppLocalDataSourceImpl
 import com.plz.no.anr.lol.data.utils.JsonUtils

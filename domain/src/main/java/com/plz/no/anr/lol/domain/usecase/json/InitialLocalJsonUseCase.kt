@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
  */
 class InitialLocalJsonUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val repository: AppRepository
+    private val appRepository: AppRepository
 ) : BaseUseCase<Unit, Boolean>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<Boolean>> {
-        return repository.initLocalJson()
+        return appRepository.initLocalJson()
     }
 
 }

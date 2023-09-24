@@ -96,7 +96,7 @@ fun HomeItem(
                         .weight(1f),
                     pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
-                    isPlaying = summoner.isPlaying,
+                    isPlaying = false, // todo
                     onAdd = { onIntent(HomeContract.Intent.Profile.OnAdd(summoner.asProfile())) },
                     onDelete = { onIntent(HomeContract.Intent.Summoner.OnDelete(summoner.name)) },
                     onSpectator = { onIntent(HomeContract.Intent.Spectator.OnWatch(summoner.name)) }

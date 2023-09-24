@@ -1,7 +1,5 @@
 package com.plz.no.anr.lol.data.model.remote
 
-import com.plz.no.anr.lol.domain.model.Summoner
-
 @kotlinx.serialization.Serializable
 internal data class SummonerResponse(
     val accountId: String,

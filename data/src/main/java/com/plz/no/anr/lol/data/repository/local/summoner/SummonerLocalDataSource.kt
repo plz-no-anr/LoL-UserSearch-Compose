@@ -7,6 +7,8 @@ interface SummonerLocalDataSource {
 
     fun getSummonerList(): Flow<List<SummonerEntity>?>
 
+    fun getSummoner(name: String): Flow<SummonerEntity?>
+
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
 
     suspend fun updateSummoner(summonerEntity: SummonerEntity)

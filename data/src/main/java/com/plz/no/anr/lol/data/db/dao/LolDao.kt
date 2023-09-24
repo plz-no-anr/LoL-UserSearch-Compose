@@ -39,6 +39,9 @@ interface LolDao {
     @Query("SELECT * FROM Summoner")
     fun getSummonerList() : Flow<List<SummonerEntity>?>
 
+    @Query("SELECT * FROM Summoner WHERE name = :summonerName")
+    fun getSummoner(summonerName: String) : Flow<SummonerEntity?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSummoner(summonerEntity: SummonerEntity)
 

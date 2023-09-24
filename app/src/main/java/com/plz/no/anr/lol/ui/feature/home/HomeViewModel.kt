@@ -10,15 +10,18 @@ import com.plz.no.anr.lol.domain.usecase.profile.InsertProfileUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.GetSummonerListUseCase
-import com.plz.no.anr.lol.domain.usecase.summoner.RefreshSummonerListUseCase
+import com.plz.no.anr.lol.domain.usecase.summoner.ReadSummonerListUseCase
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.Intent
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.home.HomeContract.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -32,7 +35,7 @@ class HomeViewModel @Inject constructor(
     private val insertKeyUseCase: InsertKeyUseCase,
     private val deleteKeyUseCase: DeleteKeyUseCase,
     private val getSummonerListUseCase: GetSummonerListUseCase,
-    private val refreshSummonerListUseCase: RefreshSummonerListUseCase
+    private val readSummonerListUseCase: ReadSummonerListUseCase
 ) : ComaViewModel<State, Intent, SideEffect>() {
 
     override fun setInitialState(): State = State()
@@ -77,27 +80,30 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun refreshSummonerList() {
-        refreshSummonerListUseCase(Unit)
-            .onStart { reduce { copy(isRefreshing = true) } }
-            .onEach { result ->
-                result.onSuccess {
-                    reduce {
-                        copy(
-                            data = it.asReversed(),
-                            isRefreshing = false
-                        )
+        viewModelScope.launch {
+            readSummonerListUseCase(Unit)
+                .onStart { reduce { copy(isRefreshing = true) } }
+                .onEach { result ->
+                    result.onSuccess {
+                        reduce {
+                            copy(
+                                data = it.asReversed(),
+                                isRefreshing = false
+                            )
+                        }
+                    }.onFailure {
+                        reduce {
+                            copy(
+                                isRefreshing = false
+                            )
+                        }
+                        postSideEffect {
+                            SideEffect.Toast(it.message ?: "Error")
+                        }
                     }
-                }.onFailure {
-                    reduce {
-                        copy(
-                            isRefreshing = false
-                        )
-                    }
-                    postSideEffect {
-                        SideEffect.Toast(it.message ?: "Error")
-                    }
-                }
-            }.launchIn(viewModelScope)
+                }.first()
+        }
+
     }
 
     private fun deleteAllSummoner() {

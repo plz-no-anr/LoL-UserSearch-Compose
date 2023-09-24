@@ -23,7 +23,7 @@ internal class RemoteDataSourceImpl (
 }
 
 private fun <T> Response<T?>.asResult(): Result<T> {
-    return if (isSuccessful && body() != null) {
+     return if (isSuccessful && body() != null) {
         Result.success(body()!!)
     } else {
         Result.failure(

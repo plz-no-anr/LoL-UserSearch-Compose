@@ -26,7 +26,7 @@ sealed class AppError(val code: Int, val message: String) {
         is NoJsonData -> "Failed to load local json."
     }
 
-    fun exception() = Exception(this.toDescription())
+    fun exception() = Exception(this.parse())
 }
 
 fun String.parseError(): AppError = this.let {

@@ -10,6 +10,8 @@ class SummonerLocalDataSourceImpl(
 
     override fun getSummonerList(): Flow<List<SummonerEntity>?> = dao.getSummonerList()
 
+    override fun getSummoner(name: String): Flow<SummonerEntity?> = dao.getSummoner(name)
+
     override suspend fun insertSummoner(summonerEntity: SummonerEntity) {
         dao.insertSummoner(summonerEntity)
     }

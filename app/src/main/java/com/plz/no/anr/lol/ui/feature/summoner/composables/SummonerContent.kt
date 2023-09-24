@@ -64,7 +64,7 @@ fun SummonerContent(
             tierRank = data.tierRank,
             tierIcon = getTierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
-            isPlaying = data.isPlaying,
+            isPlaying = false, // todo
             onSpectator = { onIntent(SummonerContract.Intent.Spectator.OnWatch(data.name)) }
         )
 
