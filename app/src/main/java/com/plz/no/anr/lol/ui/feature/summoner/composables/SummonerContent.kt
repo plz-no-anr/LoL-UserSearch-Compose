@@ -64,7 +64,8 @@ fun SummonerContent(
             tierRank = data.tierRank,
             tierIcon = getTierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
-            onSpectator = { onIntent(SummonerContract.Intent.Spectator.OnWatch(data.id)) }
+            isPlaying = false, // todo
+            onSpectator = { onIntent(SummonerContract.Intent.Spectator.OnWatch(data.name)) }
         )
 
     }
@@ -111,6 +112,7 @@ private fun TierRankView(
     tierRank: String,
     tierIcon: Painter = painterResource(id = R.drawable.emblem_bronze),
     miniSeries: Summoner.MiniSeries? = null,
+    isPlaying: Boolean = false,
     onSpectator: () -> Unit
 ) {
     Row(
@@ -142,6 +144,7 @@ private fun TierRankView(
             }
             Spacer(modifier = Modifier.height(10.dp))
             SpectatorView(
+                isPlaying = isPlaying,
                 onSpectator = onSpectator
             )
         }
@@ -201,6 +204,7 @@ private fun SummonerMiniView(
 
 @Composable
 private fun SpectatorView(
+    isPlaying: Boolean = false,
     onSpectator: () -> Unit = {}
 ) {
     Row(
@@ -213,6 +217,14 @@ private fun SpectatorView(
             fontSize = 20.sp,
             modifier = Modifier,
             fontWeight = FontWeight.Bold
+        )
+        Icon(
+            imageVector = Icons.Rounded.Square,
+            contentDescription = null,
+            modifier = Modifier
+                .size(30.dp)
+                .align(Alignment.Bottom),
+            tint = if (isPlaying) Color.Green else Color.Red
         )
     }
 }
