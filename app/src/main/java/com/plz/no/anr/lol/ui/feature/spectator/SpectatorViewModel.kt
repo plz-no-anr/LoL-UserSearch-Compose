@@ -20,8 +20,8 @@ class SpectatorViewModel @Inject constructor(
     private val requestSpectatorUseCase: RequestSpectatorUseCase
 ) : ComaViewModel<State, Intent, SideEffect>() {
 
-    private val summonerName: String? by lazy {
-        stateHandle.get<String>(Destination.Spectator.Args.KEY_SUMMONER_NAME)
+    private val summonerId: String? by lazy {
+        stateHandle.get<String>(Destination.Spectator.Args.KEY_SUMMONER_ID)
     }
 
     override fun setInitialState(): State = State()
@@ -34,7 +34,7 @@ class SpectatorViewModel @Inject constructor(
     }
 
     private fun getSpectator() {
-        summonerName?.let {
+        summonerId?.let {
             requestSpectatorUseCase(it.trim())
                 .onStart { reduce { copy(isLoading = true) } }
                 .onEach { result ->

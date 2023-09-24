@@ -24,7 +24,7 @@ fun SummonerRoute(
         onNavigationRequested = {
             when (it) {
                 is SummonerContract.SideEffect.Navigation.Back -> navController.popBackStack()
-                is SummonerContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
+                is SummonerContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.summonerId)
             }
         }
     )

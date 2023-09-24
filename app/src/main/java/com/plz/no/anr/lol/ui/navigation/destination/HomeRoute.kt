@@ -25,7 +25,7 @@ fun HomeRoute(
     ) {
         when (it) {
             is HomeContract.SideEffect.Navigation.ToSearch -> navController.navigateToSearch()
-            is HomeContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.name)
+            is HomeContract.SideEffect.Navigation.ToSpectator -> navController.navigateToSpectator(it.summonerId)
         }
 
     }

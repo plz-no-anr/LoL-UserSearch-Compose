@@ -27,17 +27,13 @@ internal object SummonerModule {
     @ViewModelScoped
     @Provides
     fun provideSummonerRepository(
-        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         appLocalDataSource: AppLocalDataSource,
         summonerLocalDataSource: SummonerLocalDataSource,
-        searchLocalDataSource: SearchLocalDataSource,
         remoteDataSource: RemoteDataSource,
         dataStoreManager: DataStoreManager
     ) : SummonerRepository = SummonerRepositoryImpl(
-        ioDispatcher = coroutineDispatcher,
         appLocalDataSource = appLocalDataSource,
         summonerLocalDataSource = summonerLocalDataSource,
-        searchLocalDataSource = searchLocalDataSource,
         remoteDataSource = remoteDataSource,
         dataStoreManager = dataStoreManager
     )

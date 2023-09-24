@@ -66,7 +66,7 @@ private fun NavGraphBuilder.spectatorScreen(
 ) {
     composable(
         route = Destination.Spectator.route,
-        arguments = listOf(navArgument(name = Destination.Spectator.Args.KEY_SUMMONER_NAME) {
+        arguments = listOf(navArgument(name = Destination.Spectator.Args.KEY_SUMMONER_ID) {
             type = NavType.StringType
         })
     ) {

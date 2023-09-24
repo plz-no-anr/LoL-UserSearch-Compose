@@ -20,11 +20,11 @@ sealed class Destination(open val route: String) {
 
     object Spectator : Destination("spectator") {
         object Args {
-            const val KEY_SUMMONER_NAME = "summoner_name"
+            const val KEY_SUMMONER_ID = "summoner_id"
         }
 
         override val route: String
-        get() = "${super.route}?{${Args.KEY_SUMMONER_NAME}}"
+        get() = "${super.route}?{${Args.KEY_SUMMONER_ID}}"
 
         fun routeWithArgs(summonerName: String) = "${super.route}?$summonerName"
     }
