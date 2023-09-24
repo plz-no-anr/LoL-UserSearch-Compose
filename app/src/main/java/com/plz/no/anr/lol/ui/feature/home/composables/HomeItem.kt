@@ -96,10 +96,9 @@ fun HomeItem(
                         .weight(1f),
                     pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
-                    isPlaying = false, // todo
                     onAdd = { onIntent(HomeContract.Intent.Profile.OnAdd(summoner.asProfile())) },
                     onDelete = { onIntent(HomeContract.Intent.Summoner.OnDelete(summoner.name)) },
-                    onSpectator = { onIntent(HomeContract.Intent.Spectator.OnWatch(summoner.name)) }
+                    onSpectator = { onIntent(HomeContract.Intent.Spectator.OnWatch(summoner.id)) }
                 )
             }
 
@@ -184,7 +183,6 @@ private fun LeagueInfoView(
     modifier: Modifier = Modifier,
     pointWinLose: String,
     miniSeries: Summoner.MiniSeries?,
-    isPlaying: Boolean,
     onAdd: () -> Unit,
     onDelete: () -> Unit,
     onSpectator: () -> Unit
@@ -206,7 +204,6 @@ private fun LeagueInfoView(
         }
 
         IconView(
-            isPlaying = isPlaying,
             onAddClick = onAdd,
             onDeleteClick = onDelete,
             onSpectator = onSpectator
@@ -229,7 +226,6 @@ private fun LeaguePointView(
 
 @Composable
 private fun IconView(
-    isPlaying: Boolean = false,
     onAddClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
     onSpectator: () -> Unit = {}
@@ -255,7 +251,6 @@ private fun IconView(
 
         SpectatorView(
             modifier = Modifier,
-            isPlaying = isPlaying,
             onSpectator = onSpectator
         )
 
@@ -297,25 +292,17 @@ private fun MiniSeriesView(
 @Composable
 private fun SpectatorView(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
     onSpectator: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
             .clickable {
-                if (isPlaying) onSpectator()
+                onSpectator()
             }
     ) {
         Text(
             text = stringResource(id = R.string.playing),
             fontSize = 12.sp
-        )
-        Icon(
-            imageVector = Icons.Rounded.Square,
-            contentDescription = null,
-            modifier = Modifier
-                .size(20.dp),
-            tint = if (isPlaying) Color.Green else Color.Red
         )
     }
 }

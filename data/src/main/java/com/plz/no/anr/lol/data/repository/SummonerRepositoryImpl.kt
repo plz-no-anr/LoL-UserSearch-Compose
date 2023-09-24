@@ -2,14 +2,12 @@ package com.plz.no.anr.lol.data.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.plz.no.anr.lol.data.di.CoroutineQualifiers
 import com.plz.no.anr.lol.data.model.common.AppError
 import com.plz.no.anr.lol.data.model.local.asDomain
 import com.plz.no.anr.lol.data.model.remote.SpectatorResponse
 import com.plz.no.anr.lol.data.model.remote.asDomain
 import com.plz.no.anr.lol.data.repository.local.DataStoreManager
 import com.plz.no.anr.lol.data.repository.local.app.AppLocalDataSource
-import com.plz.no.anr.lol.data.repository.local.search.SearchLocalDataSource
 import com.plz.no.anr.lol.data.repository.local.summoner.SummonerLocalDataSource
 import com.plz.no.anr.lol.data.repository.remote.RemoteDataSource
 import com.plz.no.anr.lol.data.utils.QueueType
@@ -23,17 +21,14 @@ import com.plz.no.anr.lol.domain.model.Spectator
 import com.plz.no.anr.lol.domain.model.Summoner
 import com.plz.no.anr.lol.domain.model.Team
 import com.plz.no.anr.lol.domain.repository.SummonerRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 internal class SummonerRepositoryImpl(
-    @CoroutineQualifiers.IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val appLocalDataSource: AppLocalDataSource,
     private val summonerLocalDataSource: SummonerLocalDataSource,
-    private val searchLocalDataSource: SearchLocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val dataStoreManager: DataStoreManager,
 ) : SummonerRepository {
@@ -63,6 +58,7 @@ internal class SummonerRepositoryImpl(
                     emit(
                         Result.success(
                             Summoner(
+                                id = summoner.id,
                                 name = summoner.name,
                                 level = summoner.summonerLevel.toString(),
                                 icon = summoner.profileIconId.toIcon(),
@@ -184,7 +180,7 @@ internal class SummonerRepositoryImpl(
                 if (this@toChampInfo == (-1).toLong()) return@map "NoBan" to "NoBan"
                 champs.find { it.key == this.toString() }?.let {
                     it.name to it.image.full.toChampImage()
-                } ?: throw Exception("Champ Not Found")
+                } ?: ("" to "")
             }.first()
 
     private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
@@ -214,7 +210,7 @@ internal class SummonerRepositoryImpl(
             }.first()
 
 
-    private suspend fun getRunes(
+    private suspend fun getRunes( // todo
         perkStyle: Long,
         subStyle: Long,
         perks: List<Long>
@@ -226,12 +222,18 @@ internal class SummonerRepositoryImpl(
                     runeEntity.slots.map { it.runes }
                         .flatten()
                         .forEachIndexed { index, rune ->
-                            if (rune.id == perks[index]) {
+                            perks.find { it == rune.id }.let {
                                 runeNames.add(
                                     index,
                                     Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
                                 )
                             }
+//                            if (rune.id == perks[index]) {
+//                                runeNames.add(
+//                                    index,
+//                                    Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+//                                )
+//                            }
                             if (index > 3) {
                                 return@forEachIndexed
                             }

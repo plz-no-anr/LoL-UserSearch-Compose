@@ -33,7 +33,7 @@ class HomeContract : ComaContract() {
         }
 
         sealed class Spectator : Intent() {
-            data class OnWatch(val name: String) : Spectator()
+            data class OnWatch(val summonerId: String) : Spectator()
 
         }
 
@@ -54,7 +54,7 @@ class HomeContract : ComaContract() {
 
         sealed class Navigation : SideEffect() {
             object ToSearch : Navigation()
-            data class ToSpectator(val name: String) : Navigation()
+            data class ToSpectator(val summonerId: String) : Navigation()
         }
 
     }

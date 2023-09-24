@@ -9,6 +9,7 @@ import com.plz.no.anr.lol.domain.model.Summoner
 @Entity(tableName = "Summoner")
 data class SummonerEntity(
     @PrimaryKey
+    val id: String,
     val name: String, // 소환사 이름
     val level: String, // 레벨
     val icon: String, // 소환사 아이콘
@@ -36,6 +37,7 @@ data class SummonerEntity(
 }
 
 fun SummonerEntity.asDomain() = Summoner(
+    id = id,
     name = name,
     level = level,
     icon = icon,

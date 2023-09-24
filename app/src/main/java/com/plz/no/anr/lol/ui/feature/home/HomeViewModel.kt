@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
@@ -51,7 +50,7 @@ class HomeViewModel @Inject constructor(
             is Intent.Key.OnGet -> postSideEffect { SideEffect.MoveGetApiKey }
             is Intent.Key.OnAdd -> insertKey(intent.key)
             is Intent.Key.OnDelete -> deleteKey()
-            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name) }
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.summonerId) }
         }
     }
 

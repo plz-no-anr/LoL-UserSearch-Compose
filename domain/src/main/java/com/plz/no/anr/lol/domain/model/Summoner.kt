@@ -1,6 +1,7 @@
 package com.plz.no.anr.lol.domain.model
 
 data class Summoner(
+    val id: String, // 소환사 아이디
     val name: String, // 소환사 이름
     val level: String, // 레벨
     val icon: String, // 소환사 아이콘
@@ -25,6 +26,7 @@ data class Summoner(
     val tierRank = "$tier $rank"
 
     fun asProfile() = Profile(
+        id = id,
         name = name,
         level = level,
         icon = icon,
@@ -33,6 +35,7 @@ data class Summoner(
 }
 
 fun getDummySummoner() = Summoner(
+    id = "Summoner Id",
     name = "Summoner Name",
     level = "100",
     icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",

@@ -30,7 +30,7 @@ class SummonerViewModel @Inject constructor(
         when (intent) {
             is Intent.OnLoad -> requestSummonerData()
             is Intent.Navigation.Back -> postSideEffect { SideEffect.Navigation.Back }
-            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name) }
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.summonerId) }
         }
     }
 
