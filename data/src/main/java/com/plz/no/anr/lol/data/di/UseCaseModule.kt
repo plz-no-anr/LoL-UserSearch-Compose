@@ -13,8 +13,8 @@ import com.plz.no.anr.lol.domain.usecase.profile.GetProfileUseCase
 import com.plz.no.anr.lol.domain.usecase.profile.InsertProfileUseCase
 import com.plz.no.anr.lol.domain.usecase.search.DeleteAllSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.search.DeleteSearchUseCase
-import com.plz.no.anr.lol.domain.usecase.search.GetSearchUseCase
-import com.plz.no.anr.lol.domain.usecase.search.InsertSearchUseCase
+import com.plz.no.anr.lol.domain.usecase.search.GetSearchListUseCase
+import com.plz.no.anr.lol.domain.usecase.search.SaveSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.spectator.RequestSpectatorUseCase
 import com.plz.no.anr.lol.domain.usecase.summoner.*
 import dagger.Module
@@ -36,13 +36,13 @@ internal object UseCaseModule {
     fun provideGetSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: SearchRepository
-    ) = GetSearchUseCase(coroutineDispatcher, repository)
+    ) = GetSearchListUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideInsertSearchUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: SearchRepository
-    ) = InsertSearchUseCase(coroutineDispatcher, repository)
+    ) = SaveSearchUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideDeleteSearchUseCase(
@@ -84,13 +84,34 @@ internal object UseCaseModule {
     fun provideRequestSummonerListUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: SummonerRepository
-    ) = ReadSummonerListUseCase(coroutineDispatcher, repository)
+    ) = GetSummonerListUseCase(coroutineDispatcher, repository)
+
+//    @Provides
+//    fun provideRefreshSummonerListUseCase(
+//        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+//        repository: SummonerRepository
+//    ) = RefreshSummonerListUseCase(coroutineDispatcher, repository)
 
     @Provides
-    fun provideRefreshSummonerListUseCase(
+    fun provideReadSummonerUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        repository: SummonerRepository,
+        saveSearchUseCase: SaveSearchUseCase,
+        saveSummonerUseCase: SaveSummonerUseCase
+    ) = ReadSummonerUseCase(coroutineDispatcher, repository, saveSearchUseCase, saveSummonerUseCase)
+
+    @Provides
+    fun provideReadSummonerListUseCase(
+        @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
+        summonerRepository: SummonerRepository,
+        readSummonerUseCase: ReadSummonerUseCase
+    ) = ReadSummonerListUseCase(coroutineDispatcher, summonerRepository, readSummonerUseCase)
+
+    @Provides
+    fun provideSaveSummonerUseCase(
         @CoroutineQualifiers.IoDispatcher coroutineDispatcher: CoroutineDispatcher,
         repository: SummonerRepository
-    ) = RefreshSummonerListUseCase(coroutineDispatcher, repository)
+    ) = SaveSummonerUseCase(coroutineDispatcher, repository)
 
     @Provides
     fun provideInsertSummonerUseCase(

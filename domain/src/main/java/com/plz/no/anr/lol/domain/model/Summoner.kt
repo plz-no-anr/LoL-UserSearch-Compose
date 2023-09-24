@@ -10,7 +10,6 @@ data class Summoner(
     val wins: Int, // 승리
     val losses: Int, // 패배
     val miniSeries: MiniSeries? = null, // 승급전
-    val isPlaying: Boolean,
 ) {
     data class MiniSeries(
         var losses: Int,
@@ -42,7 +41,6 @@ fun getDummySummoner() = Summoner(
     leaguePoints = 322,
     wins = 223,
     losses = 203,
-    isPlaying = false,
     miniSeries = Summoner.MiniSeries(
         progress = "WLNNN",
         wins = 1,

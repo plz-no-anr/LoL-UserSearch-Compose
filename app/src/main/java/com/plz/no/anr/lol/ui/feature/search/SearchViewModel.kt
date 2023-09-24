@@ -3,7 +3,7 @@ package com.plz.no.anr.lol.ui.feature.search
 import androidx.lifecycle.viewModelScope
 import com.plz.no.anr.lol.domain.usecase.search.DeleteAllSearchUseCase
 import com.plz.no.anr.lol.domain.usecase.search.DeleteSearchUseCase
-import com.plz.no.anr.lol.domain.usecase.search.GetSearchUseCase
+import com.plz.no.anr.lol.domain.usecase.search.GetSearchListUseCase
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.Intent
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.SideEffect
 import com.plz.no.anr.lol.ui.feature.search.SearchContract.State
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val getSearchUseCase: GetSearchUseCase,
+    private val getSearchListUseCase: GetSearchListUseCase,
     private val deleteSearchUseCase: DeleteSearchUseCase,
     private val deleteSearchAllUseCase: DeleteAllSearchUseCase
 ) : ComaViewModel<State, Intent, SideEffect>() {
@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getSearch() {
-        getSearchUseCase(Unit)
+        getSearchListUseCase(Unit)
             .onStart { reduce { copy(isLoading = true) } }
             .onEach { result ->
                 result.onSuccess {

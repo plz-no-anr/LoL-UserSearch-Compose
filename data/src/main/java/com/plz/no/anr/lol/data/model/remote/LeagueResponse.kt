@@ -27,7 +27,7 @@ internal data class LeagueResponse(
     )
 }
 
-internal fun LeagueResponse.MiniSeriesDTO.toDomain() = Summoner.MiniSeries(
+internal fun LeagueResponse.MiniSeriesDTO.asDomain() = Summoner.MiniSeries(
     losses = this.losses,
     target = this.target,
     wins = this.wins,

@@ -10,3 +10,13 @@ internal data class SummonerResponse(
     val puuid: String,
     val summonerLevel: Long
 )
+
+//internal fun SummonerResponse.asDomain(): Summoner = Summoner(
+//    accountId = accountId,
+//    profileIconId = profileIconId,
+//    revisionDate = revisionDate,
+//    name = name,
+//    id = id,
+//    puuid = puuid,
+//    summonerLevel = summonerLevel
+//)

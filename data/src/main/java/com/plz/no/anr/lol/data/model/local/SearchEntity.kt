@@ -10,7 +10,7 @@ data class SearchEntity(
     val name: String,
     val date: String
 )
-fun SearchEntity.toDomain() = Search(
+fun SearchEntity.asDomain() = Search(
     name = name,
     date = date
 )

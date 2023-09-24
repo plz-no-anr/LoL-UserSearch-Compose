@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 class InsertProfileUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: ProfileRepository
+    private val profileRepository: ProfileRepository
 ): BaseUseCase<Profile, Unit>(coroutineDispatcher) {
 
     override fun execute(parameter: Profile): Flow<Result<Unit>> {
-        return appRepository.insertProfile(parameter)
+        return profileRepository.insertProfile(parameter)
     }
 
 }

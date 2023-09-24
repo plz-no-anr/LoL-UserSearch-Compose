@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 class InsertKeyUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val repository: AppRepository
+    private val appRepository: AppRepository
 ): BaseUseCase<String, Unit>(coroutineDispatcher) {
 
     override fun execute(parameter: String): Flow<Result<Unit>> {
-        return repository.insertApiKey(parameter)
+        return appRepository.insertApiKey(parameter)
     }
 
 }

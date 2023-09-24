@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 class DeleteSearchUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: SearchRepository
+    private val searchRepository: SearchRepository
 ): BaseUseCase<String, Unit>(coroutineDispatcher) {
 
     override fun execute(parameter: String): Flow<Result<Unit>> {
-        return appRepository.deleteSearch(parameter)
+        return searchRepository.deleteSearch(parameter)
     }
 
 }

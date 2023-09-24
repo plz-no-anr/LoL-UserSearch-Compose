@@ -3,11 +3,11 @@ package com.plz.no.anr.lol.data.utils
 import com.plz.no.anr.lol.data.model.local.ProfileEntity
 import com.plz.no.anr.lol.data.model.local.SearchEntity
 import com.plz.no.anr.lol.data.model.local.SummonerEntity
+import com.plz.no.anr.lol.data.model.local.asDomain
 import com.plz.no.anr.lol.data.model.local.json.ChampEntity
 import com.plz.no.anr.lol.data.model.local.json.MapEntity
 import com.plz.no.anr.lol.data.model.local.json.RuneEntity
 import com.plz.no.anr.lol.data.model.local.json.SpellEntity
-import com.plz.no.anr.lol.data.model.local.toDomain
 import com.plz.no.anr.lol.domain.model.Profile
 import com.plz.no.anr.lol.domain.model.Search
 import com.plz.no.anr.lol.domain.model.Summoner
@@ -17,14 +17,14 @@ import com.plz.no.anr.lol.domain.model.common.json.RuneJson
 import com.plz.no.anr.lol.domain.model.common.json.SummonerJson
 
 
-fun Search.toEntity() = SearchEntity(
+fun Search.asEntity() = SearchEntity(
     name = name,
     date = date
 )
 
-fun List<SearchEntity>.toSearchList() = map { it.toDomain() }
+fun List<SearchEntity>.asSearchList() = map { it.asDomain() }
 
-fun Summoner.toEntity() = SummonerEntity(
+fun Summoner.asEntity() = SummonerEntity(
     name = name,
     level = level,
     icon = icon,
@@ -33,26 +33,25 @@ fun Summoner.toEntity() = SummonerEntity(
     rank = rank,
     wins = wins,
     losses = losses,
-    miniSeries = miniSeries?.toEntity(),
-    isPlaying = isPlaying
+    miniSeries = miniSeries?.asEntity(),
 )
 
-fun List<SummonerEntity>.toSummonerList() = map { it.toDomain() }
+fun List<SummonerEntity>.asSummonerList() = map { it.asDomain() }
 
-fun Summoner.MiniSeries.toEntity() = SummonerEntity.MiniSeries(
+fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
     losses = losses,
     wins = wins,
     target = target,
     progress = progress
 )
 
-fun Profile.toEntity() = ProfileEntity(
+fun Profile.asEntity() = ProfileEntity(
     name = name,
     level = level,
     icon = icon
 )
 
-fun ChampionJson.Champion.toEntity() = ChampEntity(
+fun ChampionJson.Champion.asEntity() = ChampEntity(
     id = id,
     key = key,
     name = name,
@@ -64,20 +63,20 @@ fun ChampionJson.Champion.toEntity() = ChampEntity(
     )
 )
 
-fun MapJson.MapData.toEntity() = MapEntity(
+fun MapJson.MapData.asEntity() = MapEntity(
     mapId = mapId,
     mapName = mapName,
 )
 
-fun RuneJson.toEntity() = RuneEntity(
+fun RuneJson.asEntity() = RuneEntity(
     id = id,
     key = key,
     icon = icon,
     name = name,
-    slots = slots.toEntity()
+    slots = slots.asEntity()
 )
 
-fun SummonerJson.Spell.toEntity() = SpellEntity(
+fun SummonerJson.Spell.asEntity() = SpellEntity(
     id = id,
     key = key,
     name = name,
@@ -91,15 +90,15 @@ fun SummonerJson.Spell.toEntity() = SpellEntity(
 )
 
 
-private fun List<RuneJson.RuneInfo>.toEntity() = map { it.toRuneInfo() }
+private fun List<RuneJson.RuneInfo>.asEntity() = map { it.asRuneInfo() }
 
-private fun RuneJson.RuneInfo.toRuneInfo() = RuneEntity.RuneInfo(
-    runes = runes.toSubRuneList()
+private fun RuneJson.RuneInfo.asRuneInfo() = RuneEntity.RuneInfo(
+    runes = runes.asSubRuneList()
 )
 
-private fun List<RuneJson.RuneInfo.SubRune>.toSubRuneList() = map { it.toSubRune() }
+private fun List<RuneJson.RuneInfo.SubRune>.asSubRuneList() = map { it.asSubRune() }
 
-private fun RuneJson.RuneInfo.SubRune.toSubRune() = RuneEntity.RuneInfo.SubRune(
+private fun RuneJson.RuneInfo.SubRune.asSubRune() = RuneEntity.RuneInfo.SubRune(
     id = id,
     key = key,
     icon = icon,

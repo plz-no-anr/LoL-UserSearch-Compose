@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 class RequestSummonerUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: SummonerRepository
+    private val summonerRepository: SummonerRepository
 ): BaseUseCase<String, Summoner>(coroutineDispatcher) {
 
     override fun execute(parameter: String): Flow<Result<Summoner>> {
-        return appRepository.requestSummoner(parameter)
+        return summonerRepository.requestSummoner(parameter)
     }
 
 }

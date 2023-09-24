@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 class RequestSpectatorUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: SummonerRepository
+    private val summonerRepository: SummonerRepository
 ): BaseUseCase<String, Spectator>(coroutineDispatcher) {
 
     override fun execute(parameter: String): Flow<Result<Spectator>> {
-        return appRepository.requestSpectator(parameter)
+        return summonerRepository.requestSpectator(parameter)
     }
 
 }

@@ -4,15 +4,17 @@ import com.plz.no.anr.lol.data.model.local.json.ChampEntity
 import com.plz.no.anr.lol.data.model.local.json.MapEntity
 import com.plz.no.anr.lol.data.model.local.json.RuneEntity
 import com.plz.no.anr.lol.data.model.local.json.SpellEntity
+import kotlinx.coroutines.flow.Flow
+
 interface AppLocalDataSource {
     // Json
-    suspend fun getChamps() : List<ChampEntity>
+    suspend fun getChamps() : Flow<List<ChampEntity>>
 
-    suspend fun getSpells() : List<SpellEntity>
+    suspend fun getSpells() : Flow<List<SpellEntity>>
 
-    suspend fun getRunes() : List<RuneEntity>
+    suspend fun getRunes() : Flow<List<RuneEntity>>
 
-    suspend fun getMaps() : List<MapEntity>
+    suspend fun getMaps() : Flow<List<MapEntity>>
 
     suspend fun insertChamp(champEntity: ChampEntity)
 

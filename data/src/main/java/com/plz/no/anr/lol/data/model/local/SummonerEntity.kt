@@ -20,7 +20,6 @@ data class SummonerEntity(
     @ColumnInfo(name = "total_losses")
     val losses: Int, // 패배
     @Embedded val miniSeries: MiniSeries?, // 승급전
-    val isPlaying: Boolean,
 ) {
     data class MiniSeries(
         val losses: Int,
@@ -28,7 +27,7 @@ data class SummonerEntity(
         val wins: Int,
         val progress: String
     )
-    fun MiniSeries.toDomain() = Summoner.MiniSeries(
+    fun MiniSeries.asDomain() = Summoner.MiniSeries(
         losses = losses,
         target = target,
         wins = wins,
@@ -36,7 +35,7 @@ data class SummonerEntity(
     )
 }
 
-fun SummonerEntity.toDomain() = Summoner(
+fun SummonerEntity.asDomain() = Summoner(
     name = name,
     level = level,
     icon = icon,
@@ -45,6 +44,5 @@ fun SummonerEntity.toDomain() = Summoner(
     rank = rank,
     wins = wins,
     losses = losses,
-    miniSeries = miniSeries?.toDomain(),
-    isPlaying = isPlaying
+    miniSeries = miniSeries?.asDomain(),
 )

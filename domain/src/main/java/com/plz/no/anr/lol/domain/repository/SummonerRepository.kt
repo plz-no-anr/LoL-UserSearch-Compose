@@ -8,13 +8,15 @@ interface SummonerRepository {
 
     fun requestSummoner(name: String): Flow<Result<Summoner>>
 
-    fun readSummonerList(): Flow<Result<List<Summoner>>>
+    fun getSummoner(name: String): Flow<Result<Summoner>>
 
-    fun refreshSummonerList(): Flow<Result<List<Summoner>>>
+    fun getSummonerList(): Flow<Result<List<Summoner>>>
 
-    fun requestSpectator(name: String): Flow<Result<Spectator>>
+    fun requestSpectator(summonerId: String): Flow<Result<Spectator>>
 
     fun insertSummoner(summoner: Summoner): Flow<Result<Unit>>
+
+    fun updateSummoner(summoner: Summoner): Flow<Result<Unit>>
 
     fun deleteSummoner(name: String): Flow<Result<Unit>>
 

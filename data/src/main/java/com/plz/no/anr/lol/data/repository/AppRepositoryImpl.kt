@@ -5,10 +5,10 @@ import com.plz.no.anr.lol.data.repository.local.DataStoreManager
 import com.plz.no.anr.lol.data.repository.local.app.AppLocalDataSource
 import com.plz.no.anr.lol.data.utils.JsonUtils
 import com.plz.no.anr.lol.data.utils.asEntity
+import com.plz.no.anr.lol.data.utils.catchResultError
 import com.plz.no.anr.lol.domain.repository.AppRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -47,35 +47,37 @@ internal class AppRepositoryImpl(
         coroutineScope {
             if (!init) {
                 val json = getJson()
-                launch {
+                val mapJob = launch {
                     json.map.data.values.forEach {
                         appLocalDataSource.insertMap(it.asEntity())
                     }
                 }
-                launch {
+                val champJob = launch {
                     json.champ.data.values.forEach {
                         appLocalDataSource.insertChamp(it.asEntity())
                     }
                 }
-                launch {
+                val runeJob = launch {
                     json.rune.forEach {
                         appLocalDataSource.insertRune(it.asEntity())
                     }
                 }
-                launch {
+                val summonerJob = launch {
                     json.summoner.data.values.forEach {
                         appLocalDataSource.insertSpell(it.asEntity())
                     }
                 }
+                mapJob.join()
+                champJob.join()
+                runeJob.join()
+                summonerJob.join()
                 dataStoreManager.storeInit(true)
                 emit(Result.success(true))
             } else {
                 emit(Result.success(false))
             }
         }
-    }.catch {
-        emit(Result.failure(it))
-    }
+    }.catchResultError()
 
 
 }

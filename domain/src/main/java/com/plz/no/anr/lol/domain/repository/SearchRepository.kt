@@ -9,6 +9,8 @@ interface SearchRepository {
 
     fun insertSearch(search: Search): Flow<Result<Unit>>
 
+    fun updateSearch(search: Search): Flow<Result<Unit>>
+
     fun deleteSearch(sName: String): Flow<Result<Unit>>
 
     fun deleteSearchAll(): Flow<Result<Unit>>

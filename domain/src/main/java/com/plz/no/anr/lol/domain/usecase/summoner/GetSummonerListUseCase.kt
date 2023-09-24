@@ -6,13 +6,13 @@ import com.plz.no.anr.lol.domain.usecase.base.BaseUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
-class RefreshSummonerListUseCase(
+class GetSummonerListUseCase(
     coroutineDispatcher: CoroutineDispatcher,
-    private val appRepository: SummonerRepository
+    private val summonerRepository: SummonerRepository
 ): BaseUseCase<Unit, List<Summoner>>(coroutineDispatcher) {
 
     override fun execute(parameter: Unit): Flow<Result<List<Summoner>>> {
-        return appRepository.refreshSummonerList()
+        return summonerRepository.getSummonerList()
     }
 
 }
