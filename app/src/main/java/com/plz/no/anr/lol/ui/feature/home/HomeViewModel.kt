@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
             is Intent.Key.OnGet -> postSideEffect { SideEffect.MoveGetApiKey }
             is Intent.Key.OnAdd -> insertKey(intent.key)
             is Intent.Key.OnDelete -> deleteKey()
-            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.name) }
+            is Intent.Spectator.OnWatch -> postSideEffect { SideEffect.Navigation.ToSpectator(intent.summonerId) }
         }
     }
 

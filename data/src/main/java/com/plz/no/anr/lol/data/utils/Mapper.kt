@@ -25,6 +25,7 @@ fun Search.asEntity() = SearchEntity(
 fun List<SearchEntity>.asSearchList() = map { it.asDomain() }
 
 fun Summoner.asEntity() = SummonerEntity(
+    id = id,
     name = name,
     level = level,
     icon = icon,
@@ -46,6 +47,7 @@ fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
 )
 
 fun Profile.asEntity() = ProfileEntity(
+    id = id,
     name = name,
     level = level,
     icon = icon
