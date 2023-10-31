@@ -13,4 +13,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "lol"
-include (":app", ":data", ":domain")
+include(":app")
+include(":data")
+include(":domain")
+include(":model")

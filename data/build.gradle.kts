@@ -1,64 +1,76 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
-    androidLib
-    kotlinAndroid
-    kotlinKapt
-    kotlinParcelize
-    kotlinSerialization
-    daggerHiltAndroid
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = NameSpace.data
-    compileSdk = AppConfig.compileSdkVersion
+    namespace = "com.plznoanr.data"
+    compileSdk = 34
 
     defaultConfig {
-        minSdk = AppConfig.minSdkVersion
+        minSdk = 24
 
-        testInstrumentationRunner = AppConfig.androidTestInstrumentation
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures.buildConfig = true
+
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${gradleLocalProperties(rootDir).getProperty("RIOT_BASE_URL")}\""
+            )
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile(AppConfig.proguardFileName),
-                AppConfig.proguardRules
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.javaCompatibility
-        targetCompatibility = AppConfig.javaCompatibility
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = AppConfig.jvmTarget
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
 
 dependencies {
-    implementation(domain)
-    // Coroutines
-    api(Dependencies.ThirdParty.coroutinesAndroid)
-    // OkHttp
-    implementationOkHttp()
-    // Retrofit
-    implementationRetrofit()
-    // Room
-    implementationRoom()
-    // Hilt
-    implementationHilt()
-    // Timber
-    implementation(Dependencies.ThirdParty.timber)
-    // Serialization
-    implementation(Dependencies.ThirdParty.kotlinSerialization)
+    implementation(project(":model"))
 
-    implmentationDataStore()
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
-    implementationUnitTest()
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.google.gson)
+    implementation(libs.timber)
 
-    implementationAndroidTest()
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+//
+//    implementationUnitTest()
+//
+//    implementationAndroidTest()
 }

@@ -1,27 +1,26 @@
 plugins {
-    androidApplication
-    kotlinAndroid
-    kotlinKapt
-    kotlinParcelize
-    daggerHiltAndroid
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = AppConfig.applicationId
-    compileSdk = AppConfig.compileSdkVersion
+    namespace = "com.plznoanr.lol"
+    compileSdk = 34
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     defaultConfig {
-        applicationId = AppConfig.applicationId
-        minSdk = AppConfig.minSdkVersion
-        targetSdk = AppConfig.targetSdkVersion
-        versionCode = AppConfig.versionCode
-        versionName = AppConfig.versionName
+        applicationId = "com.plznoanr.lol"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
 
-        testInstrumentationRunner = AppConfig.androidTestInstrumentation
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -36,17 +35,17 @@ android {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile(AppConfig.proguardFileName),
-                AppConfig.proguardRules
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.javaCompatibility
-        targetCompatibility = AppConfig.javaCompatibility
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = AppConfig.jvmTarget
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     testOptions {
         unitTests.apply {
@@ -54,48 +53,40 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.kotlinCompilerExtention
+        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
-    implementation(data)
-    implementation(domain)
-    implementation(Dependencies.AndroidX.core)
-    implementation(Dependencies.AndroidX.appcompat)
-    // Splash
-    implementation(Dependencies.AndroidX.splashscreen)
-    // Compose
-    implementationCompose()
-    // Lifecycle
-    implementationLifecycle()
-    // Coroutines
-//    implementationCoroutines()
-    // Retrofit
-//    implementationRetrofit()
-    // Room
-//    implementationRoom()
-    // Hilt
-    implementationHilt()
-    // Timber
-    implementation(Dependencies.ThirdParty.timber)
-    // Theme Adapter
-    implementationThemeAdapter()
-    // Image load
-    implementation(Dependencies.ThirdParty.coil)
-    // Lottie
-    implementation(Dependencies.ThirdParty.lottieCompose)
-    // Coma
-    implementation(Dependencies.ThirdParty.coma)
-    // ViewPager
-    implementation(Dependencies.ThirdParty.viewPager)
-    implementation(Dependencies.ThirdParty.viewPagerIndicators)
-    // UnitTest
-    implementationUnitTest()
-    // Android Test
-    implementationAndroidTest()
+    implementation(project(":domain"))
+    implementation(project(":model"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewModel.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    implementation(libs.bundles.androidx.compose)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    implementation(libs.timber)
+    implementation(libs.bundles.lottie)
+    implementation(libs.bundles.coil)
+    implementation(libs.coma)
+    implementation(libs.card.stack)
+
+    testImplementation(libs.junit4)
+
 }
