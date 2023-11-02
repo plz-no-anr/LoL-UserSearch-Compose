@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="17">
-      <module name="lol-user-search-compose-mvi.app" target="17" />
-      <module name="lol-user-search-compose-mvi.buildSrc" target="17" />
-      <module name="lol-user-search-compose-mvi.buildSrc.main" target="17" />
-      <module name="lol-user-search-compose-mvi.buildSrc.test" target="17" />
-      <module name="lol-user-search-compose-mvi.data" target="17" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17" />
   </component>
 </project>

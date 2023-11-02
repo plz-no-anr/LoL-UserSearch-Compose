@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -15,5 +16,4 @@
 local.properties
 
 # Project exclude paths
-/buildSrc/build/
 /.idea/kotlinc.xml
