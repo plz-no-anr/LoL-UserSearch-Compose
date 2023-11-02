@@ -1,22 +1,19 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    id("lol.android.application")
+    id("lol.android.hilt")
+    id("lol.android.application.flavors")
+    id("lol.android.application.compose")
+//    alias(libs.plugins.hilt)
+//    kotlin("kapt")
 }
 
 android {
     namespace = "com.plznoanr.lol"
-    compileSdk = 34
 
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
+    buildFeatures.buildConfig = true
 
     defaultConfig {
         applicationId = "com.plznoanr.lol"
-        minSdk = 24
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
 
@@ -40,26 +37,19 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
+
     testOptions {
         unitTests.apply {
             isReturnDefaultValues = true
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
+
 }
 
 dependencies {
-    implementation(project(":domain"))
-    implementation(project(":model"))
+    implementation(project(":core:common"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
@@ -68,18 +58,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewModel.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.bundles.androidx.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     implementation(libs.timber)
     implementation(libs.bundles.lottie)
@@ -87,6 +73,8 @@ dependencies {
     implementation(libs.coma)
     implementation(libs.card.stack)
 
+//    implementation(libs.hilt.android)
+//    kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit4)
 
 }

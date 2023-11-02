@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
 sealed class NetworkState {
     data object None: NetworkState()
@@ -15,7 +14,7 @@ sealed class NetworkState {
     data object NotConnected: NetworkState()
 }
 
-class NetworkManager @Inject constructor(
+class NetworkManager(
     appContext: Context
 ) {
     private val _networkState = MutableStateFlow<NetworkState>(NetworkState.None)

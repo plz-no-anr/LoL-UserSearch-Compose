@@ -1,7 +1,7 @@
 package com.plznoanr.lol.ui.feature.home
 
-import com.plznoanr.model.Profile
-import com.plznoanr.model.Summoner
+import com.plznoanr.lol.core.model.Profile
+import com.plznoanr.lol.core.model.Summoner
 import plznoanr.coma.core.ComaContract
 
 data class HomeUiState(
@@ -27,7 +27,7 @@ sealed class HomeIntent : ComaContract.Intent {
     }
 
     sealed class Profile : HomeIntent() {
-        data class OnAdd(val profile: com.plznoanr.model.Profile) : Profile()
+        data class OnAdd(val profile: com.plznoanr.lol.core.model.Profile) : Profile()
     }
 
     sealed class Spectator : HomeIntent() {

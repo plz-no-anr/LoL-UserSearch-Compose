@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -12,8 +13,12 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "lol"
+rootProject.name = "lol-user-search-compose-mvi"
 include(":app")
-include(":data")
-include(":domain")
-include(":model")
+include(":core:common")
+include(":core:network")
+include(":core:database")
+include(":core:data")
+include(":core:domain")
+include(":core:model")
+include(":core:datastore")

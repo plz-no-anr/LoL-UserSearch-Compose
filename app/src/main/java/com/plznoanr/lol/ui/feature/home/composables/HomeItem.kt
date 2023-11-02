@@ -40,8 +40,8 @@ import com.plznoanr.lol.ui.feature.common.IconImage
 import com.plznoanr.lol.ui.feature.common.summoner.getTierIcon
 import com.plznoanr.lol.ui.feature.home.HomeIntent
 import com.plznoanr.lol.ui.theme.sky
-import com.plznoanr.model.Summoner
-import com.plznoanr.model.getDummySummoner
+import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.model.getDummySummoner
 
 @Composable
 fun HomeItem(

@@ -1,9 +1,9 @@
 package com.plznoanr.lol.ui.feature.search
 
 import androidx.lifecycle.viewModelScope
-import com.plznoanr.domain.usecase.search.DeleteAllSearchUseCase
-import com.plznoanr.domain.usecase.search.DeleteSearchUseCase
-import com.plznoanr.domain.usecase.search.GetSearchListUseCase
+import com.plznoanr.lol.core.domain.usecase.search.DeleteAllSearchUseCase
+import com.plznoanr.lol.core.domain.usecase.search.DeleteSearchUseCase
+import com.plznoanr.lol.core.domain.usecase.search.GetSearchListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

@@ -1,6 +1,6 @@
 package com.plznoanr.lol.ui.feature.summoner
 
-import com.plznoanr.model.Summoner
+import com.plznoanr.lol.core.model.Summoner
 import plznoanr.coma.core.ComaContract
 
 

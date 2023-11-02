@@ -1,16 +1,16 @@
 package com.plznoanr.lol.ui.feature.home
 
 import androidx.lifecycle.viewModelScope
-import com.plznoanr.domain.usecase.key.DeleteKeyUseCase
-import com.plznoanr.domain.usecase.key.GetKeyUseCase
-import com.plznoanr.domain.usecase.key.InsertKeyUseCase
-import com.plznoanr.domain.usecase.profile.GetProfileUseCase
-import com.plznoanr.domain.usecase.profile.InsertProfileUseCase
-import com.plznoanr.domain.usecase.summoner.DeleteAllSummonerUseCase
-import com.plznoanr.domain.usecase.summoner.DeleteSummonerUseCase
-import com.plznoanr.domain.usecase.summoner.GetSummonerListUseCase
-import com.plznoanr.domain.usecase.summoner.ReadSummonerListUseCase
-import com.plznoanr.model.Profile
+import com.plznoanr.lol.core.domain.usecase.key.DeleteKeyUseCase
+import com.plznoanr.lol.core.domain.usecase.key.GetKeyUseCase
+import com.plznoanr.lol.core.domain.usecase.key.InsertKeyUseCase
+import com.plznoanr.lol.core.domain.usecase.profile.GetProfileUseCase
+import com.plznoanr.lol.core.domain.usecase.profile.InsertProfileUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.DeleteAllSummonerUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.DeleteSummonerUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerListUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.ReadSummonerListUseCase
+import com.plznoanr.lol.core.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -47,7 +47,11 @@ class HomeViewModel @Inject constructor(
             is HomeIntent.Key.OnGet -> postSideEffect { HomeSideEffect.MoveGetApiKey }
             is HomeIntent.Key.OnAdd -> insertKey(intent.key)
             is HomeIntent.Key.OnDelete -> deleteKey()
-            is HomeIntent.Spectator.OnWatch -> postSideEffect { HomeSideEffect.Navigation.ToSpectator(intent.summonerId) }
+            is HomeIntent.Spectator.OnWatch -> postSideEffect {
+                HomeSideEffect.Navigation.ToSpectator(
+                    intent.summonerId
+                )
+            }
         }
     }
 
@@ -57,22 +61,17 @@ class HomeViewModel @Inject constructor(
             getProfileUseCase(Unit),
             getSummonerListUseCase(Unit)
         ) { key, profile, summoners ->
-            HomeUiState(
-                key = key.getOrNull(),
-                profile = profile.getOrNull(),
-                data = summoners.getOrElse { emptyList() }
-            )
-        }.onStart { reduce { copy(isLoading = true) } }
-            .onEach {
-                reduce {
-                    copy(
-                        isLoading = false,
-                        key = it.key,
-                        profile = it.profile,
-                        data = it.data?.asReversed(),
-                    )
-                }
-            }.launchIn(viewModelScope)
+            reduce {
+                copy(
+                    isLoading = false,
+                    key = key.getOrNull(),
+                    profile = profile.getOrNull(),
+                    data = summoners.getOrElse { emptyList() }
+                )
+            }
+        }.onStart {
+            reduce { copy(isLoading = true) }
+        }.launchIn(viewModelScope)
     }
 
     private fun refreshSummonerList() {
@@ -169,25 +168,27 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun insertKey(key: String) {
-        insertKeyUseCase(key)
-            .onStart { reduce { copy(isLoading = true) } }
-            .onEach { result ->
-                result.onSuccess {
-                    reduce {
-                        copy(
-                            key = key,
-                            isLoading = false
-                        )
+        viewModelScope.launch {
+            insertKeyUseCase(key)
+                .onStart { reduce { copy(isLoading = true) } }
+                .onEach { result ->
+                    result.onSuccess {
+                        reduce {
+                            copy(
+                                key = key,
+                                isLoading = false
+                            )
+                        }
+                    }.onFailure {
+                        reduce {
+                            copy(
+                                error = it.message,
+                                isLoading = false
+                            )
+                        }
                     }
-                }.onFailure {
-                    reduce {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
+                }.first()
+        }
     }
 
     private fun deleteKey() {

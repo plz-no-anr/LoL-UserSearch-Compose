@@ -32,8 +32,8 @@ import com.plznoanr.lol.R
 import com.plznoanr.lol.ui.feature.common.IconImage
 import com.plznoanr.lol.ui.feature.common.summoner.getTierIcon
 import com.plznoanr.lol.ui.feature.summoner.SummonerIntent
-import com.plznoanr.model.Summoner
-import com.plznoanr.model.getDummySummoner
+import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.model.getDummySummoner
 
 @Composable
 fun SummonerContent(

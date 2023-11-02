@@ -27,8 +27,8 @@ import com.plznoanr.lol.R
 import com.plznoanr.lol.ui.feature.common.IconImage
 import com.plznoanr.lol.ui.feature.home.HomeIntent
 import com.plznoanr.lol.ui.theme.sky
-import com.plznoanr.model.Profile
-import com.plznoanr.model.Summoner
+import com.plznoanr.lol.core.model.Profile
+import com.plznoanr.lol.core.model.Summoner
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

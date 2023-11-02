@@ -1,6 +1,6 @@
 package com.plznoanr.lol.ui.feature.spectator
 
-import com.plznoanr.model.Spectator
+import com.plznoanr.lol.core.model.Spectator
 import plznoanr.coma.core.ComaContract
 
 data class SpectatorUiState(

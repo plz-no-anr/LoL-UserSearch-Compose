@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.R
-import com.plznoanr.model.common.AppError
+import com.plznoanr.lol.core.common.model.AppError
 
 @Composable
 fun ErrorScreen(

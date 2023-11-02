@@ -1,6 +1,6 @@
 package com.plznoanr.lol.ui.feature.search
 
-import com.plznoanr.model.Search
+import com.plznoanr.lol.core.model.Search
 import plznoanr.coma.core.ComaContract
 
 data class SearchUiState(

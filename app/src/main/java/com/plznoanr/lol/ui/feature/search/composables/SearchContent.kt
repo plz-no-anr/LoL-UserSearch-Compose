@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.R
 import com.plznoanr.lol.ui.feature.search.SearchIntent
-import com.plznoanr.model.Search
+import com.plznoanr.lol.core.model.Search
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

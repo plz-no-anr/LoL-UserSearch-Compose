@@ -2,7 +2,7 @@ package com.plznoanr.lol.ui.feature.spectator
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.plznoanr.domain.usecase.spectator.RequestSpectatorUseCase
+import com.plznoanr.lol.core.domain.usecase.spectator.RequestSpectatorUseCase
 import com.plznoanr.lol.ui.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn

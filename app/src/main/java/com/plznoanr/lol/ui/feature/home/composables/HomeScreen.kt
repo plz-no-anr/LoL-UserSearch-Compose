@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.R
+import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.ui.feature.common.AppProgressBar
 import com.plznoanr.lol.ui.feature.common.GetApiKeyView
 import com.plznoanr.lol.ui.feature.common.TopAppBar
@@ -29,8 +30,7 @@ import com.plznoanr.lol.ui.feature.home.HomeIntent
 import com.plznoanr.lol.ui.feature.home.HomeSideEffect
 import com.plznoanr.lol.ui.feature.home.HomeUiState
 import com.plznoanr.lol.ui.theme.sky
-import com.plznoanr.model.Profile
-import com.plznoanr.model.common.parseError
+import com.plznoanr.lol.core.model.Profile
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

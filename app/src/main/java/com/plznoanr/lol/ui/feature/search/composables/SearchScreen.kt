@@ -7,12 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.plznoanr.lol.R
+import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.ui.feature.common.AppProgressBar
+import com.plznoanr.lol.ui.feature.common.TopAppBar
 import com.plznoanr.lol.ui.feature.common.error.ErrorScreen
 import com.plznoanr.lol.ui.feature.search.SearchIntent
 import com.plznoanr.lol.ui.feature.search.SearchSideEffect
 import com.plznoanr.lol.ui.feature.search.SearchUiState
-import com.plznoanr.model.common.parseError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -46,7 +47,7 @@ fun SearchScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            com.plznoanr.lol.ui.feature.common.TopAppBar(
+            TopAppBar(
                 title = stringResource(id = R.string.search_title),
                 isBackPressVisible = true,
                 onBackPressed = { onIntent(SearchIntent.Navigation.Back) }
