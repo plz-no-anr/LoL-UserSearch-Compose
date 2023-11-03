@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.data.repository.local.summoner
+package com.plznoanr.lol.core.database.data.summoner
 
 import com.plznoanr.lol.core.database.dao.LolDao
 import com.plznoanr.lol.core.database.model.SummonerEntity
@@ -10,6 +10,11 @@ class SummonerLocalDataSourceImpl @Inject constructor(
 ) : SummonerLocalDataSource {
 
     override fun getSummonerList(): Flow<List<SummonerEntity>?> = dao.getSummonerList()
+
+    override fun getSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?> = dao.getSummonerList(
+        page = page,
+        size = size
+    )
 
     override fun getSummoner(name: String): Flow<SummonerEntity?> = dao.getSummoner(name)
 

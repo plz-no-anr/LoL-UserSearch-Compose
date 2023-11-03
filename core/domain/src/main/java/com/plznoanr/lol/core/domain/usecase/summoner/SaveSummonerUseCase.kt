@@ -18,8 +18,7 @@ class SaveSummonerUseCase @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(parameter: Summoner): Flow<Result<Unit>> =
-        summonerRepository.getSummonerList()
-            .map { result ->
+        summonerRepository.getSummonerList().map { result ->
                 result.getOrNull()?.let { summoners ->
                     summoners.find { parameter.name == it.name }
                 }

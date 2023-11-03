@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.domain.usecase.base.BaseUseCase
 import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.CoroutineDispatcher
@@ -13,10 +14,10 @@ class ReadSummonerListUseCase @Inject constructor(
     private val getSummonerListUseCase: GetSummonerListUseCase,
     private val readSummonerUseCase: ReadSummonerUseCase,
     @AppDispatchers.IO coroutineDispatcher: CoroutineDispatcher,
-): BaseUseCase<Unit, List<Summoner>>(coroutineDispatcher) {
+): BaseUseCase<Paging, List<Summoner>>(coroutineDispatcher) {
 
-    override fun execute(parameter: Unit): Flow<Result<List<Summoner>>> =
-        getSummonerListUseCase(Unit)
+    override fun execute(parameter: Paging): Flow<Result<List<Summoner>>> =
+        getSummonerListUseCase(parameter)
             .map { result ->
                 val summonerList = result.getOrThrow()
                 val list = summonerList.map { summoner ->

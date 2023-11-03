@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.data.repository.local.search
+package com.plznoanr.lol.core.database.data.search
 
 import com.plznoanr.lol.core.database.model.SearchEntity
 import kotlinx.coroutines.flow.Flow
@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 interface SearchLocalDataSource {
 
     fun getSearch() : Flow<List<SearchEntity>?>
+
+    suspend fun upsertSearch(searchEntity: SearchEntity)
 
     suspend fun insertSearch(searchEntity: SearchEntity)
 

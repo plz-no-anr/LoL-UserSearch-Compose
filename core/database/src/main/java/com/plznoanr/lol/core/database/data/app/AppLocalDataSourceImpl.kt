@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.data.repository.local.app
+package com.plznoanr.lol.core.database.data.app
 
 import com.plznoanr.lol.core.database.dao.JsonDao
 import com.plznoanr.lol.core.database.model.json.ChampEntity

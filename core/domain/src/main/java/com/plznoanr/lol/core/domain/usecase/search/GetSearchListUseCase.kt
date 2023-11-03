@@ -17,8 +17,7 @@ class GetSearchListUseCase @Inject constructor(
     override fun execute(parameter: Unit): Flow<Result<List<Search>>> {
         return searchRepository.getSearchList().map { result ->
             Result.success(
-                result.getOrThrow().sortedBy { it.date }
-                    .map {
+                result.getOrThrow().map {
                         it.copy(
                             date = it.date
                         )

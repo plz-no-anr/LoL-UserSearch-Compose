@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.data.repository.local.profle
+package com.plznoanr.lol.core.database.data.profle
 
 import com.plznoanr.lol.core.database.dao.LolDao
 import com.plznoanr.lol.core.database.model.ProfileEntity

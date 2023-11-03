@@ -1,40 +1,39 @@
 package com.plznoanr.lol.core.database.di
 
-import android.content.Context
-import androidx.room.Room
-import com.plznoanr.lol.core.database.AppDatabase
-import com.plznoanr.lol.core.database.dao.JsonDao
-import com.plznoanr.lol.core.database.dao.LolDao
-import com.plznoanr.lol.core.database.model.json.JsonTypeConverter
+import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
+import com.plznoanr.lol.core.database.data.app.AppLocalDataSourceImpl
+import com.plznoanr.lol.core.database.data.profle.ProfileLocalDataSource
+import com.plznoanr.lol.core.database.data.profle.ProfileLocalDataSourceImpl
+import com.plznoanr.lol.core.database.data.search.SearchLocalDataSource
+import com.plznoanr.lol.core.database.data.search.SearchLocalDataSourceImpl
+import com.plznoanr.lol.core.database.data.summoner.SummonerLocalDataSource
+import com.plznoanr.lol.core.database.data.summoner.SummonerLocalDataSourceImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalDataModule {
+interface LocalDataModule {
+    @Binds
+    fun bindAppLocalDataSource(
+        appLocalDataSourceImpl: AppLocalDataSourceImpl
+    ): AppLocalDataSource
 
-    @Provides
-    @Singleton
-    fun provideDatabase(
-        @ApplicationContext context: Context,
-    ): AppDatabase =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "lol-app.db"
-        ).build()
+    @Binds
+    fun bindProfileLocalData(
+        profileLocalDataSourceImpl: ProfileLocalDataSourceImpl
+    ): ProfileLocalDataSource
 
-    @Provides
-    fun provideAppDao(database: AppDatabase): LolDao =
-        database.appDao()
+    @Binds
+    fun bindSearchLocalData(
+        searchLocalDataSourceImpl: SearchLocalDataSourceImpl
+    ): SearchLocalDataSource
 
-    @Provides
-    fun provideJsonDao(database: AppDatabase): JsonDao =
-        database.jsonDao()
+    @Binds
+    fun bindSummonerLocalData(
+        summonerLocalDataSourceImpl: SummonerLocalDataSourceImpl
+    ): SummonerLocalDataSource
 
 }

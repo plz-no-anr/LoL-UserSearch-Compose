@@ -1,6 +1,7 @@
 package com.plznoanr.lol.ui.feature.home
 
 import androidx.lifecycle.viewModelScope
+import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.domain.usecase.key.DeleteKeyUseCase
 import com.plznoanr.lol.core.domain.usecase.key.GetKeyUseCase
 import com.plznoanr.lol.core.domain.usecase.key.InsertKeyUseCase
@@ -30,9 +31,10 @@ class HomeViewModel @Inject constructor(
     private val getKeyUseCase: GetKeyUseCase,
     private val insertKeyUseCase: InsertKeyUseCase,
     private val deleteKeyUseCase: DeleteKeyUseCase,
-    private val getSummonerListUseCase: GetSummonerListUseCase,
     private val readSummonerListUseCase: ReadSummonerListUseCase
 ) : ComaViewModel<HomeUiState, HomeIntent, HomeSideEffect>() {
+
+    private var paging = Paging()
 
     override fun setInitialState(): HomeUiState = HomeUiState()
 
@@ -59,7 +61,7 @@ class HomeViewModel @Inject constructor(
         combine(
             getKeyUseCase(Unit),
             getProfileUseCase(Unit),
-            getSummonerListUseCase(Unit)
+            readSummonerListUseCase(paging)
         ) { key, profile, summoners ->
             reduce {
                 copy(
@@ -76,7 +78,7 @@ class HomeViewModel @Inject constructor(
 
     private fun refreshSummonerList() {
         viewModelScope.launch {
-            readSummonerListUseCase(Unit)
+            readSummonerListUseCase(paging)
                 .onStart { reduce { copy(isRefreshing = true) } }
                 .onEach { result ->
                     result.onSuccess {

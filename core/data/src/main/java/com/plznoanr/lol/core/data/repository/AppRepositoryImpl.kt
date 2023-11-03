@@ -1,11 +1,11 @@
 package com.plznoanr.lol.core.data.repository
 
 import com.plznoanr.lol.core.common.model.AppError
-import com.plznoanr.lol.core.data.repository.local.app.AppLocalDataSource
+import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
 import com.plznoanr.lol.core.data.utils.JsonParser
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.data.utils.catchResultError
-import com.plznoanr.lol.core.datastore.DataStoreManager
+import com.plznoanr.lol.core.datastore.PreferenceDataSource
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -17,25 +17,25 @@ import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
-    private val dataStoreManager: DataStoreManager,
+    private val preferenceDataSource: PreferenceDataSource,
     private val jsonParser: JsonParser
 ) : AppRepository {
 
-    override fun getApiKey(): Flow<Result<String?>> = dataStoreManager.apiKeyFlow.map {
+    override fun getApiKey(): Flow<Result<String?>> = preferenceDataSource.apiKeyFlow.map {
         Result.success(it)
     }
 
     override fun insertApiKey(key: String): Flow<Result<Unit>> = flow {
-        dataStoreManager.storeApiKey(key)
+        preferenceDataSource.storeApiKey(key)
         emit(Result.success(Unit))
     }
 
     override fun deleteApiKey(): Flow<Result<Unit>> = flow {
-        dataStoreManager.clearApiKey()
+        preferenceDataSource.clearApiKey()
         emit(Result.success(Unit))
     }
 
-    private suspend fun isLocalInitialize() = dataStoreManager.initFlow.first() ?: false
+    private suspend fun isLocalInitialize() = preferenceDataSource.initFlow.first() ?: false
 
     private suspend fun getJson() = requireNotNull(jsonParser.getLocalJson()) {
         throw Exception(AppError.NoJsonData.parse())
@@ -71,7 +71,7 @@ class AppRepositoryImpl @Inject constructor(
                 champJob.join()
                 runeJob.join()
                 summonerJob.join()
-                dataStoreManager.storeInit(true)
+                preferenceDataSource.storeInit(true)
                 emit(Result.success(true))
             } else {
                 emit(Result.success(false))

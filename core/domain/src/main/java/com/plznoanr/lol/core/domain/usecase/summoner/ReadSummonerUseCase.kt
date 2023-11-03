@@ -3,6 +3,7 @@ package com.plznoanr.lol.core.domain.usecase.summoner
 import com.plznoanr.lol.core.common.di.AppDispatchers
 import com.plznoanr.lol.core.domain.usecase.base.BaseUseCase
 import com.plznoanr.lol.core.domain.usecase.search.SaveSearchUseCase
+import com.plznoanr.lol.core.domain.usecase.search.SaveUseCase
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class ReadSummonerUseCase @Inject constructor(
     private val requestSummonerUseCase: RequestSummonerUseCase,
     private val getSummonerUseCase: GetSummonerUseCase,
-    private val saveSearchUseCase: SaveSearchUseCase,
+    private val saveSearchUseCase: SaveUseCase,
     private val saveSummonerUseCase: SaveSummonerUseCase,
     @AppDispatchers.IO coroutineDispatcher: CoroutineDispatcher
 ) : BaseUseCase<String, Summoner>(coroutineDispatcher) {
@@ -33,7 +34,7 @@ class ReadSummonerUseCase @Inject constructor(
                         name = it.getOrThrow().name,
                         date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                     )
-                ).first()
+                )
                 saveSummonerUseCase(it.getOrThrow()).first()
             }.map {
                 if (it.isSuccess) {

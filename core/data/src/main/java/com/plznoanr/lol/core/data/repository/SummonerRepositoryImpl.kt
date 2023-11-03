@@ -3,23 +3,24 @@ package com.plznoanr.lol.core.data.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.plznoanr.lol.core.common.model.AppError
-import com.plznoanr.lol.core.data.repository.local.app.AppLocalDataSource
-import com.plznoanr.lol.core.data.repository.local.summoner.SummonerLocalDataSource
+import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.data.utils.QueueType
-import com.plznoanr.lol.core.network.RemoteDataSource
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.data.utils.asSummonerList
 import com.plznoanr.lol.core.data.utils.catchResultError
 import com.plznoanr.lol.core.data.utils.toChampImage
 import com.plznoanr.lol.core.data.utils.toIcon
 import com.plznoanr.lol.core.data.utils.toSpellImage
+import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
+import com.plznoanr.lol.core.database.data.summoner.SummonerLocalDataSource
 import com.plznoanr.lol.core.database.model.asDomain
+import com.plznoanr.lol.core.datastore.PreferenceDataSource
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.Team
+import com.plznoanr.lol.core.network.NetworkDataSource
 import com.plznoanr.lol.core.network.model.SpectatorResponse
 import com.plznoanr.lol.core.network.model.asDomain
-import com.plznoanr.lol.core.datastore.DataStoreManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -29,12 +30,12 @@ import javax.inject.Inject
 class SummonerRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
     private val summonerLocalDataSource: SummonerLocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
-    private val dataStoreManager: DataStoreManager,
+    private val networkDataSource: NetworkDataSource,
+    private val preferenceDataSource: PreferenceDataSource,
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
-        val key = requireNotNull(dataStoreManager.apiKeyFlow.first()) {
+        val key = requireNotNull(preferenceDataSource.apiKeyFlow.first()) {
             throw Exception(AppError.Forbidden.parse())
         }
         put("X-Riot-Token", key)
@@ -42,12 +43,12 @@ class SummonerRepositoryImpl @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
-        val summoner = remoteDataSource.requestSummoner(
+        val summoner = networkDataSource.requestSummoner(
             authTokenHeader(),
             name
         ).getOrThrow()
 
-        val league = remoteDataSource.requestLeague(
+        val league = networkDataSource.requestLeague(
             authTokenHeader(),
             summoner.id
         ).getOrThrow()
@@ -85,17 +86,25 @@ class SummonerRepositoryImpl @Inject constructor(
                 } ?: Result.failure(AppError.Default.exception())
             }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun getSummonerList(): Flow<Result<List<Summoner>>> =
-        summonerLocalDataSource.getSummonerList()
-            .map { entity ->
-                entity?.let {
-                    Result.success(it.asSummonerList())
-                } ?: Result.failure(AppError.Default.exception())
-            }
+        summonerLocalDataSource.getSummonerList().map { entity ->
+            entity?.let {
+                Result.success(it.asSummonerList())
+            } ?: Result.failure(AppError.Default.exception())
+        }
+
+    override fun getSummonerList(paging: Paging): Flow<Result<List<Summoner>>> =
+        summonerLocalDataSource.getSummonerList(
+            page = paging.page,
+            size = paging.size
+        ).map { entity ->
+            entity?.let {
+                Result.success(it.asSummonerList())
+            } ?: Result.failure(AppError.Default.exception())
+        }
 
     override fun requestSpectator(summonerId: String): Flow<Result<Spectator>> = flow {
-        val result = remoteDataSource.requestSpectator(
+        val result = networkDataSource.requestSpectator(
             authTokenHeader(),
             summonerId
         )

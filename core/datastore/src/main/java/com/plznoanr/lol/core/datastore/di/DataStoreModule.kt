@@ -1,7 +1,6 @@
 package com.plznoanr.lol.core.datastore.di
 
 import android.content.Context
-import com.plznoanr.lol.core.datastore.DataStoreManager
 import com.plznoanr.lol.core.datastore.SharedPreferenceManager
 import dagger.Module
 import dagger.Provides
@@ -16,12 +15,7 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun providePreferenceData(@ApplicationContext context: Context): SharedPreferenceManager =
+    fun provideSharedPreferenceData(@ApplicationContext context: Context): SharedPreferenceManager =
         SharedPreferenceManager(context)
-
-    @Provides
-    @Singleton
-    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager =
-        DataStoreManager(context)
 
 }

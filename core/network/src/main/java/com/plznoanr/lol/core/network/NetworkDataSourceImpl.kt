@@ -8,9 +8,9 @@ import com.plznoanr.lol.core.network.retrofit.asResult
 import com.plznoanr.lol.core.network.retrofit.asResultOrNull
 import javax.inject.Inject
 
-class RemoteDataSourceImpl @Inject constructor(
+class NetworkDataSourceImpl @Inject constructor(
     private val api: UserSearchApi
-): RemoteDataSource {
+): NetworkDataSource {
     override suspend fun requestSummoner(header: HashMap<String, String>, name: String): Result<SummonerResponse> {
         return api.getSummoner(header, name).asResult()
     }

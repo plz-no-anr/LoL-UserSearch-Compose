@@ -1,7 +1,7 @@
 package com.plznoanr.lol.core.data.repository
 
 import com.plznoanr.lol.core.database.model.asDomain
-import com.plznoanr.lol.core.data.repository.local.profle.ProfileLocalDataSource
+import com.plznoanr.lol.core.database.data.profle.ProfileLocalDataSource
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.model.Profile
 import kotlinx.coroutines.flow.Flow

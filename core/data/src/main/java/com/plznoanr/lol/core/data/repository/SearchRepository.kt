@@ -7,6 +7,8 @@ interface SearchRepository {
 
     fun getSearchList(): Flow<Result<List<Search>>>
 
+    suspend fun upsertSearch(search: Search)
+
     fun insertSearch(search: Search): Flow<Result<Unit>>
 
     fun updateSearch(search: Search): Flow<Result<Unit>>

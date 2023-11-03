@@ -9,17 +9,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LolDao {
 
-    @Query("SELECT * FROM Search LIMIT 20 OFFSET 0")
+    @Query("SELECT * FROM Search ORDER BY date DESC LIMIT 20")
     fun getSearchList(): Flow<List<SearchEntity>?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSearch(searchEntity: SearchEntity)
 
-    @Query("DELETE FROM Search WHERE name = :sName")
-    suspend fun deleteSearch(sName: String)
-
     @Update
     suspend fun updateSearch(searchEntity: SearchEntity)
+    @Upsert
+    suspend fun upsertSearch(searchEntity: SearchEntity)
+
+    @Query("DELETE FROM Search WHERE name = :sName")
+    suspend fun deleteSearch(sName: String)
 
     @Query("DELETE FROM Search")
     suspend fun deleteSearchAll()
@@ -35,6 +37,9 @@ interface LolDao {
 
     @Query("DELETE FROM Profile")
     suspend fun deleteProfile()
+
+    @Query("SELECT * FROM Summoner LIMIT :size OFFSET (:page - 1) * :size")
+    fun getSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
 
     @Query("SELECT * FROM Summoner")
     fun getSummonerList() : Flow<List<SummonerEntity>?>

@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.data.repository.local.search
+package com.plznoanr.lol.core.database.data.search
 
 import com.plznoanr.lol.core.database.dao.LolDao
 import com.plznoanr.lol.core.database.model.SearchEntity
@@ -10,6 +10,10 @@ class SearchLocalDataSourceImpl @Inject constructor(
 ) : SearchLocalDataSource {
 
     override fun getSearch(): Flow<List<SearchEntity>?> = dao.getSearchList()
+
+    override suspend fun upsertSearch(searchEntity: SearchEntity) {
+        dao.upsertSearch(searchEntity)
+    }
 
     override suspend fun insertSearch(searchEntity: SearchEntity) {
         dao.insertSearch(searchEntity)

@@ -1,6 +1,6 @@
 package com.plznoanr.lol.core.data.repository
 
-import com.plznoanr.lol.core.data.repository.local.search.SearchLocalDataSource
+import com.plznoanr.lol.core.database.data.search.SearchLocalDataSource
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.data.utils.asSearchList
 import com.plznoanr.lol.core.model.Search
@@ -19,6 +19,10 @@ class SearchRepositoryImpl @Inject constructor(
                 it?.asSearchList() ?: emptyList()
             )
         }
+
+    override suspend fun upsertSearch(search: Search) {
+        localDataSource.upsertSearch(search.asEntity())
+    }
 
     override fun insertSearch(search: Search): Flow<Result<Unit>> = flow {
         localDataSource.insertSearch(search.asEntity()).run {
