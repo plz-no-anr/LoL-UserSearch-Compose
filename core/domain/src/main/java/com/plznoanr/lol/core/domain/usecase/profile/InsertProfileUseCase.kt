@@ -1,7 +1,6 @@
 package com.plznoanr.lol.core.domain.usecase.profile
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.domain.usecase.base.BaseUseCase
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.data.repository.ProfileRepository
 import kotlinx.coroutines.CoroutineDispatcher

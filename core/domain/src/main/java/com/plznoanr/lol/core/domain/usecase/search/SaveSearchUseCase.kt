@@ -1,7 +1,6 @@
 package com.plznoanr.lol.core.domain.usecase.search
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.domain.usecase.base.BaseUseCase
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.data.repository.SearchRepository
 import kotlinx.coroutines.CoroutineDispatcher

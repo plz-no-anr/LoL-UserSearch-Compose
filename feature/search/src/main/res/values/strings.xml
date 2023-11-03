@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">검색</string>
+    <string name="summoner_name">소환사 이름</string>
+    <string name="delete_all">전체 삭제</string>
+    <string name="search_title">전적 검색</string>
+</resources>

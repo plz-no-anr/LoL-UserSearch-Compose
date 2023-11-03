@@ -13,21 +13,17 @@ class ProfileRepositoryImpl @Inject constructor(
     private val localDataSource: ProfileLocalDataSource
 ) : ProfileRepository {
 
-    override fun getProfile(): Flow<Result<Profile?>> =
+    override fun getProfile(): Flow<Profile?> =
         localDataSource.getProfile().map {
-            Result.success(it?.asDomain())
+            it?.asDomain()
         }
 
-    override fun insertProfile(profile: Profile): Flow<Result<Unit>> = flow {
-        localDataSource.insertProfile(profile.asEntity()).run {
-            emit(Result.success(Unit))
-        }
+    override suspend fun insertProfile(profile: Profile) {
+        localDataSource.insertProfile(profile.asEntity())
     }
 
-    override fun deleteProfile(): Flow<Result<Unit>> = flow {
-        localDataSource.deleteProfile().run {
-            emit(Result.success(Unit))
-        }
+    override suspend fun deleteProfile() {
+        localDataSource.deleteProfile()
     }
 
 }

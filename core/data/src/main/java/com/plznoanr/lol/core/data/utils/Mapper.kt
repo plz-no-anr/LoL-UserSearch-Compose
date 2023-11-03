@@ -11,10 +11,7 @@ import com.plznoanr.lol.core.database.model.json.SpellEntity
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.model.Summoner
-import com.plznoanr.lol.core.model.common.json.ChampionJson
-import com.plznoanr.lol.core.model.common.json.MapJson
-import com.plznoanr.lol.core.model.common.json.RuneJson
-import com.plznoanr.lol.core.model.common.json.SummonerJson
+
 
 
 fun Search.asEntity() = SearchEntity(

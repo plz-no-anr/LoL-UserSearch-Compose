@@ -47,9 +47,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:search"))
+    implementation(project(":feature:bookmark"))
+    implementation(project(":feature:setting"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
@@ -73,8 +77,6 @@ dependencies {
     implementation(libs.coma)
     implementation(libs.card.stack)
 
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit4)
 
 }

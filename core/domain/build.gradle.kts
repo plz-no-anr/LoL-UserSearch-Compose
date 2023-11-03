@@ -14,7 +14,6 @@ dependencies {
     implementation(libs.javax.inject)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.timber)
 
     testImplementation(libs.junit4)
 }

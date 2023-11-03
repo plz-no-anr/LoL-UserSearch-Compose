@@ -4,12 +4,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppRepository {
 
-    fun getApiKey(): Flow<Result<String?>>
+    fun getApiKey(): Flow<String?>
 
-    fun insertApiKey(key: String): Flow<Result<Unit>>
+    suspend fun insertApiKey(key: String)
 
-    fun deleteApiKey(): Flow<Result<Unit>>
+    suspend fun deleteApiKey()
 
-    fun initLocalJson(): Flow<Result<Boolean>>
+    fun initializeJsonData(): Flow<Result<Boolean>>
 
 }

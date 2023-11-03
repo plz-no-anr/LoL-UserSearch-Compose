@@ -1,67 +1,45 @@
 package com.plznoanr.lol.core.datastore
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = PreferenceDataSource.DATASTORE_NAME,
-    produceMigrations = { context ->
-        listOf(
-            SharedPreferencesMigration(
-                context = context,
-                sharedPreferencesName = SharedPreferenceManager.LOL_APP,
-                keysToMigrate = setOf( // 마이그레이션 하고자 하는 키 모음
-                    SharedPreferenceManager.API_KEY,
-                    SharedPreferenceManager.INIT_KEY
-                )
-            )
-        )
-    }
-)
-
 class PreferenceDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val dataStore: DataStore<Preferences>
 ) {
-    companion object {
-        const val DATASTORE_NAME = "app_prefs"
+    private object PreferenceKey {
         val API_KEY = stringPreferencesKey("API_KEY")
-        val INIT_KEY = booleanPreferencesKey("INIT_KEY")
+        val INIT = booleanPreferencesKey("INIT_KEY")
     }
 
-
-    val apiKeyFlow: Flow<String?> = context.dataStore.data.map {
-        it[API_KEY]
+    val apiKeyFlow: Flow<String?> = dataStore.data.map {
+        it[PreferenceKey.API_KEY]
     }
 
-    val initFlow: Flow<Boolean?> = context.dataStore.data.map {
-        it[INIT_KEY]
+    val initFlow: Flow<Boolean?> = dataStore.data.map {
+        it[PreferenceKey.INIT]
     }
 
     suspend fun storeApiKey(apiKey: String) {
-        context.dataStore.edit { preferences ->
-            preferences[API_KEY] = apiKey
+        dataStore.edit { preferences ->
+            preferences[PreferenceKey.API_KEY] = apiKey
         }
     }
 
     suspend fun storeInit(init: Boolean) {
-        context.dataStore.edit { preferences ->
-            preferences[INIT_KEY] = init
+        dataStore.edit { preferences ->
+            preferences[PreferenceKey.INIT] = init
         }
     }
 
     suspend fun clearApiKey() {
-        context.dataStore.edit { preferences ->
-            preferences.remove(API_KEY)
+        dataStore.edit { preferences ->
+            preferences.remove(PreferenceKey.API_KEY)
         }
     }
 

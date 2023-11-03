@@ -2,11 +2,11 @@ package com.plznoanr.lol.core.data.utils
 
 import android.content.Context
 import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.model.common.LocalJson
-import com.plznoanr.lol.core.model.common.json.ChampionJson
-import com.plznoanr.lol.core.model.common.json.MapJson
-import com.plznoanr.lol.core.model.common.json.RuneJson
-import com.plznoanr.lol.core.model.common.json.SummonerJson
+import com.plznoanr.lol.core.data.model.LocalJson
+import com.plznoanr.lol.core.data.model.ChampionJson
+import com.plznoanr.lol.core.data.model.MapJson
+import com.plznoanr.lol.core.data.model.RuneJson
+import com.plznoanr.lol.core.data.model.SummonerJson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async

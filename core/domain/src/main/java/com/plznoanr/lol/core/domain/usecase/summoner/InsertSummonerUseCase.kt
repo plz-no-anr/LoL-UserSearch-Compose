@@ -1,7 +1,6 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.domain.usecase.base.BaseUseCase
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import kotlinx.coroutines.CoroutineDispatcher
