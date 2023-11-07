@@ -1,25 +1,26 @@
 package com.plznoanr.lol.core.data.repository
 
+import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.flow.Flow
 
 interface SummonerRepository {
 
-    fun requestSummoner(name: String): Flow<Result<Summoner>>
+    suspend fun requestSummoner(name: String): Result<Summoner>
 
-    fun getSummoner(name: String): Flow<Result<Summoner>>
+    fun getSummoner(name: String): Flow<Summoner?>
 
-    fun getSummonerList(): Flow<Result<List<Summoner>>>
+    fun getSummonerList(paging: Paging): Flow<List<Summoner>>
 
-    fun requestSpectator(summonerId: String): Flow<Result<Spectator>>
+    fun getBookMarkedSummonerList(paging: Paging): Flow<List<Summoner>>
 
-    fun insertSummoner(summoner: Summoner): Flow<Result<Unit>>
+    suspend fun requestSpectator(summonerId: String): Result<Spectator>
 
-    fun updateSummoner(summoner: Summoner): Flow<Result<Unit>>
+    suspend fun upsertSummoner(summoner: Summoner)
 
-    fun deleteSummoner(name: String): Flow<Result<Unit>>
+    suspend fun deleteSummoner(name: String)
 
-    fun deleteSummonerAll(): Flow<Result<Unit>>
+    suspend fun deleteSummonerAll()
 
 }

@@ -9,9 +9,11 @@ import kotlinx.datetime.LocalDateTime
 data class SearchEntity(
     @PrimaryKey
     val name: String,
-    val date: LocalDateTime
+    val date: LocalDateTime,
+    val isBookmark: Boolean
 )
 fun SearchEntity.asDomain() = Search(
     name = name,
-    date = date
+    date = date,
+    isBookmark = isBookmark
 )

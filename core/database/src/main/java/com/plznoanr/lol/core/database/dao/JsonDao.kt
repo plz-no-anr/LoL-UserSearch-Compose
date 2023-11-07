@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface JsonDao {
     @Query("SELECT * FROM Champ")
-    fun getChamps(): Flow<List<ChampEntity>>
+    fun getChamps(): List<ChampEntity>
 
     @Query("SELECT * FROM Spell")
-    fun getSpells(): Flow<List<SpellEntity>>
+    fun getSpells(): List<SpellEntity>
 
     @Query("SELECT * FROM Rune")
-    fun getRunes(): Flow<List<RuneEntity>>
+    fun getRunes(): List<RuneEntity>
 
     @Query("SELECT * FROM Map")
-    fun getMaps(): Flow<List<MapEntity>>
+    fun getMaps(): List<MapEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertChamp(champEntity: ChampEntity)

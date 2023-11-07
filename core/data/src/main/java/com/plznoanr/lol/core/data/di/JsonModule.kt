@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
@@ -20,5 +21,9 @@ object JsonModule {
     fun provideJsonUtils(
         @ApplicationContext context: Context,
         @AppDispatchers.Default coroutineDispatcher: CoroutineDispatcher
-    ): JsonParser = JsonParser(context, coroutineDispatcher)
+    ): JsonParser = JsonParser(
+        context,
+        Json { ignoreUnknownKeys = true },
+        coroutineDispatcher
+    )
 }

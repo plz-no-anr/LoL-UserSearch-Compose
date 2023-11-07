@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    fun getProfile(): Flow<Result<Profile?>>
+    fun getProfile(): Flow<Profile?>
 
-    fun insertProfile(profile: Profile): Flow<Result<Unit>>
+    suspend fun upsertProfile(profile: Profile)
 
-    fun deleteProfile(): Flow<Result<Unit>>
+    suspend fun deleteProfile()
 
 }

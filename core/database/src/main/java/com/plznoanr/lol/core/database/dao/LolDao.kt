@@ -9,17 +9,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LolDao {
 
-    @Query("SELECT * FROM Search LIMIT 20 OFFSET 0")
+    @Query("SELECT * FROM Search ORDER BY date DESC LIMIT 20")
     fun getSearchList(): Flow<List<SearchEntity>?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSearch(searchEntity: SearchEntity)
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertSearch(searchEntity: SearchEntity)
+//
+//    @Update
+//    suspend fun updateSearch(searchEntity: SearchEntity)
+
+    @Upsert
+    suspend fun upsertSearch(searchEntity: SearchEntity)
 
     @Query("DELETE FROM Search WHERE name = :sName")
     suspend fun deleteSearch(sName: String)
-
-    @Update
-    suspend fun updateSearch(searchEntity: SearchEntity)
 
     @Query("DELETE FROM Search")
     suspend fun deleteSearchAll()
@@ -27,26 +30,32 @@ interface LolDao {
     @Query("SELECT * FROM Profile")
     fun getProfile() : Flow<ProfileEntity?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProfile(profileEntity: ProfileEntity)
-
-    @Update
-    suspend fun updateProfile(profileEntity: ProfileEntity)
+    @Upsert
+    suspend fun upsertProfile(profileEntity: ProfileEntity)
 
     @Query("DELETE FROM Profile")
     suspend fun deleteProfile()
 
-    @Query("SELECT * FROM Summoner")
-    fun getSummonerList() : Flow<List<SummonerEntity>?>
+    @Query("SELECT * FROM Summoner LIMIT :size OFFSET (:page - 1) * :size")
+    fun getSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
+
+//    @Query("SELECT * FROM Summoner")
+//    fun getSummonerList() : Flow<List<SummonerEntity>?>
 
     @Query("SELECT * FROM Summoner WHERE name = :summonerName")
     fun getSummoner(summonerName: String) : Flow<SummonerEntity?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSummoner(summonerEntity: SummonerEntity)
+    @Query("SELECT * FROM Summoner WHERE isBookMarked = 1 LIMIT :size OFFSET (:page - 1) * :size")
+    fun getBookMarkedSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
 
-    @Update
-    suspend fun updateSummoner(summonerEntity: SummonerEntity)
+    @Upsert
+    fun upsertSummoner(summonerEntity: SummonerEntity)
+
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertSummoner(summonerEntity: SummonerEntity)
+//
+//    @Update
+//    suspend fun updateSummoner(summonerEntity: SummonerEntity)
 
     @Query("DELETE FROM Summoner WHERE name = :summonerName")
     suspend fun deleteSummoner(summonerName: String)

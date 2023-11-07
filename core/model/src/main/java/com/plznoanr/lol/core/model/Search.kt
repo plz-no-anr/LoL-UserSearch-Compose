@@ -7,7 +7,8 @@ import java.time.format.DateTimeFormatter
 
 data class Search(
     val name: String,
-    val date: LocalDateTime
+    val date: LocalDateTime,
+    val isBookmark: Boolean = false,
 ) {
     val displayDateTime: String
         get() = date.toJavaLocalDateTime()

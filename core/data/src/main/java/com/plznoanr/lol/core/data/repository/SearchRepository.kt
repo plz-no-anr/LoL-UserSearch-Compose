@@ -5,14 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
 
-    fun getSearchList(): Flow<Result<List<Search>>>
+    fun getSearchList(): Flow<List<Search>>
 
-    fun insertSearch(search: Search): Flow<Result<Unit>>
+    suspend fun upsertSearch(search: Search)
 
-    fun updateSearch(search: Search): Flow<Result<Unit>>
+    suspend fun deleteSearch(sName: String)
 
-    fun deleteSearch(sName: String): Flow<Result<Unit>>
-
-    fun deleteSearchAll(): Flow<Result<Unit>>
+    suspend fun deleteSearchAll()
 
 }

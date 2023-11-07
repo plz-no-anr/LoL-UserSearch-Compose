@@ -9,8 +9,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply {
-                apply("fncy.android.library")
-                apply("fncy.android.hilt")
+                apply("lol.android.library")
+                apply("lol.android.hilt")
             }
             extensions.configure<LibraryExtension> {
                 defaultConfig {
@@ -24,14 +24,14 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("coil.kt.compose").get())
                 add("implementation", libs.findLibrary("coil.kt.svg").get())
 
+                add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("androidx.navigation.compose").get())
                 add("implementation", libs.findLibrary("androidx.lifecycle.runtime.compose").get())
-                add(
-                    "implementation",
-                    libs.findLibrary("androidx.lifecycle.viewModel.compose").get()
-                )
+                add("implementation", libs.findLibrary("androidx.lifecycle.viewModel.compose").get())
 
                 add("implementation", libs.findLibrary("kotlinx.coroutines.android").get())
+                add("implementation", libs.findLibrary("coma").get())
+
             }
         }
     }

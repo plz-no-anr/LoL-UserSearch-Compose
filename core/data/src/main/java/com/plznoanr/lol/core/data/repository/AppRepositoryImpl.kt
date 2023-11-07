@@ -1,47 +1,46 @@
 package com.plznoanr.lol.core.data.repository
 
+import com.plznoanr.lol.core.common.di.AppDispatchers
 import com.plznoanr.lol.core.common.model.AppError
-import com.plznoanr.lol.core.data.repository.local.app.AppLocalDataSource
 import com.plznoanr.lol.core.data.utils.JsonParser
 import com.plznoanr.lol.core.data.utils.asEntity
-import com.plznoanr.lol.core.data.utils.catchResultError
-import com.plznoanr.lol.core.datastore.DataStoreManager
+import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
+import com.plznoanr.lol.core.datastore.PreferenceDataSource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
-    private val dataStoreManager: DataStoreManager,
-    private val jsonParser: JsonParser
+    private val preferenceDataSource: PreferenceDataSource,
+    private val jsonParser: JsonParser,
+    @AppDispatchers.Default private val defaultDispatcher: CoroutineDispatcher
 ) : AppRepository {
 
-    override fun getApiKey(): Flow<Result<String?>> = dataStoreManager.apiKeyFlow.map {
-        Result.success(it)
+    override fun getApiKey(): Flow<String?> = preferenceDataSource.apiKeyFlow
+
+    override suspend fun insertApiKey(key: String) {
+        preferenceDataSource.storeApiKey(key)
     }
 
-    override fun insertApiKey(key: String): Flow<Result<Unit>> = flow {
-        dataStoreManager.storeApiKey(key)
-        emit(Result.success(Unit))
+    override suspend fun deleteApiKey() {
+        preferenceDataSource.clearApiKey()
     }
 
-    override fun deleteApiKey(): Flow<Result<Unit>> = flow {
-        dataStoreManager.clearApiKey()
-        emit(Result.success(Unit))
-    }
-
-    private suspend fun isLocalInitialize() = dataStoreManager.initFlow.first() ?: false
+    private suspend fun isLocalInitialize() = preferenceDataSource.initFlow.first() ?: false
 
     private suspend fun getJson() = requireNotNull(jsonParser.getLocalJson()) {
         throw Exception(AppError.NoJsonData.parse())
     }
 
-    override fun initLocalJson(): Flow<Result<Boolean>> = flow {
+    override fun initializeJsonData(): Flow<Result<Boolean>> = flow {
         val init = isLocalInitialize()
         Timber.d("isInit: $init")
         coroutineScope {
@@ -71,13 +70,18 @@ class AppRepositoryImpl @Inject constructor(
                 champJob.join()
                 runeJob.join()
                 summonerJob.join()
-                dataStoreManager.storeInit(true)
+                preferenceDataSource.storeInit(true)
                 emit(Result.success(true))
             } else {
                 emit(Result.success(false))
             }
         }
-    }.catchResultError()
+    }.catch { e ->
+        Timber.w("catchResultError : $e")
+        emit(
+            Result.failure(e)
+        )
+    }.flowOn(defaultDispatcher)
 
 
 }
