@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
-import com.plznoanr.lol.feature.mylibrary.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

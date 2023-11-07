@@ -3,8 +3,6 @@ plugins {
     id("lol.android.hilt")
     id("lol.android.application.flavors")
     id("lol.android.application.compose")
-//    alias(libs.plugins.hilt)
-//    kotlin("kapt")
 }
 
 android {
@@ -54,11 +52,11 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:bookmark"))
     implementation(project(":feature:setting"))
+    implementation(project(":feature:summoner"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewModel.compose)
     implementation(libs.androidx.activity.compose)
@@ -66,16 +64,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    implementation(libs.bundles.androidx.compose)
+//    implementation(libs.bundles.androidx.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.timber)
-    implementation(libs.bundles.lottie)
-    implementation(libs.bundles.coil)
-    implementation(libs.coma)
-    implementation(libs.card.stack)
+//    implementation(libs.bundles.lottie)
+//    implementation(libs.bundles.coil)
+//    implementation(libs.coma)
+//    implementation(libs.card.stack)
 
     testImplementation(libs.junit4)
 

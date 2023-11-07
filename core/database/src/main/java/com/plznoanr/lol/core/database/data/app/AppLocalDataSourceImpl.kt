@@ -12,19 +12,19 @@ class AppLocalDataSourceImpl @Inject constructor(
     private val jsonDao: JsonDao
 ) : AppLocalDataSource {
 
-    override suspend fun getChamps(): Flow<List<ChampEntity>> {
+    override suspend fun getChamps(): List<ChampEntity> {
         return jsonDao.getChamps()
     }
 
-    override suspend fun getSpells(): Flow<List<SpellEntity>> {
+    override suspend fun getSpells(): List<SpellEntity> {
         return jsonDao.getSpells()
     }
 
-    override suspend fun getRunes(): Flow<List<RuneEntity>> {
+    override suspend fun getRunes(): List<RuneEntity> {
         return jsonDao.getRunes()
     }
 
-    override suspend fun getMaps(): Flow<List<MapEntity>> {
+    override suspend fun getMaps(): List<MapEntity> {
         return jsonDao.getMaps()
     }
 

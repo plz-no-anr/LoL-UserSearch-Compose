@@ -7,9 +7,7 @@ interface ProfileLocalDataSource {
 
     fun getProfile() : Flow<ProfileEntity?>
 
-    suspend fun insertProfile(profileEntity: ProfileEntity)
-
-    suspend fun updateProfile(profileEntity: ProfileEntity)
+    suspend fun upsertProfile(profileEntity: ProfileEntity)
 
     suspend fun deleteProfile()
 

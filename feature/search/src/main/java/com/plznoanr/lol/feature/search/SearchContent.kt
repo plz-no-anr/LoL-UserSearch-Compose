@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.model.Search
 
 @Composable
@@ -46,7 +47,7 @@ internal fun SearchContent(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        imageVector = AppIcons.Search,
                         contentDescription = null
                     )
                 }

@@ -7,7 +7,7 @@ interface ProfileRepository {
 
     fun getProfile(): Flow<Profile?>
 
-    suspend fun insertProfile(profile: Profile)
+    suspend fun upsertProfile(profile: Profile)
 
     suspend fun deleteProfile()
 

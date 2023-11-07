@@ -1,41 +1,48 @@
 package com.plznoanr.lol.feature.home
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
+import com.plznoanr.lol.core.designsystem.component.AppProgressBar
+import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import com.plznoanr.lol.core.model.Profile
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    HomeScreen(
+        state = state,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::postIntent,
+        onNavigationRequested = {}
+    )
+}
+
+@Composable
+internal fun HomeScreen(
     state: HomeUiState,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     sideEffectFlow: Flow<HomeSideEffect>?,
     onIntent: (HomeIntent) -> Unit,
     onNavigationRequested: (HomeSideEffect.Navigation) -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val (getKeyVisible, setKeyVisible) = remember { mutableStateOf(false) }
 
@@ -45,78 +52,35 @@ fun HomeScreen(
             when (sideEffect) {
                 is HomeSideEffect.Navigation.ToSearch -> onNavigationRequested(sideEffect)
                 is HomeSideEffect.Navigation.ToSpectator -> onNavigationRequested(sideEffect)
-                is HomeSideEffect.Toast -> scaffoldState.snackbarHostState.showSnackbar(
-                    message = sideEffect.message,
-                    duration = SnackbarDuration.Short
-                )
+                is HomeSideEffect.Toast -> coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = sideEffect.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+
                 is HomeSideEffect.MoveGetApiKey -> setKeyVisible(true)
             }
         }?.collect()
     }
 
-    Scaffold(
-        topBar = {
-            com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar(
-                titleRes = stringResource(id = R.string.main_title),
-                isBackPressVisible = false,
-                isDrawerVisible = true,
-                onDrawerClick = {
-                    coroutineScope.launch {
-                        delay(200)
-                        onDrawerEvent(scaffoldState.drawerState)
-                    }
-                },
-            ) {
-                IconButton(onClick = { onIntent(HomeIntent.OnSearch) }) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            }
-        },
-        scaffoldState = scaffoldState,
-        drawerContent = {
-            Drawers(
-                data = state.profile ?: getDummyProfile(),
-                apiKey = state.key,
-                onGetKey = {
-                    onIntent(HomeIntent.Key.OnGet)
-                },
-                onAddKey = {
-                    it.run {
-                        if (isNotEmpty()) {
-                            onIntent(HomeIntent.Key.OnAdd(it))
-                        }
-                    }
-                },
-                onDeleteKey = {
-                    onIntent(HomeIntent.Key.OnDelete)
-                }
-            )
-        },
-        drawerBackgroundColor = com.plznoanr.lol.core.designsystem.theme.sky,
-        drawerContentColor = Color.White,
-        drawerShape = RoundedCornerShape(10.dp),
-    ) {
-        when {
-            state.isLoading -> com.plznoanr.lol.core.designsystem.component.AppProgressBar()
-            state.error != null -> com.plznoanr.lol.core.designsystem.component.error.ErrorScreen(
-                error = state.error.parseError()
-            ) { onIntent(HomeIntent.OnLoad) }
-            else -> {
-                HomeContent(
-                    modifier = Modifier.padding(it),
-                    data = state.data,
-                    isRefreshing = state.isRefreshing,
-                ) { intent ->
-                    onIntent(intent)
-                }
+
+    when {
+        state.isLoading -> AppProgressBar()
+        state.error != null -> ErrorScreen(
+            error = state.error.parseError()
+        ) { onIntent(HomeIntent.OnLoad) }
+
+        else -> {
+            HomeContent(
+                data = state.data,
+                isRefreshing = state.isRefreshing,
+            ) { intent ->
+                onIntent(intent)
             }
         }
-        if (getKeyVisible) com.plznoanr.lol.core.designsystem.component.GetApiKeyView()
     }
+    if (getKeyVisible) com.plznoanr.lol.core.designsystem.component.GetApiKeyView()
 }
 
 
@@ -131,9 +95,6 @@ private fun HomeScreenPreview() {
     )
 }
 
-private suspend fun onDrawerEvent(drawerState: DrawerState) = drawerState.also {
-    if (it.isOpen) it.close() else it.open()
-}
 
 private fun getDummyProfile() = Profile(
     id = "id",

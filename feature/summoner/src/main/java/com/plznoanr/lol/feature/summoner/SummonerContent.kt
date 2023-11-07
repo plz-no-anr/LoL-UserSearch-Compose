@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.plznoanr.lol.core.designsystem.component.summoner.getTierIcon
+import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
 
@@ -59,7 +59,7 @@ fun SummonerContent(
 
         TierRankView(
             tierRank = data.tierRank,
-            tierIcon = com.plznoanr.lol.core.designsystem.component.summoner.getTierIcon(tier = data.tier),
+            tierIcon = TierIcon(tier = data.tier),
             miniSeries = data.miniSeries,
             isPlaying = false, // todo
             onSpectator = { onIntent(SummonerIntent.Spectator.OnWatch(data.name)) }
@@ -107,7 +107,7 @@ private fun SummonerInfoView(
 private fun TierRankView(
     modifier: Modifier = Modifier,
     tierRank: String,
-    tierIcon: Painter = painterResource(id = R.drawable.emblem_bronze),
+    tierIcon: Painter,
     miniSeries: Summoner.MiniSeries? = null,
     isPlaying: Boolean = false,
     onSpectator: () -> Unit

@@ -2,17 +2,16 @@ package com.plznoanr.lol.core.data.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.plznoanr.lol.core.common.di.AppDispatchers
 import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Paging
-import com.plznoanr.lol.core.data.utils.QueueType
 import com.plznoanr.lol.core.data.utils.asEntity
-import com.plznoanr.lol.core.data.utils.asSummonerList
-import com.plznoanr.lol.core.data.utils.catchResultError
 import com.plznoanr.lol.core.data.utils.toChampImage
 import com.plznoanr.lol.core.data.utils.toIcon
 import com.plznoanr.lol.core.data.utils.toSpellImage
 import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
 import com.plznoanr.lol.core.database.data.summoner.SummonerLocalDataSource
+import com.plznoanr.lol.core.database.model.SummonerEntity
 import com.plznoanr.lol.core.database.model.asDomain
 import com.plznoanr.lol.core.datastore.PreferenceDataSource
 import com.plznoanr.lol.core.model.Spectator
@@ -21,10 +20,11 @@ import com.plznoanr.lol.core.model.Team
 import com.plznoanr.lol.core.network.NetworkDataSource
 import com.plznoanr.lol.core.network.model.SpectatorResponse
 import com.plznoanr.lol.core.network.model.asDomain
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SummonerRepositoryImpl @Inject constructor(
@@ -32,6 +32,7 @@ class SummonerRepositoryImpl @Inject constructor(
     private val summonerLocalDataSource: SummonerLocalDataSource,
     private val networkDataSource: NetworkDataSource,
     private val preferenceDataSource: PreferenceDataSource,
+    @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
@@ -42,7 +43,7 @@ class SummonerRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun requestSummoner(name: String): Flow<Result<Summoner>> = flow {
+    override suspend fun requestSummoner(name: String): Result<Summoner> = withContext(ioDispatcher) {
         val summoner = networkDataSource.requestSummoner(
             authTokenHeader(),
             name
@@ -53,57 +54,52 @@ class SummonerRepositoryImpl @Inject constructor(
             summoner.id
         ).getOrThrow()
 
-        if (league.isNotEmpty()) {
-            league.find { it.queueType == QueueType.SOLO_RANK }?.let {
-                emit(
-                    Result.success(
-                        Summoner(
-                            id = summoner.id,
-                            name = summoner.name,
-                            level = summoner.summonerLevel.toString(),
-                            icon = summoner.profileIconId.toIcon(),
-                            tier = it.tier,
-                            leaguePoints = it.leaguePoints,
-                            rank = it.rank,
-                            wins = it.wins,
-                            losses = it.losses,
-                            miniSeries = it.miniSeries?.asDomain(),
-                        )
+        return@withContext if (league.isNotEmpty()) {
+            league.find { it.queueType == "RANKED_SOLO_5x5" }?.let {
+                Result.success(
+                    Summoner(
+                        id = summoner.id,
+                        name = summoner.name,
+                        level = summoner.summonerLevel.toString(),
+                        icon = summoner.profileIconId.toIcon(),
+                        tier = it.tier,
+                        leaguePoints = it.leaguePoints,
+                        rank = it.rank,
+                        wins = it.wins,
+                        losses = it.losses,
+                        miniSeries = it.miniSeries?.asDomain(),
                     )
                 )
-            } ?: emit(Result.failure(AppError.NoMatchHistory.exception())) // 솔로 랭크만 지원
+            } ?: Result.failure(AppError.NoMatchHistory.exception()) // 자랭만 있음
         } else {
-            emit(Result.failure(AppError.NoMatchHistory.exception()))
+            Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
         }
 
-    }.catchResultError()
+    }
 
-    override fun getSummoner(name: String): Flow<Result<Summoner>> =
+    override fun getSummoner(name: String): Flow<Summoner?> =
         summonerLocalDataSource.getSummoner(name)
             .map { entity ->
-                entity?.let {
-                    Result.success(it.asDomain())
-                } ?: Result.failure(AppError.Default.exception())
+                entity?.asDomain()
             }
 
-    override fun getSummonerList(): Flow<Result<List<Summoner>>> =
-        summonerLocalDataSource.getSummonerList().map { entity ->
-            entity?.let {
-                Result.success(it.asSummonerList())
-            } ?: Result.failure(AppError.Default.exception())
-        }
-
-    override fun getSummonerList(paging: Paging): Flow<Result<List<Summoner>>> =
+    override fun getSummonerList(paging: Paging): Flow<List<Summoner>> =
         summonerLocalDataSource.getSummonerList(
             page = paging.page,
             size = paging.size
-        ).map { entity ->
-            entity?.let {
-                Result.success(it.asSummonerList())
-            } ?: Result.failure(AppError.Default.exception())
+        ).map { entities ->
+            entities?.map(SummonerEntity::asDomain) ?: emptyList()
         }
 
-    override fun requestSpectator(summonerId: String): Flow<Result<Spectator>> = flow {
+    override fun getBookMarkedSummonerList(paging: Paging): Flow<List<Summoner>> =
+        summonerLocalDataSource.getBookMarkedSummonerList(
+            page = paging.page,
+            size = paging.size
+        ).map { entities ->
+            entities?.map(SummonerEntity::asDomain) ?: emptyList()
+        }
+
+    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = runCatching {
         val result = networkDataSource.requestSpectator(
             authTokenHeader(),
             summonerId
@@ -113,40 +109,27 @@ class SummonerRepositoryImpl @Inject constructor(
                 map = response.mapId.toMap(),
                 banChamp = response.bannedChampions.toBanChamp(),
                 redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
-                    .asDomain(),
+                    .map { it.asDomain() },
                 blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
-                    .asDomain()
+                    .map { it.asDomain() }
             )
         }
-        emit(
-            spectator?.let {
-                Result.success(it)
-            } ?: Result.failure(Exception(AppError.NotPlaying.parse()))
-        )
-    }.catchResultError()
 
-    override fun insertSummoner(summoner: Summoner): Flow<Result<Unit>> = flow {
-        summonerLocalDataSource.insertSummoner(summoner.asEntity()).run {
-            emit(Result.success(Unit))
-        }
+        return spectator?.let {
+            Result.success(it)
+        } ?: Result.failure(Exception(AppError.NotPlaying.parse()))
     }
 
-    override fun updateSummoner(summoner: Summoner): Flow<Result<Unit>> = flow {
-        summonerLocalDataSource.updateSummoner(summoner.asEntity()).run {
-            emit(Result.success(Unit))
-        }
+    override suspend fun upsertSummoner(summoner: Summoner) {
+        summonerLocalDataSource.upsertSummoner(summoner.asEntity())
     }
 
-    override fun deleteSummoner(name: String): Flow<Result<Unit>> = flow {
-        summonerLocalDataSource.deleteSummoner(name).run {
-            emit(Result.success(Unit))
-        }
+    override suspend fun deleteSummoner(name: String) {
+        summonerLocalDataSource.deleteSummoner(name)
     }
 
-    override fun deleteSummonerAll(): Flow<Result<Unit>> = flow {
-        summonerLocalDataSource.deleteSummonerAll().run {
-            emit(Result.success(Unit))
-        }
+    override suspend fun deleteSummonerAll() {
+        summonerLocalDataSource.deleteSummonerAll()
     }
 
     private suspend fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
@@ -156,104 +139,101 @@ class SummonerRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun List<SpectatorResponse.CurrentGameParticipant>.asDomain() = map {
-        val champInfo = it.championId.toChampInfo()
-        Spectator.SpectatorInfo(
-            name = it.summonerName,
+    private suspend fun SpectatorResponse.CurrentGameParticipant.asDomain(): Spectator.SpectatorInfo {
+        val champInfo = championId.toChampInfo()
+        return Spectator.SpectatorInfo(
+            name = summonerName,
             champName = champInfo.first,
             champImg = champInfo.second,
-            team = it.teamId.toTeam(),
-            spell1 = it.spell1Id.toSpellImage(),
-            spell2 = it.spell2Id.toSpellImage(),
-            runeStyle = it.perks.perkStyle.toRuneStyle(),
-            subStyle = it.perks.perkSubStyle.toRuneStyle(),
-            mainRune = getMainRune(it.perks.perkStyle, it.perks.perkIds[0]),
-            rune = getRunes(it.perks.perkStyle, it.perks.perkSubStyle, it.perks.perkIds),
+            team = teamId.toTeam(),
+            spell1 = spell1Id.toSpellImage(),
+            spell2 = spell2Id.toSpellImage(),
+            runeStyle = perks.perkStyle.toRuneStyle(),
+            subStyle = perks.perkSubStyle.toRuneStyle(),
+            mainRune = getMainRune(perks.perkStyle, perks.perkIds[0]),
+            rune = getRunes(perks.perkStyle, perks.perkSubStyle, perks.perkIds),
         )
     }
 
     private fun Long.toTeam() = if (this.toString() == "100") Team.BLUE else Team.RED
     private suspend fun Long.toMap(): String =
         appLocalDataSource.getMaps()
-            .map { maps ->
-                maps.find { it.mapId == this.toString() }?.mapName
-                    ?: throw Exception("Map Not Found")
-            }.first()
+            .find { it.mapId == this.toString() }?.mapName
+            ?: throw Exception("Map Not Found")
 
 
     private suspend fun Long.toChampInfo(): Pair<String, String> =
-        appLocalDataSource.getChamps()
-            .map { champs ->
-                if (this@toChampInfo == (-1).toLong()) return@map "NoBan" to "NoBan"
-                champs.find { it.key == this.toString() }?.let {
+        if (this@toChampInfo == (-1).toLong()) {
+            "NoBan" to "NoBan"
+        } else {
+            appLocalDataSource.getChamps()
+                .find { it.key == this.toString() }?.let {
                     it.name to it.image.full.toChampImage()
                 } ?: ("Not Found" to "Not Found")
-            }.first()
+        }
 
     private suspend fun Long.toRuneStyle(): Spectator.SpectatorInfo.Rune =
         appLocalDataSource.getRunes()
-            .map { runes ->
-                runes.find { it.id == this@toRuneStyle }?.let {
-                    Spectator.SpectatorInfo.Rune(it.name, it.icon)
-                } ?: throw Exception("Rune Not Found")
-            }.first()
+            .find { it.id == this@toRuneStyle }?.let {
+                Spectator.SpectatorInfo.Rune(it.name, it.icon)
+            } ?: throw Exception("Rune Not Found")
+
 
     private suspend fun Long.toSpellImage(): String =
         appLocalDataSource.getSpells()
-            .map { spells ->
-                spells.find { it.key == this.toString() }?.image?.full?.toSpellImage()
-                    ?: throw Exception("Spell Not Found")
-            }.first()
+            .find { it.key == this.toString() }?.image?.full?.toSpellImage()
+            ?: throw Exception("Spell Not Found")
+
 
     private suspend fun getMainRune(perkStyle: Long, perks: Long): String =
         appLocalDataSource.getRunes()
-            .map { runeEntities ->
-                runeEntities.find { it.id == perkStyle }?.let { runeEntity ->
-                    runeEntity.slots.map { slot ->
-                        slot.runes
-                    }.flatten()
-                        .find { it.id == perks }?.icon ?: throw Exception("Main Rune Not Found")
-                } ?: throw Exception("Main Rune Not Found")
-            }.first()
+            .find { it.id == perkStyle }?.let { runeEntity ->
+                runeEntity.slots.map { slot ->
+                    slot.runes
+                }.flatten()
+                    .find { it.id == perks }?.icon ?: throw Exception("Main Rune Not Found")
+            } ?: throw Exception("Main Rune Not Found")
 
 
     private suspend fun getRunes(
         perkStyle: Long,
         subStyle: Long,
         perks: List<Long>
-    ): List<Spectator.SpectatorInfo.Rune> =
-        appLocalDataSource.getRunes()
-            .map { runeEntities ->
-                val runeNames = mutableListOf<Spectator.SpectatorInfo.Rune>()
-                runeEntities.find { it.id == perkStyle }?.let { runeEntity ->
-                    runeEntity.slots.map { it.runes }
-                        .flatten()
-                        .forEachIndexed { index, rune ->
-                            perks.find { it == rune.id }.let {
-                                runeNames.add(
-                                    index,
-                                    Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
-                                )
-                            }
-                            if (index > 3) {
-                                return@forEachIndexed
-                            }
-                        }
-                } ?: runeEntities.find { it.id == subStyle }?.let { runeEntity ->
-                    runeEntity.slots.map { it.runes }
-                        .flatten()
-                        .forEachIndexed { index, rune ->
-                            if (index in 4..5) {
-                                perks.find { it == rune.id }.let {
-                                    runeNames.add(
-                                        index,
-                                        Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
-                                    )
-                                }
-                            }
-                        }
+    ): List<Spectator.SpectatorInfo.Rune> {
+        val runeNames = mutableListOf<Spectator.SpectatorInfo.Rune>()
+
+        val runeEntities = appLocalDataSource.getRunes()
+
+        runeEntities.find { it.id == perkStyle }?.let { runeEntity ->
+            runeEntity.slots.map { it.runes }
+                .flatten()
+                .forEachIndexed { index, rune ->
+                    perks.find { it == rune.id }.let {
+                        runeNames.add(
+                            index,
+                            Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                        )
+                    }
+                    if (index > 3) {
+                        return@forEachIndexed
+                    }
                 }
-                runeNames
-            }.first()
+        } ?: runeEntities.find { it.id == subStyle }?.let { runeEntity ->
+            runeEntity.slots.map { it.runes }
+                .flatten()
+                .forEachIndexed { index, rune ->
+                    if (index in 4..5) {
+                        perks.find { it == rune.id }.let {
+                            runeNames.add(
+                                index,
+                                Spectator.SpectatorInfo.Rune(rune.name, rune.icon)
+                            )
+                        }
+                    }
+                }
+        }
+        return runeNames
+    }
+
 
 }

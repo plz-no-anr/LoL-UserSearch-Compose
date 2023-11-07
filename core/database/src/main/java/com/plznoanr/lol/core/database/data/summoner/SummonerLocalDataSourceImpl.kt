@@ -9,8 +9,6 @@ class SummonerLocalDataSourceImpl @Inject constructor(
     private val dao: LolDao
 ) : SummonerLocalDataSource {
 
-    override fun getSummonerList(): Flow<List<SummonerEntity>?> = dao.getSummonerList()
-
     override fun getSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?> = dao.getSummonerList(
         page = page,
         size = size
@@ -18,12 +16,13 @@ class SummonerLocalDataSourceImpl @Inject constructor(
 
     override fun getSummoner(name: String): Flow<SummonerEntity?> = dao.getSummoner(name)
 
-    override suspend fun insertSummoner(summonerEntity: SummonerEntity) {
-        dao.insertSummoner(summonerEntity)
-    }
+    override fun getBookMarkedSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?> = dao.getBookMarkedSummonerList(
+        page = page,
+        size = size
+    )
 
-    override suspend fun updateSummoner(summonerEntity: SummonerEntity) {
-        dao.updateSummoner(summonerEntity)
+    override suspend fun upsertSummoner(summonerEntity: SummonerEntity) {
+        dao.upsertSummoner(summonerEntity)
     }
 
     override suspend fun deleteSummoner(name: String) {

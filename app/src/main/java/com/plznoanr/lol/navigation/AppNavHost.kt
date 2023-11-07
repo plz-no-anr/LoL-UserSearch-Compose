@@ -1,28 +1,40 @@
 package com.plznoanr.lol.navigation
 
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.plznoanr.lol.feature.bookmark.navigation.bookmarkScreen
+import com.plznoanr.lol.feature.home.navigation.HomeRoute
+import com.plznoanr.lol.feature.home.navigation.homeScreen
+import com.plznoanr.lol.feature.search.navigation.searchGraph
+import com.plznoanr.lol.feature.setting.navigation.settingScreen
+import com.plznoanr.lol.feature.summoner.navigation.summonerScreen
 
 
 @Composable
 fun AppNavHost(
-    navController: NavController,
+    navController: NavHostController,
     onShowSnackbar: suspend  (String) -> Boolean,
+    startDestination: String = HomeRoute
 ) {
-    val navController = rememberNavController()
-
 
     NavHost(
         navController = navController,
-        startDestination = Destination.Main.route,
+        startDestination = startDestination
     ) {
+        homeScreen()
+
+        searchGraph(
+            nestedGraphs = {
+                summonerScreen(
+                    onBackPressed = navController::popBackStack,
+                )
+            }
+        )
+
+        bookmarkScreen()
+
+        settingScreen()
 
     }
 

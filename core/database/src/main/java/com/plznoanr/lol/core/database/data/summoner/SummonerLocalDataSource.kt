@@ -5,15 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface SummonerLocalDataSource {
 
-    fun getSummonerList(): Flow<List<SummonerEntity>?>
-
     fun getSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?>
 
     fun getSummoner(name: String): Flow<SummonerEntity?>
 
-    suspend fun insertSummoner(summonerEntity: SummonerEntity)
+    fun getBookMarkedSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?>
 
-    suspend fun updateSummoner(summonerEntity: SummonerEntity)
+    suspend fun upsertSummoner(summonerEntity: SummonerEntity)
 
     suspend fun deleteSummoner(name: String)
 

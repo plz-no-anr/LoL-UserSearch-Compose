@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.plznoanr.lol.core.common.model.parseError
+import com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -41,10 +42,8 @@ fun SpectatorScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar(
-                titleRes = stringResource(id = R.string.spectator_title),
-                isBackPressVisible = true,
-                onBackPressed = { onIntent(SpectatorIntent.Navigation.Back) }
+            DefaultTopAppBar(
+                titleRes = R.string.spectator_title
             )
         }) {
         when {

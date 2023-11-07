@@ -30,12 +30,12 @@ fun LoLApp(
         networkManager = networkManager
     )
 ) {
-    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val isOnline by appState.isOnline.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     val networkErrorMessage = stringResource(id = R.string.network_error)
-    LaunchedEffect(isOffline) {
-        if (isOffline) {
+    LaunchedEffect(isOnline) {
+        if (!isOnline) {
             snackbarHostState.showSnackbar(
                 message = networkErrorMessage,
                 duration = SnackbarDuration.Indefinite
@@ -64,16 +64,15 @@ fun LoLApp(
             if (destination != null) {
                 DefaultTopAppBar(
                     titleRes = destination.iconTitleId,
-                ) {
-                    AppNavHost(
-                        navController = appState.navController,
-                        onShowSnackbar = { message ->
-                            snackbarHostState.showSnackbar(message) == SnackbarResult.ActionPerformed
-                        }
-                    )
-                }
+                )
             }
 
+            AppNavHost(
+                navController = appState.navController,
+                onShowSnackbar = { message ->
+                    snackbarHostState.showSnackbar(message) == SnackbarResult.ActionPerformed
+                }
+            )
         }
 
     }

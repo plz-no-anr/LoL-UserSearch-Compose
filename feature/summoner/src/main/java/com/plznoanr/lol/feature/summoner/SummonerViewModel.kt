@@ -2,8 +2,8 @@ package com.plznoanr.lol.feature.summoner
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.plznoanr.lol.core.domain.usecase.summoner.ReadSummonerUseCase
-import com.plznoanr.lol.ui.navigation.Destination
+import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerUseCase
+import com.plznoanr.lol.feature.summoner.navigation.SummonerArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -14,12 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    private val readSummonerUseCase: ReadSummonerUseCase
+    private val getSummonerUseCase: GetSummonerUseCase
 ) : ComaViewModel<SummonerUiState, SummonerIntent, SummonerSideEffect>() {
 
-    private val summonerName: String? by lazy {
-        stateHandle.get<String>(Destination.Summoner.Args.KEY_SUMMONER_NAME)
-    }
+    private val summonerName: String = SummonerArgs(stateHandle).summonerName
 
     override fun setInitialState(): SummonerUiState = SummonerUiState()
 
@@ -36,19 +34,15 @@ class SummonerViewModel @Inject constructor(
     }
 
     private fun requestSummonerData() {
-        summonerName?.let {
-            readSummonerUseCase(it.trim())
-                .onStart { reduce { copy(isLoading = true) } }
-                .onEach { result ->
-                    result.onSuccess {
-                        reduce { copy(data = it, isLoading = false) }
-                    }.onFailure {
-                        reduce { copy(error = it.message, isLoading = false) }
-                    }
-                }.launchIn(viewModelScope)
-        } ?: run {
-            reduce { copy(error = "Summoner name is null", isLoading = false) }
-        }
+        getSummonerUseCase(summonerName.trim())
+            .onStart { reduce { copy(isLoading = true) } }
+            .onEach { result ->
+                result.onSuccess {
+                    reduce { copy(data = it, isLoading = false) }
+                }.onFailure {
+                    reduce { copy(error = it.message, isLoading = false) }
+                }
+            }.launchIn(viewModelScope)
     }
 
 }

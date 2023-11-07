@@ -1,9 +1,12 @@
 package com.plznoanr.lol.core.data.utils
 
+import com.plznoanr.lol.core.data.model.ChampionJson
+import com.plznoanr.lol.core.data.model.MapJson
+import com.plznoanr.lol.core.data.model.RuneJson
+import com.plznoanr.lol.core.data.model.SummonerJson
 import com.plznoanr.lol.core.database.model.ProfileEntity
 import com.plznoanr.lol.core.database.model.SearchEntity
 import com.plznoanr.lol.core.database.model.SummonerEntity
-import com.plznoanr.lol.core.database.model.asDomain
 import com.plznoanr.lol.core.database.model.json.ChampEntity
 import com.plznoanr.lol.core.database.model.json.MapEntity
 import com.plznoanr.lol.core.database.model.json.RuneEntity
@@ -16,10 +19,9 @@ import com.plznoanr.lol.core.model.Summoner
 
 fun Search.asEntity() = SearchEntity(
     name = name,
-    date = date
+    date = date,
+    isBookmark = isBookmark
 )
-
-fun List<SearchEntity>.asSearchList() = map { it.asDomain() }
 
 fun Summoner.asEntity() = SummonerEntity(
     id = id,
@@ -32,9 +34,8 @@ fun Summoner.asEntity() = SummonerEntity(
     wins = wins,
     losses = losses,
     miniSeries = miniSeries?.asEntity(),
+    isBookMarked = isBookMarked
 )
-
-fun List<SummonerEntity>.asSummonerList() = map { it.asDomain() }
 
 fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
     losses = losses,
@@ -72,7 +73,7 @@ fun RuneJson.asEntity() = RuneEntity(
     key = key,
     icon = icon,
     name = name,
-    slots = slots.asEntity()
+    slots = slots.map { it.asRuneInfoEntity() }
 )
 
 fun SummonerJson.Spell.asEntity() = SpellEntity(
@@ -89,15 +90,12 @@ fun SummonerJson.Spell.asEntity() = SpellEntity(
 )
 
 
-private fun List<RuneJson.RuneInfo>.asEntity() = map { it.asRuneInfo() }
-
-private fun RuneJson.RuneInfo.asRuneInfo() = RuneEntity.RuneInfo(
-    runes = runes.asSubRuneList()
+private fun RuneJson.RuneInfo.asRuneInfoEntity() = RuneEntity.RuneInfo(
+    runes = runes.map { it.asSubRuneEntity() }
 )
 
-private fun List<RuneJson.RuneInfo.SubRune>.asSubRuneList() = map { it.asSubRune() }
 
-private fun RuneJson.RuneInfo.SubRune.asSubRune() = RuneEntity.RuneInfo.SubRune(
+private fun RuneJson.RuneInfo.SubRune.asSubRuneEntity() = RuneEntity.RuneInfo.SubRune(
     id = id,
     key = key,
     icon = icon,

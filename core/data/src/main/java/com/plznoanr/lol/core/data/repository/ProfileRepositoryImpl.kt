@@ -5,7 +5,6 @@ import com.plznoanr.lol.core.database.data.profle.ProfileLocalDataSource
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.model.Profile
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,8 +17,8 @@ class ProfileRepositoryImpl @Inject constructor(
             it?.asDomain()
         }
 
-    override suspend fun insertProfile(profile: Profile) {
-        localDataSource.insertProfile(profile.asEntity())
+    override suspend fun upsertProfile(profile: Profile) {
+        localDataSource.upsertProfile(profile.asEntity())
     }
 
     override suspend fun deleteProfile() {

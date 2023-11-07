@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -25,13 +26,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
 @Composable
 fun rememberAppState(
     networkManager: NetworkManager,
-    navController: NavController = rememberNavController(),
+    navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ): AppState = remember(
     networkManager,
@@ -48,16 +50,18 @@ fun rememberAppState(
 
 @Stable
 class AppState(
-    val navController: NavController,
+    val navController: NavHostController,
     coroutineScope: CoroutineScope,
     networkManager: NetworkManager,
 ) {
-    val isOffline: StateFlow<Boolean> = networkManager.networkState
-        .map {
+    val isOnline: StateFlow<Boolean> = networkManager.networkState
+        .onEach {
             Timber.d("networkState: $it")
+        }
+        .map {
             when (it) {
-                NetworkState.None, NetworkState.NotConnected -> false
                 NetworkState.Connected -> true
+                else -> false
             }
         }.stateIn(
             scope = coroutineScope,

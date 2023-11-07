@@ -6,6 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar
@@ -13,9 +15,23 @@ import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+@Composable
+fun SearchRoute(
+    viewModel: SearchViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+    SearchScreen(
+        state = uiState,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::postIntent,
+        onNavigationRequested = {}
+    )
+
+}
 
 @Composable
-fun SearchScreen(
+internal fun SearchScreen(
     state: SearchUiState,
     sideEffectFlow: Flow<SearchSideEffect>?,
     onIntent: (SearchIntent) -> Unit,
@@ -43,9 +59,7 @@ fun SearchScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             DefaultTopAppBar(
-                titleRes = stringResource(id = R.string.title),
-                isBackPressVisible = true,
-                onBackPressed = { onIntent(SearchIntent.Navigation.Back) }
+                titleRes = R.string.search_title,
             )
         }
     ) {

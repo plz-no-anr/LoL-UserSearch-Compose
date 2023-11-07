@@ -11,6 +11,7 @@ data class Summoner(
     val wins: Int, // 승리
     val losses: Int, // 패배
     val miniSeries: MiniSeries? = null, // 승급전
+    val isBookMarked: Boolean = false
 ) {
     data class MiniSeries(
         var losses: Int,

@@ -9,11 +9,11 @@ interface SearchLocalDataSource {
 
     suspend fun upsertSearch(searchEntity: SearchEntity)
 
-    suspend fun insertSearch(searchEntity: SearchEntity)
+//    suspend fun insertSearch(searchEntity: SearchEntity)
 
     suspend fun deleteSearch(sName: String)
 
-    suspend fun updateSearch(searchEntity: SearchEntity)
+//    suspend fun updateSearch(searchEntity: SearchEntity)
 
     suspend fun deleteSearchAll()
 

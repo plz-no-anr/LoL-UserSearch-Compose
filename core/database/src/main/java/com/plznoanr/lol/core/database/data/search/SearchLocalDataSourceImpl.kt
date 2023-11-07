@@ -15,13 +15,13 @@ class SearchLocalDataSourceImpl @Inject constructor(
         dao.upsertSearch(searchEntity)
     }
 
-    override suspend fun insertSearch(searchEntity: SearchEntity) {
-        dao.insertSearch(searchEntity)
-    }
-
-    override suspend fun updateSearch(searchEntity: SearchEntity) {
-        dao.updateSearch(searchEntity)
-    }
+//    override suspend fun insertSearch(searchEntity: SearchEntity) {
+//        dao.insertSearch(searchEntity)
+//    }
+//
+//    override suspend fun updateSearch(searchEntity: SearchEntity) {
+//        dao.updateSearch(searchEntity)
+//    }
 
     override suspend fun deleteSearch(sName: String) {
         dao.deleteSearch(sName)

@@ -8,10 +8,9 @@ import javax.inject.Inject
 
 class DeleteAllSearchUseCase @Inject constructor(
     private val searchRepository: SearchRepository,
-    @AppDispatchers.IO coroutineDispatcher: CoroutineDispatcher
-): BaseUseCase<Unit, Unit>(coroutineDispatcher) {
+) {
 
-    override fun execute(parameter: Unit): Flow<Result<Unit>> {
+    suspend operator fun invoke() {
         return searchRepository.deleteSearchAll()
     }
 

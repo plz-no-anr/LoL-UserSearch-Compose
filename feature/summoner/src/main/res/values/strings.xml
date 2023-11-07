@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="summoner_title">소환사 정보</string>
+    <string name="playing">관전 하기</string>
+    <string name="success">성공</string>
+    <string name="error">실패</string>
+</resources>

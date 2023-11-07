@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppLocalDataSource {
     // Json
-    suspend fun getChamps() : Flow<List<ChampEntity>>
+    suspend fun getChamps() : List<ChampEntity>
 
-    suspend fun getSpells() : Flow<List<SpellEntity>>
+    suspend fun getSpells() : List<SpellEntity>
 
-    suspend fun getRunes() : Flow<List<RuneEntity>>
+    suspend fun getRunes() : List<RuneEntity>
 
-    suspend fun getMaps() : Flow<List<MapEntity>>
+    suspend fun getMaps() : List<MapEntity>
 
     suspend fun insertChamp(champEntity: ChampEntity)
 

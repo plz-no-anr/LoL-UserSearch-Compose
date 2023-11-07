@@ -7,22 +7,20 @@ import kotlinx.coroutines.flow.Flow
 
 interface SummonerRepository {
 
-    fun requestSummoner(name: String): Flow<Result<Summoner>>
+    suspend fun requestSummoner(name: String): Result<Summoner>
 
-    fun getSummoner(name: String): Flow<Result<Summoner>>
+    fun getSummoner(name: String): Flow<Summoner?>
 
-    fun getSummonerList(): Flow<Result<List<Summoner>>>
+    fun getSummonerList(paging: Paging): Flow<List<Summoner>>
 
-    fun getSummonerList(paging: Paging): Flow<Result<List<Summoner>>>
+    fun getBookMarkedSummonerList(paging: Paging): Flow<List<Summoner>>
 
-    fun requestSpectator(summonerId: String): Flow<Result<Spectator>>
+    suspend fun requestSpectator(summonerId: String): Result<Spectator>
 
-    fun insertSummoner(summoner: Summoner): Flow<Result<Unit>>
+    suspend fun upsertSummoner(summoner: Summoner)
 
-    fun updateSummoner(summoner: Summoner): Flow<Result<Unit>>
+    suspend fun deleteSummoner(name: String)
 
-    fun deleteSummoner(name: String): Flow<Result<Unit>>
-
-    fun deleteSummonerAll(): Flow<Result<Unit>>
+    suspend fun deleteSummonerAll()
 
 }

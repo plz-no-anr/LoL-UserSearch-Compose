@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.plznoanr.lol.feature.summoner.SummonerRoute
 
 const val SummonerRoute = "summoner_route"
 const val SummonerNameArg = "summonerName"
@@ -33,7 +34,7 @@ fun NavGraphBuilder.summonerScreen(
             navArgument(SummonerNameArg) { type = NavType.StringType }
         )
     ) {
-
+        SummonerRoute()
     }
 
 }

@@ -11,12 +11,8 @@ class ProfileLocalDataSourceImpl @Inject constructor(
 
     override fun getProfile(): Flow<ProfileEntity?> = dao.getProfile()
 
-    override suspend fun insertProfile(profileEntity: ProfileEntity) {
-        dao.insertProfile(profileEntity)
-    }
-
-    override suspend fun updateProfile(profileEntity: ProfileEntity) {
-        dao.updateProfile(profileEntity)
+    override suspend fun upsertProfile(profileEntity: ProfileEntity) {
+        dao.upsertProfile(profileEntity)
     }
 
     override suspend fun deleteProfile() {

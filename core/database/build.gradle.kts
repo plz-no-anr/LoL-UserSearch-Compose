@@ -13,7 +13,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.google.gson)
 
     testImplementation(libs.junit4)

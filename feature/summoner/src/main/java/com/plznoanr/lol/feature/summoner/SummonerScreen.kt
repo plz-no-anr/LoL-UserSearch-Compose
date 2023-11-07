@@ -4,18 +4,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SummonerScreen(
+fun SummonerRoute(
+    viewModel: SummonerViewModel = hiltViewModel()
+) {
+
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+    SummonerScreen(
+        state = uiState,
+        sideEffectFlow = viewModel.sideEffect,
+        onIntent = viewModel::postIntent,
+        onNavigationRequested = {}
+    )
+
+}
+
+@Composable
+internal fun SummonerScreen(
     state: SummonerUiState,
     sideEffectFlow: Flow<SummonerSideEffect>?,
     onIntent: (SummonerIntent) -> Unit,

@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import plznoanr.coma.core.ComaViewModel
 import javax.inject.Inject
 
@@ -38,69 +39,28 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getSearch() {
-        getSearchListUseCase(Unit)
+        getSearchListUseCase()
             .onStart { reduce { copy(isLoading = true) } }
             .onEach { result ->
-                result.onSuccess {
-                    reduce {
-                        copy(
-                            data = it.asReversed(),
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    reduce {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
+                reduce {
+                    copy(
+                        data = result,
+                        isLoading = false
+                    )
                 }
             }.launchIn(viewModelScope)
     }
 
     private fun deleteSearch(name: String) {
-        deleteSearchUseCase(name)
-            .onStart { reduce { copy(isLoading = true) } }
-            .onEach { result ->
-                result.onSuccess {
-                    reduce {
-                        copy(
-                            data = data?.filter { it.name != name },
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    reduce {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            deleteSearchUseCase(name)
+        }
     }
 
     private fun deleteAll() {
-        deleteSearchAllUseCase(Unit)
-            .onStart { reduce { copy(isLoading = true) } }
-            .onEach { result ->
-                result.onSuccess {
-                    reduce {
-                        copy(
-                            data = emptyList(),
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    reduce {
-                        copy(
-                            error = it.message,
-                            isLoading = false
-                        )
-                    }
-                }
-            }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            deleteSearchAllUseCase()
+        }
     }
 
 }

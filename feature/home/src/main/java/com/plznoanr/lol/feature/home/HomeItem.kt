@@ -35,8 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.plznoanr.lol.R
-import com.plznoanr.lol.core.designsystem.component.summoner.getTierIcon
+import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
 
@@ -83,7 +82,7 @@ fun HomeItem(
                     modifier = modifier
                         .weight(1f),
                     tierRank = summoner.tierRank,
-                    tierIcon = com.plznoanr.lol.core.designsystem.component.summoner.getTierIcon(
+                    tierIcon = TierIcon(
                         summoner.tier
                     )
                 )
@@ -144,7 +143,7 @@ private fun SummonerView(
 private fun TierView(
     modifier: Modifier = Modifier,
     tierRank: String,
-    tierIcon: Painter = painterResource(id = R.drawable.emblem_bronze)
+    tierIcon: Painter
 ) {
     Row(
         modifier = modifier
