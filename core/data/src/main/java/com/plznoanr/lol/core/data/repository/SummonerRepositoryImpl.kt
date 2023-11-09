@@ -23,6 +23,7 @@ import com.plznoanr.lol.core.network.model.SpectatorResponse
 import com.plznoanr.lol.core.network.model.asDomain
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -36,14 +37,14 @@ class SummonerRepositoryImpl @Inject constructor(
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
-//        val key = requireNotNull(preferenceDataSource.apiKeyFlow.first()) {
-//            throw Exception(AppError.Forbidden.parse())
-//        }
-        put("X-Riot-Token", "RGAPI-76fa3006-8fb3-46cc-b5d1-5fbdf9aa9cb6")
+        val key = requireNotNull(preferenceDataSource.apiKeyFlow.first()) {
+            throw Exception(AppError.Forbidden.parse())
+        }
+        put("X-Riot-Token", key)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun requestSummoner(name: String): Result<Summoner> =
+    override suspend fun requestSummoner(name: String): Result<Summoner> = try {
         withContext(ioDispatcher) {
             val summoner = networkDataSource.requestSummoner(
                 authTokenHeader(),
@@ -75,8 +76,11 @@ class SummonerRepositoryImpl @Inject constructor(
             } else {
                 Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
             }
-
         }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
 
     override fun getSummoner(name: String): Flow<Summoner?> =
         summonerLocalDataSource.getSummoner(name)
@@ -119,25 +123,31 @@ class SummonerRepositoryImpl @Inject constructor(
             )
         }
 
-    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = runCatching {
-        val result = networkDataSource.requestSpectator(
-            authTokenHeader(),
-            summonerId
-        )
-        val spectator = result.getOrNull()?.let { response ->
-            Spectator(
-                map = response.mapId.toMap(),
-                banChamp = response.bannedChampions.toBanChamp(),
-                redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
-                    .map { it.asDomain() },
-                blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
-                    .map { it.asDomain() }
+    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = try {
+        withContext(ioDispatcher) {
+            val result = networkDataSource.requestSpectator(
+                authTokenHeader(),
+                summonerId
             )
-        }
+            val spectator = result.getOrNull()?.let { response ->
+                Spectator(
+                    map = response.mapId.toMap(),
+                    banChamp = response.bannedChampions.toBanChamp(),
+                    redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
+                        .map { it.asDomain() },
+                    blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
+                        .map { it.asDomain() }
+                )
+            }
 
-        return spectator?.let {
-            Result.success(it)
-        } ?: Result.failure(Exception(AppError.NotPlaying.parse()))
+            return@withContext if (spectator != null) {
+                Result.success(spectator)
+            } else {
+                Result.failure(Exception(AppError.NotPlaying.parse()))
+            }
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     override suspend fun upsertSummoner(summoner: Summoner) {
