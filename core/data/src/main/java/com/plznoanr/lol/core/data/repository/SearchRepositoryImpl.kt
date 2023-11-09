@@ -2,6 +2,7 @@ package com.plznoanr.lol.core.data.repository
 
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.database.data.search.SearchLocalDataSource
+import com.plznoanr.lol.core.database.model.SearchEntity
 import com.plznoanr.lol.core.database.model.asDomain
 import com.plznoanr.lol.core.model.Search
 import kotlinx.coroutines.flow.Flow
@@ -14,9 +15,7 @@ class SearchRepositoryImpl @Inject constructor(
 
     override fun getSearchList(): Flow<List<Search>> =
         localDataSource.getSearch().map {
-            it?.map { entity ->
-                entity.asDomain()
-            } ?: emptyList()
+            it?.map(SearchEntity::asDomain) ?: emptyList()
         }
 
     override suspend fun upsertSearch(search: Search) {

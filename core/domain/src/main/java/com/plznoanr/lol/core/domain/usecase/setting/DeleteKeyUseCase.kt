@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.domain.usecase.key
+package com.plznoanr.lol.core.domain.usecase.setting
 
 import com.plznoanr.lol.core.data.repository.AppRepository
 import javax.inject.Inject

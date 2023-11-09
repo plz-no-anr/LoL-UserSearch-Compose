@@ -1,20 +1,19 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.data.repository.SummonerRepository
-import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
-class GetSyncSummonerListUseCase @Inject constructor(
+class SyncSummonerListUseCase @Inject constructor(
     private val summonerRepository: SummonerRepository,
     @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
 ) {
@@ -25,16 +24,22 @@ class GetSyncSummonerListUseCase @Inject constructor(
         }
     }
 
-    operator fun invoke(parameter: Paging): Flow<List<Summoner>> {
+    operator fun invoke(): Flow<Boolean> {
         return combine(
             infiniteRepeater,
-            summonerRepository.getSummonerList(parameter)
-        ) { _, summonerList ->
+            summonerRepository.getSummonerAll()
+        ) { i, summonerList ->
+            Timber.d("invoke: $i, $summonerList")
             summonerList.map { summoner ->
-                summonerRepository.requestSummoner(summoner.name).getOrNull() ?: summoner
+                val response = summonerRepository.requestSummoner(summoner.name).getOrNull()
+                response?.let {
+                    summonerRepository.upsertSummoner(it)
+                }
             }
-        }.map {
-          it.sortedBy { summoner -> summoner.isBookMarked }
+            true
+        }.catch {
+            Timber.d(it)
+            emit(false)
         }.flowOn(ioDispatcher)
     }
 

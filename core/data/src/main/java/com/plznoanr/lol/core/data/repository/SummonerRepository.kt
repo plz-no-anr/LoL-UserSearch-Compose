@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.data.repository
 
 import com.plznoanr.lol.core.common.model.Paging
+import com.plznoanr.lol.core.common.model.PagingResult
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.flow.Flow
@@ -11,9 +12,11 @@ interface SummonerRepository {
 
     fun getSummoner(name: String): Flow<Summoner?>
 
-    fun getSummonerList(paging: Paging): Flow<List<Summoner>>
+    fun getSummonerAll(): Flow<List<Summoner>>
 
-    fun getBookMarkedSummonerList(paging: Paging): Flow<List<Summoner>>
+    fun getSummonerList(paging: Paging): Flow<PagingResult<Summoner>>
+
+    fun getBookMarkedSummonerList(paging: Paging): Flow<PagingResult<Summoner>>
 
     suspend fun requestSpectator(summonerId: String): Result<Spectator>
 

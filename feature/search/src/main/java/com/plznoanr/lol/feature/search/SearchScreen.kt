@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,25 +16,26 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 @Composable
 fun SearchRoute(
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigateToSummoner: (String) -> Unit
 ) {
-    val uiState by viewModel.state.collectAsStateWithLifecycle()
-
-    SearchScreen(
-        state = uiState,
-        sideEffectFlow = viewModel.sideEffect,
-        onIntent = viewModel::postIntent,
-        onNavigationRequested = {}
-    )
+//    val uiState by viewModel.state.collectAsStateWithLifecycle()
+//
+//    SearchScreen(
+//        state = uiState,
+//        onIntent = viewModel::postIntent,
+//        sideEffectFlow = viewModel.sideEffect,
+//        navigateToSummoner = { navigateToSummoner(it) }
+//    )
 
 }
 
 @Composable
 internal fun SearchScreen(
     state: SearchUiState,
-    sideEffectFlow: Flow<SearchSideEffect>?,
     onIntent: (SearchIntent) -> Unit,
-    onNavigationRequested: (SearchSideEffect.Navigation) -> Unit,
+    sideEffectFlow: Flow<SearchSideEffect>?,
+    navigateToSummoner: (String) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -49,8 +49,7 @@ internal fun SearchScreen(
                     message = sideEffect.msg,
                     duration = SnackbarDuration.Short
                 )
-                is SearchSideEffect.Navigation.Back -> onNavigationRequested(sideEffect)
-                is SearchSideEffect.Navigation.ToSummoner -> onNavigationRequested(sideEffect)
+                is SearchSideEffect.Navigation.ToSummoner -> navigateToSummoner(sideEffect.name)
             }
         }?.collect()
     }
@@ -91,6 +90,6 @@ private fun SearchScreenPreview() {
         state = SearchUiState(),
         sideEffectFlow = null,
         onIntent = {},
-        onNavigationRequested = {}
+        navigateToSummoner = {}
     )
 }

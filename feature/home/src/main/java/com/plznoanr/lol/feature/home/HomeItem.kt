@@ -14,11 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.HorizontalRule
 import androidx.compose.material.icons.rounded.Square
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
+import com.plznoanr.lol.core.designsystem.icon.AppIcons
+import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
 
@@ -51,7 +48,7 @@ fun HomeItem(
             .height(200.dp)
             .padding(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = com.plznoanr.lol.core.designsystem.theme.sky,
+            containerColor = SkyBlue,
             contentColor = Color.White
         )
     ) {
@@ -95,9 +92,9 @@ fun HomeItem(
                     pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
                     isPlaying = false, // todo
-                    onAdd = { onIntent(HomeIntent.Profile.OnAdd(summoner.asProfile())) },
-                    onDelete = { onIntent(HomeIntent.Summoner.OnDelete(summoner.name)) },
-                    onSpectator = { onIntent(HomeIntent.Spectator.OnWatch(summoner.name)) }
+//                    onAdd = { onIntent(HomeIntent.Profile.OnAdd(summoner.asProfile())) },
+//                    onDelete = { onIntent(HomeIntent.Summoner.OnDelete(summoner.name)) },
+//                    onSpectator = { onIntent(HomeIntent.Spectator.OnWatch(summoner.name)) }
                 )
             }
 
@@ -116,7 +113,7 @@ private fun SummonerView(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ) {
-        com.plznoanr.lol.core.designsystem.component.IconImage(
+        IconImage(
             modifier = Modifier
                 .size(90.dp)
                 .clip(RoundedCornerShape(10)),
@@ -183,9 +180,9 @@ private fun LeagueInfoView(
     pointWinLose: String,
     miniSeries: Summoner.MiniSeries?,
     isPlaying: Boolean,
-    onAdd: () -> Unit,
-    onDelete: () -> Unit,
-    onSpectator: () -> Unit
+//    onAdd: () -> Unit,
+//    onDelete: () -> Unit,
+//    onSpectator: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -205,9 +202,9 @@ private fun LeagueInfoView(
 
         IconView(
             isPlaying = isPlaying,
-            onAddClick = onAdd,
-            onDeleteClick = onDelete,
-            onSpectator = onSpectator
+//            onAddClick = onAdd,
+//            onDeleteClick = onDelete,
+//            onSpectator = onSpectator
         )
 
     }
@@ -236,14 +233,14 @@ private fun IconView(
         Modifier.padding(top = 8.dp)
     ) {
         Icon(
-            Icons.Default.Add,
+            AppIcons.Add,
             contentDescription = null,
             modifier = Modifier
                 .clickable { onAddClick() }
         )
         Spacer(modifier = Modifier.width(4.dp))
         Icon(
-            Icons.Default.Delete,
+            AppIcons.Delete,
             contentDescription = null,
             modifier = Modifier
                 .clickable { onDeleteClick() }
@@ -271,17 +268,17 @@ private fun MiniSeriesView(
                 it.forEach { result ->
                     when (result) {
                         'W' -> Icon(
-                            imageVector = Icons.Default.Check,
+                            imageVector = AppIcons.Check,
                             contentDescription = null,
                             tint = Color.Green
                         )
                         'L' -> Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = AppIcons.Close,
                             contentDescription = null,
                             tint = Color.Red
                         )
                         'N' -> Icon(
-                            imageVector = Icons.Default.HorizontalRule,
+                            imageVector = AppIcons.HorizontalRule,
                             contentDescription = null
                         )
                     }

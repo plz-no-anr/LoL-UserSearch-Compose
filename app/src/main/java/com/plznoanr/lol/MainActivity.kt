@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
@@ -46,7 +47,10 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-           LolUserSearchComposeTheme {
+            val isDarkTheme by viewModel.isDarkThemeState.collectAsStateWithLifecycle()
+           LolUserSearchComposeTheme(
+                darkTheme = isDarkTheme
+           ) {
                 LoLApp(networkManager = networkManager)
             }
         }

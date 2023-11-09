@@ -15,6 +15,7 @@ fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.searchGraph(
+    navigateToSummoner: (String) -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit,
 ) {
     navigation(
@@ -23,6 +24,7 @@ fun NavGraphBuilder.searchGraph(
     ) {
         composable(route = SearchRoute) {
             SearchRoute(
+                navigateToSummoner = navigateToSummoner
             )
         }
         nestedGraphs()

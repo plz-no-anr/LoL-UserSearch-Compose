@@ -36,11 +36,11 @@ interface LolDao {
     @Query("DELETE FROM Profile")
     suspend fun deleteProfile()
 
+    @Query("SELECT * FROM Summoner")
+    fun getSummonerList() : Flow<List<SummonerEntity>?>
+
     @Query("SELECT * FROM Summoner LIMIT :size OFFSET (:page - 1) * :size")
     fun getSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
-
-//    @Query("SELECT * FROM Summoner")
-//    fun getSummonerList() : Flow<List<SummonerEntity>?>
 
     @Query("SELECT * FROM Summoner WHERE name = :summonerName")
     fun getSummoner(summonerName: String) : Flow<SummonerEntity?>

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetSearchListUseCase @Inject constructor(
+class GetRecentSearchListUseCase @Inject constructor(
     private val searchRepository: SearchRepository,
 ) {
 

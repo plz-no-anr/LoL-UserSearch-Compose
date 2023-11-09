@@ -15,15 +15,13 @@ import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.model.Summoner
 
-
-
-fun Search.asEntity() = SearchEntity(
+internal fun Search.asEntity() = SearchEntity(
     name = name,
     date = date,
     isBookmark = isBookmark
 )
 
-fun Summoner.asEntity() = SummonerEntity(
+internal fun Summoner.asEntity() = SummonerEntity(
     id = id,
     name = name,
     level = level,
@@ -37,21 +35,21 @@ fun Summoner.asEntity() = SummonerEntity(
     isBookMarked = isBookMarked
 )
 
-fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
+internal fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
     losses = losses,
     wins = wins,
     target = target,
     progress = progress
 )
 
-fun Profile.asEntity() = ProfileEntity(
+internal fun Profile.asEntity() = ProfileEntity(
     id = id,
     name = name,
     level = level,
     icon = icon
 )
 
-fun ChampionJson.Champion.asEntity() = ChampEntity(
+internal fun ChampionJson.Champion.asEntity() = ChampEntity(
     id = id,
     key = key,
     name = name,
@@ -63,12 +61,12 @@ fun ChampionJson.Champion.asEntity() = ChampEntity(
     )
 )
 
-fun MapJson.MapData.asEntity() = MapEntity(
+internal fun MapJson.MapData.asEntity() = MapEntity(
     mapId = mapId,
     mapName = mapName,
 )
 
-fun RuneJson.asEntity() = RuneEntity(
+internal fun RuneJson.asEntity() = RuneEntity(
     id = id,
     key = key,
     icon = icon,
@@ -76,7 +74,7 @@ fun RuneJson.asEntity() = RuneEntity(
     slots = slots.map { it.asRuneInfoEntity() }
 )
 
-fun SummonerJson.Spell.asEntity() = SpellEntity(
+internal fun SummonerJson.Spell.asEntity() = SpellEntity(
     id = id,
     key = key,
     name = name,

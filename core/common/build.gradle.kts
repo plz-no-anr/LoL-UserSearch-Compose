@@ -9,8 +9,5 @@ android {
 }
 
 dependencies {
-
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    api(libs.timber)
 }

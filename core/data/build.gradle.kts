@@ -20,10 +20,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
 
-    implementation(libs.androidx.paging.runtime)
-
-    implementation(libs.timber)
-
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
 //
