@@ -9,6 +9,8 @@ class SummonerLocalDataSourceImpl @Inject constructor(
     private val dao: LolDao
 ) : SummonerLocalDataSource {
 
+    override fun getSummonerAll(): Flow<List<SummonerEntity>?> = dao.getSummonerList()
+
     override fun getSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?> = dao.getSummonerList(
         page = page,
         size = size

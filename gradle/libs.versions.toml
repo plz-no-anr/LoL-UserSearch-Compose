@@ -7,12 +7,12 @@ androidxCoreSplashscreen = "1.0.1"
 androidxAppCompat = "1.6.1"
 androidxLifecycle = "2.6.2"
 androidxActivity = "1.8.0"
-androidxNavigation = "2.7.4"
+androidxNavigation = "2.7.5"
 androidxSplashScreen = "1.0.0"
 androidxComposeBom = "2023.10.01"
 androidxComposeCompiler = "1.5.3"
 androidxRoom = "2.6.0"
-androidxHiltNavigation = "1.0.0"
+androidxHiltNavigation = "1.1.0"
 androidxDataStore = "1.0.0"
 androidxPaging = "3.2.1"
 
@@ -45,7 +45,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
 androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
-androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }

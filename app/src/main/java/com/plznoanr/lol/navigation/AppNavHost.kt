@@ -8,6 +8,7 @@ import com.plznoanr.lol.feature.home.navigation.HomeRoute
 import com.plznoanr.lol.feature.home.navigation.homeScreen
 import com.plznoanr.lol.feature.search.navigation.searchGraph
 import com.plznoanr.lol.feature.setting.navigation.settingScreen
+import com.plznoanr.lol.feature.summoner.navigation.navigateToSummoner
 import com.plznoanr.lol.feature.summoner.navigation.summonerScreen
 
 
@@ -25,6 +26,7 @@ fun AppNavHost(
         homeScreen()
 
         searchGraph(
+            navigateToSummoner = navController::navigateToSummoner,
             nestedGraphs = {
                 summonerScreen(
                     onBackPressed = navController::popBackStack,

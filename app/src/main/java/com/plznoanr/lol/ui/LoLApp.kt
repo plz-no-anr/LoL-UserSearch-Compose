@@ -45,7 +45,7 @@ fun LoLApp(
 
     Scaffold(
         containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground,
+        contentColor = MaterialTheme.colorScheme.primary,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             AppBottomBar(

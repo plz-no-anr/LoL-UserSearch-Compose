@@ -12,6 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
+import com.plznoanr.lol.core.designsystem.component.AppProgressBar
+import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -20,15 +22,15 @@ import kotlinx.coroutines.flow.onEach
 fun SummonerRoute(
     viewModel: SummonerViewModel = hiltViewModel()
 ) {
-
-    val uiState by viewModel.state.collectAsStateWithLifecycle()
-
-    SummonerScreen(
-        state = uiState,
-        sideEffectFlow = viewModel.sideEffect,
-        onIntent = viewModel::postIntent,
-        onNavigationRequested = {}
-    )
+//
+//    val uiState by viewModel.state.collectAsStateWithLifecycle()
+//
+//    SummonerScreen(
+//        state = uiState,
+//        sideEffectFlow = viewModel.sideEffect,
+//        onIntent = viewModel::postIntent,
+//        onNavigationRequested = {}
+//    )
 
 }
 
@@ -58,8 +60,8 @@ internal fun SummonerScreen(
     }
 
     when {
-        state.isLoading -> com.plznoanr.lol.core.designsystem.component.AppProgressBar()
-        state.error != null -> com.plznoanr.lol.core.designsystem.component.error.ErrorScreen(
+        state.isLoading -> AppProgressBar()
+        state.error != null -> ErrorScreen(
             error = state.error.parseError()
         ) { onIntent(SummonerIntent.Navigation.Back) }
         else -> {

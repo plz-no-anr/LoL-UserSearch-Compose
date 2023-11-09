@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.plznoanr.lol.core.common.di.AppDispatchers
 import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Paging
+import com.plznoanr.lol.core.common.model.PagingResult
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.data.utils.toChampImage
 import com.plznoanr.lol.core.data.utils.toIcon
@@ -43,39 +44,43 @@ class SummonerRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun requestSummoner(name: String): Result<Summoner> = withContext(ioDispatcher) {
-        val summoner = networkDataSource.requestSummoner(
-            authTokenHeader(),
-            name
-        ).getOrThrow()
+    override suspend fun requestSummoner(name: String): Result<Summoner> = try {
+        withContext(ioDispatcher) {
+            val summoner = networkDataSource.requestSummoner(
+                authTokenHeader(),
+                name
+            ).getOrThrow()
 
-        val league = networkDataSource.requestLeague(
-            authTokenHeader(),
-            summoner.id
-        ).getOrThrow()
+            val league = networkDataSource.requestLeague(
+                authTokenHeader(),
+                summoner.id
+            ).getOrThrow()
 
-        return@withContext if (league.isNotEmpty()) {
-            league.find { it.queueType == "RANKED_SOLO_5x5" }?.let {
-                Result.success(
-                    Summoner(
-                        id = summoner.id,
-                        name = summoner.name,
-                        level = summoner.summonerLevel.toString(),
-                        icon = summoner.profileIconId.toIcon(),
-                        tier = it.tier,
-                        leaguePoints = it.leaguePoints,
-                        rank = it.rank,
-                        wins = it.wins,
-                        losses = it.losses,
-                        miniSeries = it.miniSeries?.asDomain(),
+            return@withContext if (league.isNotEmpty()) {
+                league.find { it.queueType == "RANKED_SOLO_5x5" }?.let {
+                    Result.success(
+                        Summoner(
+                            id = summoner.id,
+                            name = summoner.name,
+                            level = summoner.summonerLevel.toString(),
+                            icon = summoner.profileIconId.toIcon(),
+                            tier = it.tier,
+                            leaguePoints = it.leaguePoints,
+                            rank = it.rank,
+                            wins = it.wins,
+                            losses = it.losses,
+                            miniSeries = it.miniSeries?.asDomain(),
+                        )
                     )
-                )
-            } ?: Result.failure(AppError.NoMatchHistory.exception()) // 자랭만 있음
-        } else {
-            Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
+                } ?: Result.failure(AppError.NoMatchHistory.exception()) // 자랭만 있음
+            } else {
+                Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
+            }
         }
-
+    } catch (e: Exception) {
+        Result.failure(e)
     }
+
 
     override fun getSummoner(name: String): Flow<Summoner?> =
         summonerLocalDataSource.getSummoner(name)
@@ -83,41 +88,66 @@ class SummonerRepositoryImpl @Inject constructor(
                 entity?.asDomain()
             }
 
-    override fun getSummonerList(paging: Paging): Flow<List<Summoner>> =
+    override fun getSummonerAll(): Flow<List<Summoner>> =
+        summonerLocalDataSource.getSummonerAll().map { entities ->
+            entities?.map(SummonerEntity::asDomain) ?: emptyList()
+        }
+
+    override fun getSummonerList(paging: Paging): Flow<PagingResult<Summoner>> =
         summonerLocalDataSource.getSummonerList(
             page = paging.page,
             size = paging.size
         ).map { entities ->
             entities?.map(SummonerEntity::asDomain) ?: emptyList()
+        }.map {
+            PagingResult(
+                data = it,
+                page = paging.page,
+                size = paging.size,
+                hasNext = it.size == paging.size
+            )
         }
 
-    override fun getBookMarkedSummonerList(paging: Paging): Flow<List<Summoner>> =
+    override fun getBookMarkedSummonerList(paging: Paging): Flow<PagingResult<Summoner>> =
         summonerLocalDataSource.getBookMarkedSummonerList(
             page = paging.page,
             size = paging.size
         ).map { entities ->
             entities?.map(SummonerEntity::asDomain) ?: emptyList()
-        }
-
-    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = runCatching {
-        val result = networkDataSource.requestSpectator(
-            authTokenHeader(),
-            summonerId
-        )
-        val spectator = result.getOrNull()?.let { response ->
-            Spectator(
-                map = response.mapId.toMap(),
-                banChamp = response.bannedChampions.toBanChamp(),
-                redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
-                    .map { it.asDomain() },
-                blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
-                    .map { it.asDomain() }
+        }.map {
+            PagingResult(
+                data = it,
+                page = paging.page,
+                size = paging.size,
+                hasNext = it.size == paging.size
             )
         }
 
-        return spectator?.let {
-            Result.success(it)
-        } ?: Result.failure(Exception(AppError.NotPlaying.parse()))
+    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = try {
+        withContext(ioDispatcher) {
+            val result = networkDataSource.requestSpectator(
+                authTokenHeader(),
+                summonerId
+            )
+            val spectator = result.getOrNull()?.let { response ->
+                Spectator(
+                    map = response.mapId.toMap(),
+                    banChamp = response.bannedChampions.toBanChamp(),
+                    redTeam = response.participants.filter { it.teamId.toTeam() == Team.RED }
+                        .map { it.asDomain() },
+                    blueTeam = response.participants.filter { it.teamId.toTeam() == Team.BLUE }
+                        .map { it.asDomain() }
+                )
+            }
+
+            return@withContext if (spectator != null) {
+                Result.success(spectator)
+            } else {
+                Result.failure(Exception(AppError.NotPlaying.parse()))
+            }
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     override suspend fun upsertSummoner(summoner: Summoner) {

@@ -1,4 +1,4 @@
-package com.plznoanr.lol.core.domain.usecase.profile
+package com.plznoanr.lol.core.domain.usecase.setting
 
 import com.plznoanr.lol.core.data.repository.ProfileRepository
 import kotlinx.coroutines.flow.Flow

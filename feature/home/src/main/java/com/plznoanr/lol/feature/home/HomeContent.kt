@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -31,6 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.lol.core.designsystem.component.IconImage
+import com.plznoanr.lol.core.designsystem.icon.AppIcons
+import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
 
@@ -43,7 +44,7 @@ fun HomeContent(
     onIntent: (HomeIntent) -> Unit
 ) {
 
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(HomeIntent.Refresh) })
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(HomeIntent.OnRefresh) })
 
     Column(
         modifier = modifier
@@ -60,9 +61,9 @@ fun HomeContent(
             modifier = Modifier
                 .pullRefresh(state = pullRefreshState)
         ) {
-            data?.let { list ->
+            if (!data.isNullOrEmpty()) {
                 LazyColumn {
-                    items(list) {
+                    items(data) {
                         HomeItem(summoner = it) { event ->
                             onIntent(event)
                         }
@@ -89,7 +90,7 @@ fun Drawers(
     onDeleteKey: () -> Unit
 ) {
 
-    com.plznoanr.lol.core.designsystem.component.IconImage(
+    IconImage(
         modifier = Modifier
             .padding(top = 30.dp, start = 16.dp, bottom = 16.dp)
             .size(size = 100.dp)
@@ -172,7 +173,7 @@ private fun KeyView(
                 OutlinedButton(onClick = onGetKey) {
                     Text(
                         text = stringResource(id = R.string.get_key),
-                        color = com.plznoanr.lol.core.designsystem.theme.sky
+                        color = SkyBlue
                     )
                 }
 
@@ -181,7 +182,7 @@ private fun KeyView(
                 OutlinedButton(onClick = onDeleteKey) {
                     Text(
                         text = stringResource(id = R.string.delete),
-                        color = com.plznoanr.lol.core.designsystem.theme.sky
+                        color = SkyBlue
                     )
                 }
             }
@@ -235,7 +236,7 @@ private fun KeyAddView(
                 .padding(top = 8.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = AppIcons.Add,
                 contentDescription = null,
                 tint = Color.White
             )

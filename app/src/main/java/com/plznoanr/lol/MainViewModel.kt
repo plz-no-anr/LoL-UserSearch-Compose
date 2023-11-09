@@ -3,12 +3,10 @@ package com.plznoanr.lol
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plznoanr.lol.core.domain.usecase.json.InitialLocalJsonUseCase
-import com.plznoanr.lol.utils.NetworkManager
-import com.plznoanr.lol.utils.NetworkState
+import com.plznoanr.lol.core.domain.usecase.setting.GetDarkThemeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -25,7 +23,8 @@ sealed class MainState {
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    initialLocalJsonUseCase: InitialLocalJsonUseCase
+    initialLocalJsonUseCase: InitialLocalJsonUseCase,
+    private val getDarkThemeUseCase: GetDarkThemeUseCase
 ) : ViewModel() {
 
     val mainState: StateFlow<MainState> = initialLocalJsonUseCase()
@@ -41,6 +40,13 @@ class MainViewModel @Inject constructor(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MainState.Loading
+        )
+
+    val isDarkThemeState: StateFlow<Boolean> = getDarkThemeUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false
         )
 
 }
