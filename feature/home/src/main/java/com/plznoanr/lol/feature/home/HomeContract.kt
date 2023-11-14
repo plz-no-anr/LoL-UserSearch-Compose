@@ -19,7 +19,10 @@ sealed interface HomeIntent {
     data object OnLoadMore : HomeIntent
 
     sealed interface Summoner : HomeIntent {
+        data class OnBookmark(val summonerId: String) : Summoner
+
         data class OnDelete(val name: String) : Summoner
+
         data object OnDeleteAll : Summoner
     }
 

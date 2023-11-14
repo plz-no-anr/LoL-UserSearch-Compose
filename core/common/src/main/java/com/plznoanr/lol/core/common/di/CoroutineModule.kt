@@ -31,4 +31,5 @@ object CoroutineModule {
     fun provideApplicationScope(
         @AppDispatchers.Default dispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(dispatcher + SupervisorJob())
+
 }

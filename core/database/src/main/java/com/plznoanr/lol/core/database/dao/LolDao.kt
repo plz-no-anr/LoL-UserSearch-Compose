@@ -12,12 +12,6 @@ interface LolDao {
     @Query("SELECT * FROM Search ORDER BY date DESC LIMIT 20")
     fun getSearchList(): Flow<List<SearchEntity>?>
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertSearch(searchEntity: SearchEntity)
-//
-//    @Update
-//    suspend fun updateSearch(searchEntity: SearchEntity)
-
     @Upsert
     suspend fun upsertSearch(searchEntity: SearchEntity)
 
@@ -45,17 +39,8 @@ interface LolDao {
     @Query("SELECT * FROM Summoner WHERE name = :summonerName")
     fun getSummoner(summonerName: String) : Flow<SummonerEntity?>
 
-    @Query("SELECT * FROM Summoner WHERE isBookMarked = 1 LIMIT :size OFFSET (:page - 1) * :size")
-    fun getBookMarkedSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
-
     @Upsert
     fun upsertSummoner(summonerEntity: SummonerEntity)
-
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertSummoner(summonerEntity: SummonerEntity)
-//
-//    @Update
-//    suspend fun updateSummoner(summonerEntity: SummonerEntity)
 
     @Query("DELETE FROM Summoner WHERE name = :summonerName")
     suspend fun deleteSummoner(summonerName: String)

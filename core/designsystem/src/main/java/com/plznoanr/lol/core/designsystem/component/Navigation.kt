@@ -8,6 +8,9 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.plznoanr.lol.core.designsystem.theme.navigationIndicator
+import com.plznoanr.lol.core.designsystem.theme.navigationSelect
+import com.plznoanr.lol.core.designsystem.theme.navigationUnSelect
 
 @Composable
 fun AppNavigationBar(
@@ -16,7 +19,8 @@ fun AppNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.primaryContainer,
         tonalElevation = 0.dp,
         content = content,
     )
@@ -53,10 +57,10 @@ fun RowScope.AppNavigationBarItem(
 }
 
 @Composable
-fun navigationSelectedColor() = MaterialTheme.colorScheme.onSurfaceVariant
+fun navigationSelectedColor() = MaterialTheme.colorScheme.navigationSelect
 
 @Composable
-fun navigationUnselectedColor() = MaterialTheme.colorScheme.onSurfaceVariant
+fun navigationUnselectedColor() = MaterialTheme.colorScheme.navigationUnSelect
 
 @Composable
-fun navigationIndicatorColor() = MaterialTheme.colorScheme.primary
+fun navigationIndicatorColor() = MaterialTheme.colorScheme.navigationIndicator

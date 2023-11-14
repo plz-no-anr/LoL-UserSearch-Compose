@@ -16,11 +16,13 @@ interface SummonerRepository {
 
     fun getSummonerList(paging: Paging): Flow<PagingResult<Summoner>>
 
-    fun getBookMarkedSummonerList(paging: Paging): Flow<PagingResult<Summoner>>
+    fun getBookMarkedSummonerIds(): Flow<Set<String>>
 
     suspend fun requestSpectator(summonerId: String): Result<Spectator>
 
     suspend fun upsertSummoner(summoner: Summoner)
+
+    suspend fun updateBookmarkSummonerId(id: String)
 
     suspend fun deleteSummoner(name: String)
 

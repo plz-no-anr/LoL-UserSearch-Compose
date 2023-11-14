@@ -24,7 +24,7 @@ sealed class MainState {
 @HiltViewModel
 class MainViewModel @Inject constructor(
     initialLocalJsonUseCase: InitialLocalJsonUseCase,
-    private val getDarkThemeUseCase: GetDarkThemeUseCase
+    getDarkThemeUseCase: GetDarkThemeUseCase
 ) : ViewModel() {
 
     val mainState: StateFlow<MainState> = initialLocalJsonUseCase()

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SummonerLocalDataSourceImpl @Inject constructor(
-    private val dao: LolDao
+    private val dao: LolDao,
 ) : SummonerLocalDataSource {
 
     override fun getSummonerAll(): Flow<List<SummonerEntity>?> = dao.getSummonerList()
@@ -17,11 +17,6 @@ class SummonerLocalDataSourceImpl @Inject constructor(
     )
 
     override fun getSummoner(name: String): Flow<SummonerEntity?> = dao.getSummoner(name)
-
-    override fun getBookMarkedSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?> = dao.getBookMarkedSummonerList(
-        page = page,
-        size = size
-    )
 
     override suspend fun upsertSummoner(summonerEntity: SummonerEntity) {
         dao.upsertSummoner(summonerEntity)

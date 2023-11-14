@@ -3,6 +3,7 @@ package com.plznoanr.lol.core.datastore
 import android.content.Context
 import android.content.SharedPreferences
 
+@Deprecated("Use DataStore")
 class SharedPreferenceManager(
     context: Context
 ) {

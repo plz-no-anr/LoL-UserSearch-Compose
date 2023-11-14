@@ -5,7 +5,7 @@ import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.data.utils.JsonParser
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
-import com.plznoanr.lol.core.datastore.PreferenceDataSource
+import com.plznoanr.lol.core.datastore.SettingPreferenceDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -19,22 +19,22 @@ import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
-    private val preferenceDataSource: PreferenceDataSource,
+    private val settingPreferenceDataSource: SettingPreferenceDataSource,
     private val jsonParser: JsonParser,
     @AppDispatchers.Default private val defaultDispatcher: CoroutineDispatcher
 ) : AppRepository {
 
-    override fun getApiKey(): Flow<String?> = preferenceDataSource.apiKeyFlow
+    override fun getApiKey(): Flow<String?> = settingPreferenceDataSource.apiKeyFlow
 
     override suspend fun insertApiKey(key: String) {
-        preferenceDataSource.storeApiKey(key)
+        settingPreferenceDataSource.updateApiKey(key)
     }
 
     override suspend fun deleteApiKey() {
-        preferenceDataSource.clearApiKey()
+        settingPreferenceDataSource.clearApiKey()
     }
 
-    private suspend fun isLocalInitialize() = preferenceDataSource.initFlow.first() ?: false
+    private suspend fun isLocalInitialize() = settingPreferenceDataSource.initFlow.first() ?: false
 
     private suspend fun getJson() = requireNotNull(jsonParser.getLocalJson()) {
         throw Exception(AppError.NoJsonData.parse())
@@ -70,7 +70,7 @@ class AppRepositoryImpl @Inject constructor(
                 champJob.join()
                 runeJob.join()
                 summonerJob.join()
-                preferenceDataSource.storeInit(true)
+                settingPreferenceDataSource.updateInit(true)
                 emit(Result.success(true))
             } else {
                 emit(Result.success(false))
