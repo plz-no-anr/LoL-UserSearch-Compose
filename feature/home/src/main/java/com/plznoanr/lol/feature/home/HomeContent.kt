@@ -4,7 +4,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -46,6 +48,11 @@ fun HomeContent(
 
     val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(HomeIntent.OnRefresh) })
 
+    val lazyColumnState = rememberLazyListState().apply {
+        OnBottomReached {
+            onIntent(HomeIntent.OnLoadMore)
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,11 +69,14 @@ fun HomeContent(
                 .pullRefresh(state = pullRefreshState)
         ) {
             if (!data.isNullOrEmpty()) {
-                LazyColumn {
+                LazyColumn(
+                    state = lazyColumnState,
+                ) {
                     items(data) {
-                        HomeItem(summoner = it) { event ->
-                            onIntent(event)
-                        }
+                        HomeItem(
+                            summoner = it,
+                            onBookmarked = { onIntent(HomeIntent.Summoner.OnBookmark(it.id)) }
+                        )
                     }
                 }
             }
@@ -241,5 +251,28 @@ private fun KeyAddView(
                 tint = Color.White
             )
         }
+    }
+}
+
+@Composable
+internal fun LazyListState.OnBottomReached(
+    onFetch: () -> Unit
+) {
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+                ?: return@derivedStateOf true
+
+            lastVisibleItem.index == layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore) {
+        snapshotFlow { shouldLoadMore.value }
+            .collect {
+                if (it) {
+                    onFetch()
+                }
+            }
     }
 }

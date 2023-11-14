@@ -8,9 +8,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Named
 
-class PreferenceDataSource @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+class SettingPreferenceDataSource @Inject constructor(
+    @Named("setting") private val dataStore: DataStore<Preferences>
 ) {
     private object PreferenceKey {
         val API_KEY = stringPreferencesKey("API_KEY")
@@ -30,19 +31,19 @@ class PreferenceDataSource @Inject constructor(
         it[PreferenceKey.IS_DARK_THEME]
     }
 
-    suspend fun storeApiKey(apiKey: String) {
+    suspend fun updateApiKey(apiKey: String) {
         dataStore.edit { preferences ->
             preferences[PreferenceKey.API_KEY] = apiKey
         }
     }
 
-    suspend fun storeInit(init: Boolean) {
+    suspend fun updateInit(init: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferenceKey.INIT] = init
         }
     }
 
-    suspend fun storeIsDarkTheme(isDarkTheme: Boolean) {
+    suspend fun updateIsDarkTheme(isDarkTheme: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferenceKey.IS_DARK_THEME] = isDarkTheme
         }

@@ -19,6 +19,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
-import com.plznoanr.lol.core.designsystem.theme.SkyBlue
+import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
 
@@ -40,7 +42,7 @@ import com.plznoanr.lol.core.model.getDummySummoner
 fun HomeItem(
     modifier: Modifier = Modifier,
     summoner: Summoner,
-    onIntent: (HomeIntent) -> Unit
+    onBookmarked: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -48,8 +50,8 @@ fun HomeItem(
             .height(200.dp)
             .padding(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = SkyBlue,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.secondary
         )
     ) {
         Row(
@@ -81,7 +83,9 @@ fun HomeItem(
                     tierRank = summoner.tierRank,
                     tierIcon = TierIcon(
                         summoner.tier
-                    )
+                    ),
+                    isBookmark = summoner.isBookMarked,
+                    onBookmarked = onBookmarked
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -91,10 +95,6 @@ fun HomeItem(
                         .weight(1f),
                     pointWinLose = summoner.lpWinLose,
                     miniSeries = summoner.miniSeries,
-                    isPlaying = false, // todo
-//                    onAdd = { onIntent(HomeIntent.Profile.OnAdd(summoner.asProfile())) },
-//                    onDelete = { onIntent(HomeIntent.Summoner.OnDelete(summoner.name)) },
-//                    onSpectator = { onIntent(HomeIntent.Spectator.OnWatch(summoner.name)) }
                 )
             }
 
@@ -140,7 +140,9 @@ private fun SummonerView(
 private fun TierView(
     modifier: Modifier = Modifier,
     tierRank: String,
-    tierIcon: Painter
+    tierIcon: Painter,
+    isBookmark: Boolean,
+    onBookmarked: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -171,6 +173,16 @@ private fun TierView(
                 fontSize = 13.sp
             )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(onClick = { onBookmarked() }) {
+            Icon(
+                imageVector = if (isBookmark) AppIcons.BookMark else AppIcons.BookMarkBorder,
+                contentDescription = null
+            )
+        }
+
     }
 }
 
@@ -179,15 +191,11 @@ private fun LeagueInfoView(
     modifier: Modifier = Modifier,
     pointWinLose: String,
     miniSeries: Summoner.MiniSeries?,
-    isPlaying: Boolean,
-//    onAdd: () -> Unit,
-//    onDelete: () -> Unit,
-//    onSpectator: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
     ) {
 
         LeaguePointView(
@@ -200,13 +208,6 @@ private fun LeagueInfoView(
             )
         }
 
-        IconView(
-            isPlaying = isPlaying,
-//            onAddClick = onAdd,
-//            onDeleteClick = onDelete,
-//            onSpectator = onSpectator
-        )
-
     }
 }
 
@@ -217,46 +218,46 @@ private fun LeaguePointView(
     Row {
         Text(
             text = pointWinLose,
-            fontSize = 12.sp
+            fontSize = 15.sp
         )
     }
 }
 
-@Composable
-private fun IconView(
-    isPlaying: Boolean = false,
-    onAddClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {},
-    onSpectator: () -> Unit = {}
-) {
-    Row(
-        Modifier.padding(top = 8.dp)
-    ) {
-        Icon(
-            AppIcons.Add,
-            contentDescription = null,
-            modifier = Modifier
-                .clickable { onAddClick() }
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Icon(
-            AppIcons.Delete,
-            contentDescription = null,
-            modifier = Modifier
-                .clickable { onDeleteClick() }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        SpectatorView(
-            modifier = Modifier,
-            isPlaying = isPlaying,
-            onSpectator = onSpectator
-        )
-
-    }
-
-}
+//@Composable
+//private fun IconView(
+//    isPlaying: Boolean = false,
+//    onAddClick: () -> Unit = {},
+//    onDeleteClick: () -> Unit = {},
+//    onSpectator: () -> Unit = {}
+//) {
+//    Row(
+//        Modifier.padding(top = 8.dp)
+//    ) {
+//        Icon(
+//            AppIcons.Add,
+//            contentDescription = null,
+//            modifier = Modifier
+//                .clickable { onAddClick() }
+//        )
+//        Spacer(modifier = Modifier.width(4.dp))
+//        Icon(
+//            AppIcons.Delete,
+//            contentDescription = null,
+//            modifier = Modifier
+//                .clickable { onDeleteClick() }
+//        )
+//
+//        Spacer(modifier = Modifier.weight(1f))
+//
+//        SpectatorView(
+//            modifier = Modifier,
+//            isPlaying = isPlaying,
+//            onSpectator = onSpectator
+//        )
+//
+//    }
+//
+//}
 
 @Composable
 private fun MiniSeriesView(
@@ -318,7 +319,10 @@ private fun SpectatorView(
 @Preview
 @Composable
 private fun HomeItemPreview() {
-    HomeItem(
-        summoner = getDummySummoner()
-    ) {}
+    LolUserSearchComposeTheme(darkTheme = false) {
+        HomeItem(
+            summoner = getDummySummoner()
+        ) {}
+    }
+
 }

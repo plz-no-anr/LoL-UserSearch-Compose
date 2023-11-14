@@ -11,8 +11,6 @@ interface SummonerLocalDataSource {
 
     fun getSummoner(name: String): Flow<SummonerEntity?>
 
-    fun getBookMarkedSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?>
-
     suspend fun upsertSummoner(summonerEntity: SummonerEntity)
 
     suspend fun deleteSummoner(name: String)

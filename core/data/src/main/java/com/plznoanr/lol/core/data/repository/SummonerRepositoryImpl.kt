@@ -14,7 +14,8 @@ import com.plznoanr.lol.core.database.data.app.AppLocalDataSource
 import com.plznoanr.lol.core.database.data.summoner.SummonerLocalDataSource
 import com.plznoanr.lol.core.database.model.SummonerEntity
 import com.plznoanr.lol.core.database.model.asDomain
-import com.plznoanr.lol.core.datastore.PreferenceDataSource
+import com.plznoanr.lol.core.datastore.SettingPreferenceDataSource
+import com.plznoanr.lol.core.datastore.SummonerPreferenceDataSource
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.Team
@@ -25,19 +26,22 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class SummonerRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
     private val summonerLocalDataSource: SummonerLocalDataSource,
     private val networkDataSource: NetworkDataSource,
-    private val preferenceDataSource: PreferenceDataSource,
+    private val settingPreferenceDataSource: SettingPreferenceDataSource,
+    private val summonerPreferenceDataSource: SummonerPreferenceDataSource,
     @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
-        val key = requireNotNull(preferenceDataSource.apiKeyFlow.first()) {
+        val key = requireNotNull(settingPreferenceDataSource.apiKeyFlow.first()) {
             throw Exception(AppError.Forbidden.parse())
         }
         put("X-Riot-Token", key)
@@ -108,19 +112,9 @@ class SummonerRepositoryImpl @Inject constructor(
             )
         }
 
-    override fun getBookMarkedSummonerList(paging: Paging): Flow<PagingResult<Summoner>> =
-        summonerLocalDataSource.getBookMarkedSummonerList(
-            page = paging.page,
-            size = paging.size
-        ).map { entities ->
-            entities?.map(SummonerEntity::asDomain) ?: emptyList()
-        }.map {
-            PagingResult(
-                data = it,
-                page = paging.page,
-                size = paging.size,
-                hasNext = it.size == paging.size
-            )
+    override fun getBookMarkedSummonerIds(): Flow<Set<String>> =
+        summonerPreferenceDataSource.bookmarkIdsFlow.onEach {
+            Timber.d("getBookMarkedSummonerIds : $it")
         }
 
     override suspend fun requestSpectator(summonerId: String): Result<Spectator> = try {
@@ -151,15 +145,34 @@ class SummonerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertSummoner(summoner: Summoner) {
-        summonerLocalDataSource.upsertSummoner(summoner.asEntity())
+        withContext(ioDispatcher) {
+            summonerLocalDataSource.upsertSummoner(summoner.asEntity())
+        }
+    }
+
+    override suspend fun updateBookmarkSummonerId(id: String) {
+        val bookmarkIds = summonerPreferenceDataSource.bookmarkIdsFlow.first()
+        if (!bookmarkIds.contains(id)) {
+            summonerPreferenceDataSource.updateBookmarkId(
+                bookmarkIds = bookmarkIds.plus(id),
+            )
+        } else {
+            summonerPreferenceDataSource.updateBookmarkId(
+                bookmarkIds = bookmarkIds.minus(id)
+            )
+        }
     }
 
     override suspend fun deleteSummoner(name: String) {
-        summonerLocalDataSource.deleteSummoner(name)
+        withContext(ioDispatcher) {
+            summonerLocalDataSource.deleteSummoner(name)
+        }
     }
 
     override suspend fun deleteSummonerAll() {
-        summonerLocalDataSource.deleteSummonerAll()
+        withContext(ioDispatcher) {
+            summonerLocalDataSource.deleteSummonerAll()
+        }
     }
 
     private suspend fun List<SpectatorResponse.BannedChampion>.toBanChamp() = map {
@@ -186,11 +199,11 @@ class SummonerRepositoryImpl @Inject constructor(
     }
 
     private fun Long.toTeam() = if (this.toString() == "100") Team.BLUE else Team.RED
+
     private suspend fun Long.toMap(): String =
         appLocalDataSource.getMaps()
             .find { it.mapId == this.toString() }?.mapName
             ?: throw Exception("Map Not Found")
-
 
     private suspend fun Long.toChampInfo(): Pair<String, String> =
         if (this@toChampInfo == (-1).toLong()) {

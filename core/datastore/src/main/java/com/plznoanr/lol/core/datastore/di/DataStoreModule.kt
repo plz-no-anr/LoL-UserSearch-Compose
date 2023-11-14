@@ -10,14 +10,19 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-        name = "app_prefs",
+    private val Context.settingDataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "setting_prefs",
+    )
+
+    private val Context.summonerDataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "summoner_prefs",
     )
 
     @Provides
@@ -27,6 +32,13 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context) = context.dataStore
+    @Named("setting")
+    fun provideSettingDataStore(@ApplicationContext context: Context) = context.settingDataStore
+
+    @Provides
+    @Singleton
+    @Named("summoner")
+    fun provideSummonerDataStore(@ApplicationContext context: Context) = context.summonerDataStore
+
 
 }
