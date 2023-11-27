@@ -10,6 +10,6 @@ interface AppRepository {
 
     suspend fun deleteApiKey()
 
-    fun initializeJsonData(): Flow<Result<Boolean>>
+    suspend fun initializeJsonData(): Result<Boolean>
 
 }

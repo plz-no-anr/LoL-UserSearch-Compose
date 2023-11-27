@@ -16,7 +16,7 @@ class SummonerLocalDataSourceImpl @Inject constructor(
         size = size
     )
 
-    override fun getSummoner(name: String): Flow<SummonerEntity?> = dao.getSummoner(name)
+    override fun getSummoner(summonerName: String): Flow<SummonerEntity?> = dao.getSummoner(summonerName)
 
     override suspend fun upsertSummoner(summonerEntity: SummonerEntity) {
         dao.upsertSummoner(summonerEntity)

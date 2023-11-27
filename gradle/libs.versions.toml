@@ -39,6 +39,7 @@ material = "1.9.0"
 
 google-material = "1.10.0"
 gson = "2.9.0"
+kotest = "5.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
@@ -116,6 +117,9 @@ card-stack = { group = "io.github.plz-no-anr", name = "card-stack", version.ref 
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

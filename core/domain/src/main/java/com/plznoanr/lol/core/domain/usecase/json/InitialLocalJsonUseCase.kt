@@ -1,7 +1,6 @@
 package com.plznoanr.lol.core.domain.usecase.json
 
 import com.plznoanr.lol.core.data.repository.AppRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -12,7 +11,7 @@ import javax.inject.Inject
 class InitialLocalJsonUseCase @Inject constructor(
     private val appRepository: AppRepository
 ) {
-    operator fun invoke(): Flow<Result<Boolean>> {
+    suspend operator fun invoke(): Result<Boolean> {
         return appRepository.initializeJsonData()
     }
 

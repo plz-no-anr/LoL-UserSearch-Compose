@@ -10,10 +10,8 @@ data class SearchEntity(
     @PrimaryKey
     val name: String,
     val date: LocalDateTime,
-    val isBookmark: Boolean
 )
 fun SearchEntity.asDomain() = Search(
     name = name,
     date = date,
-    isBookmark = isBookmark
 )

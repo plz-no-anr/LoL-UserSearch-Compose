@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class GetSummonerListUseCase @Inject constructor(
     private val summonerRepository: SummonerRepository,
-    private val refreshSummonerListUseCase: RefreshSummonerListUseCase
 ) {
     private val cachedList = mutableListOf<Summoner>()
     private var paging = Paging(
@@ -28,7 +27,6 @@ class GetSummonerListUseCase @Inject constructor(
         emit(Unit)
     }.onEach { // 페이징 처리
         if (isRefresh) {
-            refreshSummonerListUseCase()
             clear()
         } else {
             paging = paging.next()

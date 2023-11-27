@@ -1,26 +1,14 @@
 package com.plznoanr.lol.feature.home
 
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
-import com.plznoanr.lol.core.designsystem.component.GetApiKeyView
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import com.plznoanr.lol.core.model.Profile
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeRoute(
@@ -35,18 +23,18 @@ fun HomeRoute(
 
 @Composable
 internal fun HomeScreen(
-    state: HomeUiState,
+    state: HomeUiState2,
     onIntent: (HomeIntent) -> Unit,
 ) {
-    when {
-        state.isLoading -> AppProgressBar()
-        state.error != null -> ErrorScreen(
+    when(state) {
+        is HomeUiState2.Loading -> AppProgressBar()
+        is HomeUiState2.Error -> ErrorScreen(
             error = state.error.parseError()
         ) { onIntent(HomeIntent.OnLoadData) }
-        else -> {
+        is HomeUiState2.Data -> {
             HomeContent(
                 data = state.data,
-                isRefreshing = state.isRefreshing,
+                isRefreshing = refreshState,
             ) { intent ->
                 onIntent(intent)
             }
@@ -59,7 +47,7 @@ internal fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     HomeScreen(
-        state = HomeUiState(),
+        state = HomeUiState2.Loading,
         onIntent = {},
     )
 }

@@ -29,7 +29,7 @@ sealed class AppError(val code: Int, val message: String) {
     fun exception() = Exception(this.parse())
 }
 
-fun String.parseError(): AppError = this.let {
+fun String?.parseError(): AppError = this?.let {
     if (it.contains("/")) it.split("/")[0].toInt().let { code ->
         when (code) {
             0 -> AppError.Network
@@ -45,4 +45,4 @@ fun String.parseError(): AppError = this.let {
     } else {
         AppError.Default
     }
-}
+} ?: AppError.Default

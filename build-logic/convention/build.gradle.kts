@@ -49,10 +49,10 @@ gradlePlugin {
             id = "lol.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
-//        register("androidTest") {
-//            id = "lol.android.test"
-//            implementationClass = "AndroidTestConventionPlugin"
-//        }
+        register("androidCoroutines") {
+            id = "lol.android.coroutines"
+            implementationClass = "AndroidCoroutinePlugin"
+        }
         register("androidHilt") {
             id = "lol.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"

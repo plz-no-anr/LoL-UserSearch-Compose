@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerListUseCase
-import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
-import com.plznoanr.lol.core.domain.usecase.summoner.SaveSummonerUseCase
-import com.plznoanr.lol.core.model.Summoner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,17 +25,15 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getSummonerListUseCase: GetSummonerListUseCase,
-    private val getSummonerUseCase: GetSummonerUseCase,
     private val deleteAllSummonerUseCase: DeleteAllSummonerUseCase,
     private val deleteSummonerUseCase: DeleteSummonerUseCase,
-    private val saveSummonerUseCase: SaveSummonerUseCase,
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : ViewModel() {
 
     private val _eventFlow: MutableSharedFlow<HomeIntent> = MutableSharedFlow()
 
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<HomeUiState2> = MutableStateFlow(HomeUiState2.Loading)
+    val uiState: StateFlow<HomeUiState2> = _uiState.asStateFlow()
 
     init {
         _eventFlow
@@ -57,18 +52,19 @@ class HomeViewModel @Inject constructor(
                 when (it) {
                     is HomeIntent.OnRefresh -> {
                         _uiState.update { state ->
+                            state as HomeUiState2.Data
                             state.copy(isRefreshing = true)
                         }
                     }
                     is HomeIntent.OnLoadData -> {
                         _uiState.update { state ->
-                            state.copy(isLoading = true)
+                            HomeUiState2.Loading
                         }
                     }
                     is HomeIntent.OnLoadMore -> {
-//                        _uiState.update { state ->
-//                            state.copy(isLoading = true)
-//                        }
+                        _uiState.update { state ->
+                            HomeUiState2.Loading
+                        }
                     }
                     else -> Unit
                 }
@@ -77,8 +73,7 @@ class HomeViewModel @Inject constructor(
             }.map { result ->
                 Timber.d("result : $result")
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
+                    HomeUiState2.Data(
                         isRefreshing = false,
                         data = result.toPersistentList(),
                     )
@@ -92,28 +87,5 @@ class HomeViewModel @Inject constructor(
             _eventFlow.emit(intent)
         }
     }
-
-    private fun test() {
-        viewModelScope.launch {
-            (0..100).forEachIndexed { index, i ->
-                saveSummonerUseCase(
-                    Summoner(
-                        id = "SummonerId $index",
-                        name = "name $index",
-                        level = "level $index",
-                        icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/23.png",
-                        tier = "tier $index",
-                        leaguePoints = 100,
-                        rank = "rank $index",
-                        wins = 100,
-                        losses = 100,
-                        isBookMarked = false
-                    )
-                )
-            }
-        }
-
-    }
-
 
 }

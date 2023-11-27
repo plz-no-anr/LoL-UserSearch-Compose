@@ -6,7 +6,7 @@ import javax.inject.Inject
 class GetBookmarkedSummonerListUseCase @Inject constructor(
     private val getSummonerListUseCase: GetSummonerListUseCase
 ) {
-    operator fun invoke(isRefresh: Boolean = false) = getSummonerListUseCase(isRefresh).map {
+    operator fun invoke() = getSummonerListUseCase().map {
         it.filter { summoner -> summoner.isBookMarked }
     }
 

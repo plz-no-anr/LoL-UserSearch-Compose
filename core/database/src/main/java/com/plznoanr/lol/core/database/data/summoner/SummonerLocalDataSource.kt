@@ -9,7 +9,7 @@ interface SummonerLocalDataSource {
 
     fun getSummonerList(page: Int, size: Int): Flow<List<SummonerEntity>?>
 
-    fun getSummoner(name: String): Flow<SummonerEntity?>
+    fun getSummoner(summonerName: String): Flow<SummonerEntity?>
 
     suspend fun upsertSummoner(summonerEntity: SummonerEntity)
 
