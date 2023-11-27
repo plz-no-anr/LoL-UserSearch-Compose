@@ -18,7 +18,6 @@ import com.plznoanr.lol.core.model.Summoner
 internal fun Search.asEntity() = SearchEntity(
     name = name,
     date = date,
-    isBookmark = isBookmark
 )
 
 internal fun Summoner.asEntity() = SummonerEntity(
@@ -32,7 +31,6 @@ internal fun Summoner.asEntity() = SummonerEntity(
     wins = wins,
     losses = losses,
     miniSeries = miniSeries?.asEntity(),
-    isBookMarked = isBookMarked
 )
 
 internal fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(

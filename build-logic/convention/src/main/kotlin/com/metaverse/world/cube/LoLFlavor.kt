@@ -16,7 +16,7 @@ enum class LoLFlavor(val dimension: FlavorDimension, val applicationIdSuffix: St
     prod(FlavorDimension.flavor),
 }
 
-fun configureFlavors(
+internal fun configureFlavors(
     commonExtension: CommonExtension<*, *, *, *, *>,
     flavorConfigurationBlock: ProductFlavor.(flavor: LoLFlavor) -> Unit = {}
 ) {

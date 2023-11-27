@@ -61,7 +61,7 @@ class SummonerRepositoryImpl @Inject constructor(
             ).getOrThrow()
 
             return@withContext if (league.isNotEmpty()) {
-                league.find { it.queueType == "RANKED_SOLO_5x5" }?.let {
+                league.find { it.queueType == "RANKED_SOLO_5x5" }?.let { // 솔로 랭크만
                     Result.success(
                         Summoner(
                             id = summoner.id,
@@ -85,9 +85,8 @@ class SummonerRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-
-    override fun getSummoner(name: String): Flow<Summoner?> =
-        summonerLocalDataSource.getSummoner(name)
+    override fun getSummoner(summonerName: String): Flow<Summoner?> =
+        summonerLocalDataSource.getSummoner(summonerName)
             .map { entity ->
                 entity?.asDomain()
             }

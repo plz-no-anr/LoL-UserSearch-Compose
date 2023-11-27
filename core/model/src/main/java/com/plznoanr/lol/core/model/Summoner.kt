@@ -35,9 +35,9 @@ data class Summoner(
 
 }
 
-fun getDummySummoner() = Summoner(
-    id = "Summoner Id",
-    name = "Summoner Name",
+fun getDummySummoner(index: Int = 0) = Summoner(
+    id = "Summoner Id-$index",
+    name = "Summoner Name-$index",
     level = "100",
     icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",
     tier = "GRANDMASTER",

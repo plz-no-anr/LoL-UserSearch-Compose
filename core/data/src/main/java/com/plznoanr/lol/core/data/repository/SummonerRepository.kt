@@ -10,7 +10,7 @@ interface SummonerRepository {
 
     suspend fun requestSummoner(name: String): Result<Summoner>
 
-    fun getSummoner(name: String): Flow<Summoner?>
+    fun getSummoner(summonerName: String): Flow<Summoner?>
 
     fun getSummonerAll(): Flow<List<Summoner>>
 
