@@ -1,6 +1,6 @@
 plugins {
-    id("lol.android.library")
-    id("lol.android.coroutines")
+    alias(libs.plugins.lol.android.library)
+    alias(libs.plugins.lol.android.coroutines)
 }
 
 android {
@@ -9,9 +9,9 @@ android {
 
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:common"))
-    implementation(project(":core:data"))
+    implementation(projects.core.model)
+    implementation(projects.core.common)
+    implementation(projects.core.data)
 
     implementation(libs.javax.inject)
     implementation(libs.kotlinx.datetime)

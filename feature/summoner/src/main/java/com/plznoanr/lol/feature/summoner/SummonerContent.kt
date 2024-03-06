@@ -22,21 +22,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
+import com.plznoanr.lol.core.model.toText
 
 @Composable
 fun SummonerContent(
     modifier: Modifier = Modifier,
-    data: Summoner,
-    onIntent: (SummonerIntent) -> Unit
+    summoner: Summoner,
+    onWatch: (String) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -45,24 +46,24 @@ fun SummonerContent(
 
         ) {
         SummonerInfoView(
-            icon = data.icon,
-            name = data.name,
-            level = data.levelInfo
+            icon = summoner.icon,
+            nickname = summoner.nickname.toText(),
+            level = summoner.levelInfo
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         LeagueInfoView(
-            pointWinLose = data.lpWinLose,
+            pointWinLose = summoner.lpWinLose,
         )
         Spacer(modifier = Modifier.height(20.dp))
 
         TierRankView(
-            tierRank = data.tierRank,
-            tierIcon = TierIcon(tier = data.tier),
-            miniSeries = data.miniSeries,
+            tierRank = summoner.tierRank,
+            tierIcon = TierIcon(tier = summoner.tier),
+            miniSeries = summoner.miniSeries,
             isPlaying = false, // todo
-            onSpectator = { onIntent(SummonerIntent.Spectator.OnWatch(data.name)) }
+            onSpectator = { onWatch(summoner.id) }
         )
 
     }
@@ -73,13 +74,13 @@ fun SummonerContent(
 private fun SummonerInfoView(
     modifier: Modifier = Modifier,
     icon: String,
-    name: String,
+    nickname: String,
     level: String,
 ) {
     Row(
         modifier = modifier
     ) {
-        com.plznoanr.lol.core.designsystem.component.IconImage(
+        IconImage(
             modifier = Modifier
                 .size(130.dp),
             url = icon
@@ -88,7 +89,7 @@ private fun SummonerInfoView(
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = name,
+                text = nickname,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -229,5 +230,5 @@ private fun SpectatorView(
 @Preview
 @Composable
 private fun SummonerViewPreview() {
-    SummonerContent(data = getDummySummoner()) {}
+    SummonerContent(summoner = getDummySummoner()) {}
 }

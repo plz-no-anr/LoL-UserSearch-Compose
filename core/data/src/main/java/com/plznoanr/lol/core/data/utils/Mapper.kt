@@ -14,15 +14,18 @@ import com.plznoanr.lol.core.database.model.json.SpellEntity
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.model.Summoner
+import kotlin.math.tan
 
 internal fun Search.asEntity() = SearchEntity(
-    name = name,
+    name = nickname.name,
+    tag = nickname.tag,
     date = date,
 )
 
 internal fun Summoner.asEntity() = SummonerEntity(
     id = id,
-    name = name,
+    name = nickname.name,
+    tag = nickname.tag,
     level = level,
     icon = icon,
     tier = tier,

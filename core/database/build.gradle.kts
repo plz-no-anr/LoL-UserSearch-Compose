@@ -1,7 +1,7 @@
 plugins {
-    id("lol.android.library")
-    id("lol.android.hilt")
-    id("lol.android.room")
+    alias(libs.plugins.lol.android.library)
+    alias(libs.plugins.lol.android.hilt)
+    alias(libs.plugins.lol.android.room)
 }
 
 android {
@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:model"))
+    implementation(projects.core.model)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
     implementation(libs.google.gson)

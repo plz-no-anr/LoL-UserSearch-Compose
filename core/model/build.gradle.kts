@@ -1,6 +1,6 @@
 plugins {
-    id("lol.jvm.library")
-    id("kotlinx-serialization")
+    alias(libs.plugins.lol.jvm.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {

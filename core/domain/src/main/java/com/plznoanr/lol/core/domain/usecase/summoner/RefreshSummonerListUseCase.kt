@@ -19,7 +19,7 @@ class RefreshSummonerListUseCase @Inject constructor(
         withContext(ioDispatcher) {
             val list = summonerRepository.getSummonerAll().first()
             list.launchMap(this) {
-                val response = summonerRepository.requestSummoner(it.name).getOrNull() ?: it
+                val response = summonerRepository.requestSummoner(it.nickname).getOrNull() ?: it
                 summonerRepository.upsertSummoner(response)
             }
         }

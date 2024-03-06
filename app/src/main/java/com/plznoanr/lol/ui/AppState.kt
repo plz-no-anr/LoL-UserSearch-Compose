@@ -1,6 +1,8 @@
 package com.plznoanr.lol.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,16 +37,19 @@ fun rememberAppState(
     networkManager: NetworkManager,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
-): AppState = remember(
-    networkManager,
-    navController,
-    coroutineScope
-) {
-    AppState(
-        navController = navController,
-        coroutineScope = coroutineScope,
-        networkManager = networkManager,
-    )
+): AppState {
+    NavigationTrackingSideEffect(navController)
+    return remember(
+        networkManager,
+        navController,
+        coroutineScope
+    ) {
+        AppState(
+            navController = navController,
+            coroutineScope = coroutineScope,
+            networkManager = networkManager,
+        )
+    }
 }
 
 
@@ -74,6 +79,10 @@ class AppState(
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
+    val shouldShowBottomBar: Boolean
+        @Composable
+        get() = currentTopDestination != null
+
     val currentTopDestination: TopDestination?
         @Composable get() = when (currentDestination?.route) {
             HomeRoute -> TopDestination.Home
@@ -97,6 +106,21 @@ class AppState(
             TopDestination.Search -> navController.navigateToSearch(navOptions)
             TopDestination.Bookmark -> navController.navigateToBookmark(navOptions)
             TopDestination.Setting -> navController.navigateToSetting(navOptions)
+        }
+    }
+}
+
+@Composable
+private fun NavigationTrackingSideEffect(navController: NavHostController) {
+    DisposableEffect(navController) {
+        val listener = NavController.OnDestinationChangedListener { navController, destination, bundle ->
+            Timber.d("[네비게이션] -> [$navController][$destination][$bundle]")
+        }
+
+        navController.addOnDestinationChangedListener(listener)
+
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
         }
     }
 }

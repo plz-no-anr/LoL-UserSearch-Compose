@@ -32,27 +32,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.IconImage
+import com.plznoanr.lol.core.designsystem.component.LazyColumnIndicator
+import com.plznoanr.lol.core.designsystem.component.OnBottomReached
+import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
+import kotlinx.collections.immutable.PersistentList
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    data: List<Summoner>? = null,
-    isRefreshing: Boolean,
-    onIntent: (HomeIntent) -> Unit
+    data: PersistentList<Summoner>? = null,
+    isRefreshing: Boolean = false,
+    loadNextPage: Boolean = false,
+    onRefresh: () -> Unit = {},
+    onNextPage: () -> Unit = {},
+    onBookmarked: (String) -> Unit = {},
+    onDeleteAll: () -> Unit = {},
 ) {
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
 
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onIntent(HomeIntent.OnRefresh) })
-
-    val lazyColumnState = rememberLazyListState().apply {
-        OnBottomReached {
-            onIntent(HomeIntent.OnLoadMore)
-        }
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,22 +65,36 @@ fun HomeContent(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(top = 16.dp, end = 16.dp)
-                .clickable { onIntent(HomeIntent.Summoner.OnDeleteAll) },
+                .clickable { onDeleteAll() },
         )
         Box(
             modifier = Modifier
                 .pullRefresh(state = pullRefreshState)
         ) {
             if (!data.isNullOrEmpty()) {
+                val lazyColumnState = rememberLazyListState().apply {
+                    OnBottomReached {
+                        Timber.d("HomeScreen call")
+                        if (data.size >= 20) {
+                            onNextPage()
+                        }
+                    }
+                }
                 LazyColumn(
                     state = lazyColumnState,
                 ) {
                     items(data) {
-                        HomeItem(
+                        SummonerItem(
                             summoner = it,
-                            onBookmarked = { onIntent(HomeIntent.Summoner.OnBookmark(it.id)) }
+                            onBookmarked = { onBookmarked(it.id) }
                         )
                     }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                if (loadNextPage) {
+                    LazyColumnIndicator(
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
                 }
             }
 
@@ -221,10 +238,12 @@ private fun KeyAddView(
         OutlinedTextField(
             value = textState,
             onValueChange = { textState = it },
-            label = { Text(
-                text = stringResource(id = R.string.add_key),
-                color = Color.White
-            ) },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.add_key),
+                    color = Color.White
+                )
+            },
             modifier = Modifier
                 .weight(1f),
             colors = TextFieldDefaults.colors(
@@ -254,25 +273,3 @@ private fun KeyAddView(
     }
 }
 
-@Composable
-internal fun LazyListState.OnBottomReached(
-    onFetch: () -> Unit
-) {
-    val shouldLoadMore = remember {
-        derivedStateOf {
-            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
-                ?: return@derivedStateOf true
-
-            lastVisibleItem.index == layoutInfo.totalItemsCount - 1
-        }
-    }
-
-    LaunchedEffect(shouldLoadMore) {
-        snapshotFlow { shouldLoadMore.value }
-            .collect {
-                if (it) {
-                    onFetch()
-                }
-            }
-    }
-}

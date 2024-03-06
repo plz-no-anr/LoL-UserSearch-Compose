@@ -2,45 +2,35 @@ package com.plznoanr.lol.feature.home
 
 import androidx.compose.runtime.Stable
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.mvibase.MviEvent
+import com.plznoanr.lol.core.mvibase.MviSideEffect
+import com.plznoanr.lol.core.mvibase.MviState
 import kotlinx.collections.immutable.PersistentList
 
-data class HomeUiState(
-    val data: PersistentList<Summoner>? = null,
+@Stable
+data class UiState(
+    val summonerList: PersistentList<Summoner>? = null,
     val isLoading: Boolean = false,
+    val loadNextPage: Boolean = false,
     val isRefreshing: Boolean = false,
     val error: String? = null
-)
+) : MviState
 
-sealed interface HomeUiState2 {
-    data object Loading : HomeUiState2
+sealed interface Event: MviEvent
 
-    data object Refresh : HomeUiState2
+data object OnInit : Event
 
-    data class Error(val error: String? = null) : HomeUiState2
+data object OnRefresh : Event
 
-    @Stable
-    data class Data(val data: PersistentList<Summoner>, val isRefreshing: Boolean = false) : HomeUiState2
+data object OnNextPage : Event
 
-}
+data class OnSummonerClick(val summonerName: String) : Event
 
-sealed interface HomeIntent {
+data class OnBookmark(val summonerId: String) : Event
 
-    data object OnLoadData : HomeIntent
+data class OnDelete(val name: String) : Event
 
-    data object OnRefresh : HomeIntent
+data object OnDeleteAll : Event
 
-    data object OnLoadMore : HomeIntent
-
-    sealed interface Summoner : HomeIntent {
-
-        data class OnSummonerClick(val summonerName: String) : Summoner
-
-        data class OnBookmark(val summonerId: String) : Summoner
-
-        data class OnDelete(val name: String) : Summoner
-
-        data object OnDeleteAll : Summoner
-    }
-
-}
+sealed interface SideEffect : MviSideEffect
 

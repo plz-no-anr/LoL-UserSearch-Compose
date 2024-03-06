@@ -1,37 +1,26 @@
 package com.plznoanr.lol.feature.summoner
 
+import androidx.compose.runtime.Stable
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.mvibase.MviEvent
+import com.plznoanr.lol.core.mvibase.MviSideEffect
+import com.plznoanr.lol.core.mvibase.MviState
 
-
-data class SummonerUiState(
-    val data: Summoner? = null,
+@Stable
+data class UiState(
+    val summoner: Summoner? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
-)
+    val errorMsg: String? = null
+): MviState
 
-sealed interface SummonerIntent {
+sealed interface Event: MviEvent
+data object OnLoad: Event
+data object OnBookmark: Event
+data object OnBackPress: Event
 
-    data object OnLoad : SummonerIntent
+data class OnWatch(val summonerId: String): Event
 
-    sealed interface Navigation : SummonerIntent {
-        data object Back : Navigation
-    }
-
-    sealed interface Spectator : SummonerIntent {
-        data class OnWatch(val summonerId: String) : Spectator
-    }
-
-}
-
-sealed interface SummonerSideEffect {
-
-    data class Toast(val msg: String) : SummonerSideEffect
-
-    sealed interface Navigation : SummonerSideEffect {
-        data object Back : Navigation
-
-        data class ToSpectator(val summonerId: String) : Navigation
-    }
-
-}
-
+sealed interface SideEffect: MviSideEffect
+data class NavigateToSpectator(val summonerId: String): SideEffect
+data object OnBack: SideEffect
+data class ShowSnackbar(val message: String): SideEffect

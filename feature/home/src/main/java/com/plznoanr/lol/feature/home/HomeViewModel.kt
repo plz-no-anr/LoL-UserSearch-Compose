@@ -1,91 +1,81 @@
 package com.plznoanr.lol.feature.home
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerListUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
+import com.plznoanr.lol.core.mvibase.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getSummonerListUseCase: GetSummonerListUseCase,
+    getSummonerListUseCase: GetSummonerListUseCase,
     private val deleteAllSummonerUseCase: DeleteAllSummonerUseCase,
     private val deleteSummonerUseCase: DeleteSummonerUseCase,
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
-) : ViewModel() {
+) : MviViewModel<UiState, Event, SideEffect>() {
 
-    private val _eventFlow: MutableSharedFlow<HomeIntent> = MutableSharedFlow()
+    private val loadEvent = MutableSharedFlow<Unit>(extraBufferCapacity = Int.MAX_VALUE)
 
-    private val _uiState: MutableStateFlow<HomeUiState2> = MutableStateFlow(HomeUiState2.Loading)
-    val uiState: StateFlow<HomeUiState2> = _uiState.asStateFlow()
+    private val summonerList = loadEvent.flatMapLatest {
+        getSummonerListUseCase()
+    }.map {
+        it.toPersistentList()
+    }.stateIn(
+        scope = viewModelScope,
+        initialValue = persistentListOf(),
+        started = SharingStarted.WhileSubscribed(5_000)
+    )
+
+    override val uiState: StateFlow<UiState>
 
     init {
-        _eventFlow
-            .onEach {
-                when (it) {
-                    is HomeIntent.Summoner.OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
-                    is HomeIntent.Summoner.OnDeleteAll -> deleteAllSummonerUseCase()
-                    is HomeIntent.Summoner.OnDelete -> deleteSummonerUseCase(it.name)
-                    else -> Unit
-                }
+        val initialState = UiState()
+        uiState = eventFlow.sendEvent {
+            when (it) {
+                is OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
+                is OnDeleteAll -> deleteAllSummonerUseCase()
+                is OnDelete -> deleteSummonerUseCase(it.name)
+                is OnInit, OnNextPage -> onLoad()
+                else -> return@sendEvent
             }
-            .filter { it !is HomeIntent.Summoner }
-            .onEach {
-                Timber.d("eventFlow : $it")
-            }.onEach {
-                when (it) {
-                    is HomeIntent.OnRefresh -> {
-                        _uiState.update { state ->
-                            state as HomeUiState2.Data
-                            state.copy(isRefreshing = true)
-                        }
-                    }
-                    is HomeIntent.OnLoadData -> {
-                        _uiState.update { state ->
-                            HomeUiState2.Loading
-                        }
-                    }
-                    is HomeIntent.OnLoadMore -> {
-                        _uiState.update { state ->
-                            HomeUiState2.Loading
-                        }
-                    }
-                    else -> Unit
-                }
-            }.flatMapLatest {
-                getSummonerListUseCase(isRefresh = it is HomeIntent.OnRefresh)
-            }.map { result ->
-                Timber.d("result : $result")
-                _uiState.update {
-                    HomeUiState2.Data(
-                        isRefreshing = false,
-                        data = result.toPersistentList(),
-                    )
-                }
-            }.launchIn(viewModelScope)
-        postIntent(HomeIntent.OnLoadData)
+        }.toStateChangeFlow(initialState) { state, event ->
+            when (event) {
+                is OnRefresh -> state.copy(isRefreshing = true)
+                is OnInit -> state.copy(isLoading = true)
+                is OnNextPage -> state.copy(loadNextPage = true)
+                else -> state
+            }
+        }.combine(summonerList) { state, list ->
+            state.copy(
+                isRefreshing = false,
+                isLoading = false,
+                loadNextPage = false,
+                summonerList = list
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = initialState,
+            started = SharingStarted.Eagerly
+        )
+        viewModelScope.launch { onLoad() }
     }
 
-    fun postIntent(intent: HomeIntent) {
-        viewModelScope.launch {
-            _eventFlow.emit(intent)
-        }
+    private suspend fun onLoad() {
+        loadEvent.emit(Unit)
     }
+
 
 }

@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter
 
 
 data class Search(
-    val name: String,
-    val date: LocalDateTime,
+    val nickname: Nickname,
+    val date: LocalDateTime
 ) {
     val displayDateTime: String
         get() = date.toJavaLocalDateTime()

@@ -17,7 +17,7 @@ class FakeSummonerRepository(
     }
 
     override fun getSummoner(summonerName: String): Flow<Summoner?> {
-        return flow { emit(summoners.first { it.name == summonerName }) }
+        return flow { emit(summoners.first { it.nickname == summonerName }) }
     }
 
     override fun getSummonerAll(): Flow<List<Summoner>> {

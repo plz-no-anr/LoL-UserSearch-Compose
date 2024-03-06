@@ -10,31 +10,41 @@ import com.plznoanr.lol.feature.summoner.SummonerRoute
 
 const val SummonerRoute = "summoner_route"
 const val SummonerNameArg = "summonerName"
+const val SummonerTagArg = "summonerName"
 
 internal class SummonerArgs(
-    val summonerName: String
+    val summonerName: String,
+    val summonerTag: String
 ) {
     constructor(savedStateHandle: SavedStateHandle) : this(
-        summonerName = checkNotNull(savedStateHandle[SummonerNameArg])
+        summonerName = checkNotNull(savedStateHandle[SummonerNameArg]),
+        summonerTag = checkNotNull(savedStateHandle[SummonerTagArg])
     )
 }
 
-fun NavController.navigateToSummoner(summonerName: String) {
-    navigate("$SummonerRoute?$summonerName") {
+fun NavController.navigateToSummoner(summonerName: String, summonerTag: String) {
+    navigate("$SummonerRoute?$summonerName?$summonerTag") {
         launchSingleTop = true
     }
 }
 
 fun NavGraphBuilder.summonerScreen(
-    onBackPressed: () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
+    navigateToSpectator: (String) -> Unit,
+    onBackPressed: () -> Unit
 ) {
     composable(
-        route = "$SummonerRoute?$SummonerNameArg",
+        route = "$SummonerRoute?{$SummonerNameArg}?{$SummonerTagArg}",
         arguments = listOf(
-            navArgument(SummonerNameArg) { type = NavType.StringType }
+            navArgument(SummonerNameArg) { type = NavType.StringType },
+            navArgument(SummonerTagArg) { type = NavType.StringType },
         )
     ) {
-        SummonerRoute()
+        SummonerRoute(
+            onShowSnackbar = onShowSnackbar,
+            navigateToSpectator = navigateToSpectator,
+            onBackPress = onBackPressed
+        )
     }
 
 }

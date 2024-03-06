@@ -17,61 +17,55 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.model.Search
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SearchContent(
     modifier: Modifier = Modifier,
-    data: List<Search>? = null,
-    name: String? = null,
+    data: PersistentList<Search> = persistentListOf(),
+    isActive: Boolean = false,
+    name: String = "",
     onNameChange: (String) -> Unit,
-    onIntent: (SearchIntent) -> Unit,
+    onActiveChange: (Boolean) -> Unit,
+    onSearch: (String) -> Unit,
+    onDelete: (String) -> Unit,
+    onDeleteAll: () -> Unit,
 ) {
 
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
-        TextField(
-            value = name ?: "",
-            onValueChange = onNameChange,
-            label = { Text( text = stringResource(id = R.string.summoner_name) ) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp),
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        name?.let {
-                            onIntent(SearchIntent.Summoner.OnSearch(it))
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = AppIcons.Search,
-                        contentDescription = null
-                    )
-                }
+        SearchBar(
+            query = name,
+            onQueryChange = onNameChange,
+            onSearch = onSearch,
+            active = isActive,
+            onActiveChange = onActiveChange,
+            placeholder = {
+                Text(text = "닉네임#태그")
             },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search
-            )
-        )
-
-        TextButton(
-            modifier = Modifier
-                .align(Alignment.End),
-            onClick = { onIntent(SearchIntent.Search.OnDeleteAll) },
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = Color.Black
+            leadingIcon = {
+                Icon(imageVector = AppIcons.Search, contentDescription = null)
+            },
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.primary,
             )
         ) {
-            Text(text = stringResource(id = R.string.delete_all))
-        }
+            TextButton(
+                modifier = Modifier
+                    .align(Alignment.End),
+                onClick = onDeleteAll ,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color.Black
+                )
+            ) {
+                Text(text = stringResource(id = R.string.delete_all))
+            }
 
-        data?.let { list ->
-            if (list.isNotEmpty()) {
+            if (data.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,13 +74,12 @@ internal fun SearchContent(
                     items(data) { search ->
                         SearchItem(
                             data = search,
-                            onSearch = { onIntent(SearchIntent.Summoner.OnSearch(search.name)) },
-                            onDelete = { onIntent(SearchIntent.Search.OnDelete(search.name)) }
+                            onSearch = onSearch,
+                            onDelete = onDelete
                         )
                     }
                 }
             }
-
         }
 
     }

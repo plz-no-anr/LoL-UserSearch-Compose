@@ -38,9 +38,7 @@ internal class RetrofitGenerator(
         writeTimeout(apiConfiguration.writeTimeout, TimeUnit.SECONDS) //쓰기 타임아웃 시간 설정
         readTimeout(apiConfiguration.readTimeout, TimeUnit.SECONDS) //읽기 타임아웃 시간 설정
         addInterceptor(apiConfiguration.headerInterceptor) // header 삽입
-        apiConfiguration.logInterceptor?.also {
-            addInterceptor(it) // log interceptor 추가
-        }
+        addInterceptor(apiConfiguration.logInterceptor) // log interceptor 추가
     }
 }
 

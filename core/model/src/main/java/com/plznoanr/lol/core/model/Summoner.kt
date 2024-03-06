@@ -2,7 +2,7 @@ package com.plznoanr.lol.core.model
 
 data class Summoner(
     val id: String, // 소환사 아이디
-    val name: String, // 소환사 이름
+    val nickname: Nickname,
     val level: String, // 레벨
     val icon: String, // 소환사 아이콘
     val tier: String, // 티어 (GOLD)
@@ -14,10 +14,10 @@ data class Summoner(
     val isBookMarked: Boolean = false
 ) {
     data class MiniSeries(
-        var losses: Int,
-        var target: Int,
-        var wins: Int,
-        var progress: String
+        val losses: Int,
+        val target: Int,
+        val wins: Int,
+        val progress: String
     )
 
     val levelInfo = "LV: $level"
@@ -28,7 +28,7 @@ data class Summoner(
 
     fun asProfile() = Profile(
         id = id,
-        name = name,
+        name = nickname.toText(),
         level = level,
         icon = icon,
     )
@@ -37,7 +37,7 @@ data class Summoner(
 
 fun getDummySummoner(index: Int = 0) = Summoner(
     id = "Summoner Id-$index",
-    name = "Summoner Name-$index",
+    nickname = getDummyName(),
     level = "100",
     icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",
     tier = "GRANDMASTER",

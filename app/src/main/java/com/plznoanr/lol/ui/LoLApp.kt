@@ -44,14 +44,15 @@ fun LoLApp(
 
     Scaffold(
         containerColor = Color.Transparent,
-//        contentColor = MaterialTheme.colorScheme.primary,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            AppBottomBar(
-                destinations = appState.topDestinations,
-                onNavigateTo = appState::navigateTo,
-                currentDestination = appState.currentDestination,
-            )
+            if (appState.shouldShowBottomBar) {
+                AppBottomBar(
+                    destinations = appState.topDestinations,
+                    onNavigateTo = appState::navigateTo,
+                    currentDestination = appState.currentDestination,
+                )
+            }
         }
     ) { paddingValues ->
         Column(
@@ -59,13 +60,6 @@ fun LoLApp(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            val destination = appState.currentTopDestination
-            if (destination != null) {
-                DefaultTopAppBar(
-                    titleRes = destination.iconTitleId,
-                )
-            }
-
             AppNavHost(
                 navController = appState.navController,
                 onShowSnackbar = { message ->

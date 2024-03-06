@@ -1,8 +1,8 @@
 plugins {
-    id("lol.android.application")
-    id("lol.android.hilt")
-    id("lol.android.application.flavors")
-    id("lol.android.application.compose")
+    alias(libs.plugins.lol.android.application)
+    alias(libs.plugins.lol.android.hilt)
+    alias(libs.plugins.lol.android.application.compose)
+    alias(libs.plugins.lol.android.application.flavors)
 }
 
 android {
@@ -25,6 +25,7 @@ android {
         debug {
             isShrinkResources = false
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
         }
         release {
             isShrinkResources = true
@@ -45,14 +46,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
-    implementation(project(":core:model"))
-    implementation(project(":core:designsystem"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:search"))
-    implementation(project(":feature:bookmark"))
-    implementation(project(":feature:setting"))
-    implementation(project(":feature:summoner"))
+    implementation(projects.core.model)
+    implementation(projects.core.domain)
+    implementation(projects.core.designsystem)
+    implementation(projects.feature.home)
+    implementation(projects.feature.search)
+    implementation(projects.feature.bookmark)
+    implementation(projects.feature.setting)
+    implementation(projects.feature.summoner)
+    implementation(projects.feature.spectator)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.appcompat)

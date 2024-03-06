@@ -1,84 +1,79 @@
 package com.plznoanr.lol.feature.search
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
-import com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+
 @Composable
 fun SearchRoute(
-    viewModel: SearchViewModel = hiltViewModel(),
-    navigateToSummoner: (String) -> Unit
+    onShowSnackbar: suspend (String) -> Boolean,
+    navigateToSummoner: (String, String) -> Unit,
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
-//    val uiState by viewModel.state.collectAsStateWithLifecycle()
-//
-//    SearchScreen(
-//        state = uiState,
-//        onIntent = viewModel::postIntent,
-//        sideEffectFlow = viewModel.sideEffect,
-//        navigateToSummoner = { navigateToSummoner(it) }
-//    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
+    SearchScreen(
+        state = uiState,
+        onEvent = { coroutineScope.launch { viewModel.onEvent(it) } },
+        sideEffectFlow = viewModel.sideEffectFlow,
+        navigateToSummoner = navigateToSummoner,
+        onShowSnackbar = onShowSnackbar
+    )
 
 }
 
 @Composable
 internal fun SearchScreen(
-    state: SearchUiState,
-    onIntent: (SearchIntent) -> Unit,
-    sideEffectFlow: Flow<SearchSideEffect>?,
-    navigateToSummoner: (String) -> Unit,
+    state: UiState,
+    onEvent: (Event) -> Unit,
+    sideEffectFlow: Flow<SideEffect>,
+    navigateToSummoner: (String, String) -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
-        onIntent(SearchIntent.OnLoad)
-        sideEffectFlow?.onEach { sideEffect ->
+        sideEffectFlow.onEach { sideEffect ->
             when (sideEffect) {
-                is SearchSideEffect.Toast -> snackbarHostState.showSnackbar(
-                    message = sideEffect.msg,
-                    duration = SnackbarDuration.Short
-                )
-                is SearchSideEffect.Navigation.ToSummoner -> navigateToSummoner(sideEffect.name)
+                is NavigateToSummoner -> navigateToSummoner(sideEffect.name, sideEffect.tag)
+                is ShowSnackbar -> onShowSnackbar(sideEffect.message)
             }
-        }?.collect()
+        }.collect()
     }
+    when {
+        state.isLoading -> AppProgressBar()
+        state.error != null -> ErrorScreen(
+            error = state.error.parseError()
+        ) {}
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            DefaultTopAppBar(
-                titleRes = R.string.search_title,
+        else -> {
+            SearchContent(
+                data = state.data,
+                name = state.query,
+                isActive = state.isActive,
+                onNameChange = { onEvent(OnQueryChange(it)) },
+                onSearch = {
+                    onEvent(OnSearch(it))
+                    keyboardController?.hide()
+                },
+                onActiveChange = { onEvent(OnActiveChange(it)) },
+                onDelete = { onEvent(OnDelete(it)) },
+                onDeleteAll = { onEvent(OnDeleteAll) }
             )
         }
-    ) {
-        when {
-            state.isLoading -> AppProgressBar()
-            state.error != null -> ErrorScreen(
-                error = state.error.parseError()
-            ) {}
-            else -> {
-                SearchContent(
-                    modifier = Modifier
-                        .padding(it),
-                    data = state.data,
-                    name = state.name,
-                    onNameChange = { summonerName -> onIntent(SearchIntent.Summoner.OnNameChanged(summonerName)) },
-                    onIntent = onIntent,
-                )
-            }
-        }
-
     }
 
 }
@@ -87,9 +82,10 @@ internal fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        state = SearchUiState(),
-        sideEffectFlow = null,
-        onIntent = {},
-        navigateToSummoner = {}
+        state = UiState(),
+        sideEffectFlow = flow { },
+        onEvent = {},
+        navigateToSummoner = { n,t -> },
+        onShowSnackbar = { true }
     )
 }
