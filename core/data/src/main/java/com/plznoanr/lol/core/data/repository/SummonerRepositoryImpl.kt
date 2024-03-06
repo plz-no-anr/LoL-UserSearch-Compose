@@ -163,6 +163,10 @@ class SummonerRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearBookmark() {
+        summonerPreferenceDataSource.clearBookmark()
+    }
+
     override suspend fun deleteSummoner(name: String) {
         withContext(ioDispatcher) {
             summonerLocalDataSource.deleteSummoner(name)

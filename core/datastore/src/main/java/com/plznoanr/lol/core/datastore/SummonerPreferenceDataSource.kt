@@ -26,4 +26,10 @@ class SummonerPreferenceDataSource @Inject constructor(
             preferences[PreferenceKey.BOOKMARK] = bookmarkIds
         }
     }
+
+    suspend fun clearBookmark() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }

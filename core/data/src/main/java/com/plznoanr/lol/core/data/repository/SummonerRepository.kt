@@ -25,6 +25,8 @@ interface SummonerRepository {
 
     suspend fun updateBookmarkSummonerId(id: String)
 
+    suspend fun clearBookmark()
+
     suspend fun deleteSummoner(name: String)
 
     suspend fun deleteSummonerAll()

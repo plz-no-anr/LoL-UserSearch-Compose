@@ -17,18 +17,6 @@ sealed interface Event: MviEvent
 
 data class OnBookmark(val id: String): Event
 data object OnNextPage: Event
-
-//sealed interface BookmarkUiState {
-//
-//    @Stable
-//    data class Success(
-//        val data: PersistentList<Summoner>
-//    ) : BookmarkUiState
-//
-//    data object Loading : BookmarkUiState
-//
-//    data class Error(val error: String?) : BookmarkUiState
-//
-//}
+data object OnClear: Event
 
 sealed interface SideEffect: MviSideEffect
