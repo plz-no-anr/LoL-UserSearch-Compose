@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="retry">재시도</string>
-
+    <string name="solo_rank">솔로 랭크</string>
+    <string name="playing">관전 하기</string>
 </resources>

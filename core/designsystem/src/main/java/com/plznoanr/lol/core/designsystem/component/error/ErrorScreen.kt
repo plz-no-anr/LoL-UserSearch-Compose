@@ -35,7 +35,6 @@ fun ErrorScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(Color.White)
     ) {
         

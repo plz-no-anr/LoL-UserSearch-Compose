@@ -7,6 +7,7 @@ import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
 import com.plznoanr.lol.core.data.utils.asEntity
+import com.plznoanr.lol.core.data.utils.safeApiCall
 import com.plznoanr.lol.core.data.utils.toChampImage
 import com.plznoanr.lol.core.data.utils.toIcon
 import com.plznoanr.lol.core.data.utils.toSpellImage
@@ -18,6 +19,7 @@ import com.plznoanr.lol.core.datastore.SettingPreferenceDataSource
 import com.plznoanr.lol.core.datastore.SummonerPreferenceDataSource
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Team
 import com.plznoanr.lol.core.network.NetworkDataSource
 import com.plznoanr.lol.core.network.model.SpectatorResponse
@@ -48,11 +50,17 @@ class SummonerRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun requestSummoner(name: String): Result<Summoner> = try {
-        withContext(ioDispatcher) {
+    override suspend fun requestSummoner(nickname: Nickname): Result<Summoner> =
+        safeApiCall {
+            val account = networkDataSource.requestAccount(
+                authTokenHeader(),
+                nickname.name,
+                nickname.tag
+            ).getOrThrow()
+
             val summoner = networkDataSource.requestSummoner(
                 authTokenHeader(),
-                name
+                account.puuid
             ).getOrThrow()
 
             val league = networkDataSource.requestLeague(
@@ -60,12 +68,12 @@ class SummonerRepositoryImpl @Inject constructor(
                 summoner.id
             ).getOrThrow()
 
-            return@withContext if (league.isNotEmpty()) {
+            return@safeApiCall if (league.isNotEmpty()) {
                 league.find { it.queueType == "RANKED_SOLO_5x5" }?.let { // 솔로 랭크만
                     Result.success(
                         Summoner(
                             id = summoner.id,
-                            name = summoner.name,
+                            nickname = Nickname(summoner.name, account.tagLine),
                             level = summoner.summonerLevel.toString(),
                             icon = summoner.profileIconId.toIcon(),
                             tier = it.tier,
@@ -81,9 +89,6 @@ class SummonerRepositoryImpl @Inject constructor(
                 Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
             }
         }
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 
     override fun getSummoner(summonerName: String): Flow<Summoner?> =
         summonerLocalDataSource.getSummoner(summonerName)
@@ -116,8 +121,7 @@ class SummonerRepositoryImpl @Inject constructor(
             Timber.d("getBookMarkedSummonerIds : $it")
         }
 
-    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = try {
-        withContext(ioDispatcher) {
+    override suspend fun requestSpectator(summonerId: String): Result<Spectator> = safeApiCall {
             val result = networkDataSource.requestSpectator(
                 authTokenHeader(),
                 summonerId
@@ -133,14 +137,11 @@ class SummonerRepositoryImpl @Inject constructor(
                 )
             }
 
-            return@withContext if (spectator != null) {
+            return@safeApiCall if (spectator != null) {
                 Result.success(spectator)
             } else {
                 Result.failure(Exception(AppError.NotPlaying.parse()))
             }
-        }
-    } catch (e: Exception) {
-        Result.failure(e)
     }
 
     override suspend fun upsertSummoner(summoner: Summoner) {

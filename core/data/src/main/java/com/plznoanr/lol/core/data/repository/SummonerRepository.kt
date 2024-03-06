@@ -4,11 +4,12 @@ import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.model.Nickname
 import kotlinx.coroutines.flow.Flow
 
 interface SummonerRepository {
 
-    suspend fun requestSummoner(name: String): Result<Summoner>
+    suspend fun requestSummoner(nickname: Nickname): Result<Summoner>
 
     fun getSummoner(summonerName: String): Flow<Summoner?>
 

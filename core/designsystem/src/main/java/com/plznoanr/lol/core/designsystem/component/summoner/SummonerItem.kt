@@ -1,4 +1,4 @@
-package com.plznoanr.lol.feature.home
+package com.plznoanr.lol.core.designsystem.component.summoner
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -17,7 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Square
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,15 +31,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.lol.core.designsystem.R
 import com.plznoanr.lol.core.designsystem.component.IconImage
-import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
+import com.plznoanr.lol.core.model.toText
 
 @Composable
-fun HomeItem(
+fun SummonerItem(
     modifier: Modifier = Modifier,
     summoner: Summoner,
     onBookmarked: () -> Unit
@@ -61,11 +62,11 @@ fun HomeItem(
 
             SummonerView(
                 icon = summoner.icon,
-                name = summoner.name,
+                nickname = summoner.nickname.toText(),
                 level = summoner.levelInfo
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(2.dp)
@@ -106,7 +107,7 @@ fun HomeItem(
 @Composable
 private fun SummonerView(
     icon: String,
-    name: String,
+    nickname: String,
     level: String
 ) {
     Column(
@@ -123,7 +124,7 @@ private fun SummonerView(
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
-            text = name,
+            text = nickname,
             modifier = Modifier,
             fontSize = 14.sp
         )
@@ -320,7 +321,7 @@ private fun SpectatorView(
 @Composable
 private fun HomeItemPreview() {
     LolUserSearchComposeTheme(darkTheme = false) {
-        HomeItem(
+        SummonerItem(
             summoner = getDummySummoner()
         ) {}
     }

@@ -1,6 +1,6 @@
 plugins {
-    id("lol.android.library")
-    id("lol.android.hilt")
+    alias(libs.plugins.lol.android.library)
+    alias(libs.plugins.lol.android.hilt)
 }
 
 android {

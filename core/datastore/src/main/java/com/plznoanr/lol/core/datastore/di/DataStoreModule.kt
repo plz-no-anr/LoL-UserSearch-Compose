@@ -40,5 +40,4 @@ object DataStoreModule {
     @Named("summoner")
     fun provideSummonerDataStore(@ApplicationContext context: Context) = context.summonerDataStore
 
-
 }

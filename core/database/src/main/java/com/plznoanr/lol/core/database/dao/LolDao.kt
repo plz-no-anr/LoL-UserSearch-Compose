@@ -4,6 +4,7 @@ import androidx.room.*
 import com.plznoanr.lol.core.database.model.ProfileEntity
 import com.plznoanr.lol.core.database.model.SearchEntity
 import com.plznoanr.lol.core.database.model.SummonerEntity
+import com.plznoanr.lol.core.model.Nickname
 import kotlinx.coroutines.flow.Flow
 
 @Dao

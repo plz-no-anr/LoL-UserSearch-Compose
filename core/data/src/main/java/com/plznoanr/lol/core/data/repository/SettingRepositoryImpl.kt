@@ -14,6 +14,4 @@ class SettingRepositoryImpl @Inject constructor(
         dataSource.updateIsDarkTheme(isDarkTheme)
     }
 
-
-
 }

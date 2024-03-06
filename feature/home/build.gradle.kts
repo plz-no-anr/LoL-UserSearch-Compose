@@ -1,6 +1,6 @@
 plugins {
-    id("lol.android.feature")
-    id("lol.android.library.compose")
+    alias(libs.plugins.lol.android.feature)
+    alias(libs.plugins.lol.android.library.compose)
 }
 
 android {
@@ -9,9 +9,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:model"))
-    implementation(project(":core:domain"))
     implementation(libs.androidx.compose.material)
-    implementation(libs.card.stack)
 }

@@ -2,17 +2,33 @@ package com.plznoanr.lol.feature.bookmark
 
 import androidx.compose.runtime.Stable
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.mvibase.MviEvent
+import com.plznoanr.lol.core.mvibase.MviSideEffect
+import com.plznoanr.lol.core.mvibase.MviState
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
-sealed interface BookmarkUiState {
+@Stable
+data class UiState(
+    val bookmarkList: PersistentList<Summoner> = persistentListOf(),
+): MviState
 
-    @Stable
-    data class Success(
-        val data: PersistentList<Summoner>
-    ) : BookmarkUiState
+sealed interface Event: MviEvent
 
-    data object Loading : BookmarkUiState
+data class OnBookmark(val id: String): Event
+data object OnNextPage: Event
 
-    data class Error(val error: String?) : BookmarkUiState
+//sealed interface BookmarkUiState {
+//
+//    @Stable
+//    data class Success(
+//        val data: PersistentList<Summoner>
+//    ) : BookmarkUiState
+//
+//    data object Loading : BookmarkUiState
+//
+//    data class Error(val error: String?) : BookmarkUiState
+//
+//}
 
-}
+sealed interface SideEffect: MviSideEffect

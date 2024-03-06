@@ -31,7 +31,7 @@ class SyncSummonerListUseCase @Inject constructor(
         ) { i, summonerList ->
             Timber.d("invoke: $i, $summonerList")
             summonerList.map { summoner ->
-                val response = summonerRepository.requestSummoner(summoner.name).getOrNull()
+                val response = summonerRepository.requestSummoner(summoner.nickname).getOrNull()
                 response?.let {
                     summonerRepository.upsertSummoner(it)
                 }

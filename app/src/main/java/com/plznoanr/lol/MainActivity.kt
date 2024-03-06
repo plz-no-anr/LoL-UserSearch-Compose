@@ -24,9 +24,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel : MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
-    @Inject lateinit var networkManager: NetworkManager
+    @Inject
+    lateinit var networkManager: NetworkManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -48,9 +49,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isDarkTheme by viewModel.isDarkThemeState.collectAsStateWithLifecycle()
-           LolUserSearchComposeTheme(
+            LolUserSearchComposeTheme(
                 darkTheme = isDarkTheme
-           ) {
+            ) {
                 LoLApp(networkManager = networkManager)
             }
         }

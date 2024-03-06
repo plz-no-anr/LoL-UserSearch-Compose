@@ -63,8 +63,7 @@ class AppRepositoryImpl @Inject constructor(
                         appLocalDataSource.insertSpell(it.asEntity())
                     }
                 }
-
-                settingPreferenceDataSource.updateInit(true)
+                launch { settingPreferenceDataSource.updateInit(true) }
                 true
             } else {
                 false

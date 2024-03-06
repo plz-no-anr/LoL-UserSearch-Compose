@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Summoner
 
 @Entity(tableName = "Summoner")
@@ -11,6 +12,7 @@ data class SummonerEntity(
     @PrimaryKey
     val id: String, // 소환사 아이디
     val name: String, // 소환사 이름
+    val tag: String, // 소환사 태그
     val level: String, // 레벨
     val icon: String, // 소환사 아이콘
     val tier: String, // 티어 (GOLD)
@@ -38,7 +40,7 @@ data class SummonerEntity(
 
 fun SummonerEntity.asDomain() = Summoner(
     id = id,
-    name = name,
+    nickname = Nickname(name, tag),
     level = level,
     icon = icon,
     tier = tier,

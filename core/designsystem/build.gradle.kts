@@ -1,6 +1,6 @@
 plugins {
-    id("lol.android.library")
-    id("lol.android.library.compose")
+    alias(libs.plugins.lol.android.library)
+    alias(libs.plugins.lol.android.library.compose)
 }
 
 android {
@@ -9,7 +9,8 @@ android {
 }
 
 dependencies {
-    api(project(":core:common"))
+    implementation(projects.core.model)
+    api(projects.core.common)
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)
     api(libs.androidx.compose.material.iconsExtended)
@@ -22,4 +23,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.coil.kt.compose)
     implementation(libs.lottie.compose)
+    implementation(libs.card.stack)
 }

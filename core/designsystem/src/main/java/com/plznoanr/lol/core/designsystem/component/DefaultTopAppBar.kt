@@ -27,6 +27,7 @@ fun DefaultTopAppBar(
                 textAlign = TextAlign.Center,
                 text = stringResource(id = titleRes),
                 fontSize = 18.sp,
+                color = Color.Black
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

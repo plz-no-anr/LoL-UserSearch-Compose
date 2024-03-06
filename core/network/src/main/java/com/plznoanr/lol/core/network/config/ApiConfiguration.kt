@@ -13,7 +13,7 @@ class ApiConfiguration {
     }
 
     val endPoint: String
-        get() = BuildConfig.BASE_URL
+        get() = BuildConfig.RIOT_BASE_URL
 
     val headerInterceptor: Interceptor
         get() = Interceptor { chain ->
@@ -34,14 +34,11 @@ class ApiConfiguration {
             chain.proceed(requestBuilder.build())
         }
 
-    val logInterceptor: Interceptor?
-        get() = if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
+    val logInterceptor: Interceptor
+        get() = HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG)
+                    HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
             }
-        } else {
-            null
-        }
 
     val connectTimeout: Long
         get() = 60L

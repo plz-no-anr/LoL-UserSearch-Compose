@@ -13,8 +13,8 @@ class JsonTypeConverter {
     fun toRuneInfoList(value: String): List<RuneEntity.RuneInfo> = Gson().fromJson(value, Array<RuneEntity.RuneInfo>::class.java).toList()
 
     @TypeConverter
-    fun fromLocalDataTime(value: LocalDateTime): String = Gson().toJson(value)
+    fun fromLocalDataTime(value: LocalDateTime): String = value.toString()
 
     @TypeConverter
-    fun toLocalDataTime(value: String): LocalDateTime = Gson().fromJson(value, LocalDateTime::class.java)
+    fun toLocalDataTime(value: String): LocalDateTime = LocalDateTime.parse(value)
 }

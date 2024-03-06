@@ -11,6 +11,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             pluginManager.apply {
                 apply("lol.android.library")
                 apply("lol.android.hilt")
+                apply("dev.shreyaspatil.compose-compiler-report-generator")
             }
             extensions.configure<LibraryExtension> {
                 defaultConfig {
@@ -20,6 +21,11 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                add("implementation", project(":core:model"))
+                add("implementation", project(":core:designsystem"))
+                add("implementation", project(":core:domain"))
+                add("implementation", project(":core:mvibase"))
+
                 add("implementation", libs.findLibrary("coil.kt").get())
                 add("implementation", libs.findLibrary("coil.kt.compose").get())
                 add("implementation", libs.findLibrary("coil.kt.svg").get())
@@ -32,6 +38,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("kotlinx.coroutines.android").get())
                 add("implementation", libs.findLibrary("kotlinx.collections.immutable").get())
 
+                add("implementation", libs.findLibrary("coma").get())
             }
         }
     }

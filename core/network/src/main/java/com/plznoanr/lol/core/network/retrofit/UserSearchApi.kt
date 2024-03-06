@@ -1,5 +1,6 @@
 package com.plznoanr.lol.core.network.retrofit
 
+import com.plznoanr.lol.core.network.model.AccountResponse
 import com.plznoanr.lol.core.network.model.LeagueResponse
 import com.plznoanr.lol.core.network.model.SpectatorResponse
 import com.plznoanr.lol.core.network.model.SummonerResponse
@@ -9,10 +10,17 @@ import retrofit2.http.HeaderMap
 import retrofit2.http.Path
 
 interface UserSearchApi {
-    @GET("/lol/summoner/v4/summoners/by-name/{summonerName}")
+    @GET("/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}")
+    suspend fun getAccount(
+        @HeaderMap headerMap: Map<String, String>,
+        @Path("gameName") name: String,
+        @Path("tagLine") tag: String
+    ): Response<AccountResponse?>
+
+    @GET("/lol/summoner/v4/summoners/by-puuid/{encryptedPUUID}")
     suspend fun getSummoner(
         @HeaderMap header: Map<String, String>,
-        @Path("summonerName") summonerName: String,
+        @Path("encryptedPUUID") puuid: String,
     ): Response<SummonerResponse?>
 
     @GET("/lol/league/v4/entries/by-summoner/{encryptedSummonerId}")
