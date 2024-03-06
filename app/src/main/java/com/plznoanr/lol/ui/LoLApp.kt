@@ -63,7 +63,7 @@ fun LoLApp(
             AppNavHost(
                 navController = appState.navController,
                 onShowSnackbar = { message ->
-                    snackbarHostState.showSnackbar(message) == SnackbarResult.ActionPerformed
+                    snackbarHostState.showSnackbar(message = message, withDismissAction = true) == SnackbarResult.ActionPerformed
                 }
             )
         }

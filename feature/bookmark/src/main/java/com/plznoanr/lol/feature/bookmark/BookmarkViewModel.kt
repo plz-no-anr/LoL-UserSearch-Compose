@@ -1,6 +1,7 @@
 package com.plznoanr.lol.feature.bookmark
 
 import androidx.lifecycle.viewModelScope
+import com.plznoanr.lol.core.domain.usecase.summoner.ClearBookmarkUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.GetBookmarkedSummonerListUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
 import com.plznoanr.lol.core.mvibase.MviViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
     getBookmarkedSummonerListUseCase: GetBookmarkedSummonerListUseCase,
-    private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
+    private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase,
+    private val clearBookmarkUseCase: ClearBookmarkUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
     private val bookmarkListState = getBookmarkedSummonerListUseCase()
@@ -36,6 +38,7 @@ class BookmarkViewModel @Inject constructor(
         uiState = eventFlow.sendEvent {
             when (it) {
                 is OnBookmark -> saveBookmarkIdUseCase(it.id)
+                is OnClear -> clearBookmarkUseCase()
                 is OnNextPage -> return@sendEvent
             }
         }.toStateChangeFlow(initialState) { state, _ ->

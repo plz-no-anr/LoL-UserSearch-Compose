@@ -40,7 +40,9 @@ fun AppNavHost(
 
         bookmarkScreen()
 
-        settingScreen()
+        settingScreen(
+            onShowSnackbar = onShowSnackbar
+        )
 
     }
 

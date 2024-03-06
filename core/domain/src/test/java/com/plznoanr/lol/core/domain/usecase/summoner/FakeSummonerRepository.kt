@@ -3,6 +3,7 @@ package com.plznoanr.lol.core.domain.usecase.summoner
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
 import com.plznoanr.lol.core.data.repository.SummonerRepository
+import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
 import kotlinx.coroutines.flow.Flow
@@ -12,12 +13,12 @@ class FakeSummonerRepository(
     private val summoners: List<Summoner>,
     private val bookmarkedSummonerIds: Set<String>
 ) : SummonerRepository {
-    override suspend fun requestSummoner(name: String): Result<Summoner> {
+    override suspend fun requestSummoner(nickname: Nickname): Result<Summoner> {
         TODO("Not yet implemented")
     }
 
     override fun getSummoner(summonerName: String): Flow<Summoner?> {
-        return flow { emit(summoners.first { it.nickname == summonerName }) }
+        return flow { emit(summoners.first { it.nickname.name == summonerName }) }
     }
 
     override fun getSummonerAll(): Flow<List<Summoner>> {
@@ -49,6 +50,10 @@ class FakeSummonerRepository(
 
     override suspend fun updateBookmarkSummonerId(id: String) {
         return
+    }
+
+    override suspend fun clearBookmark() {
+        TODO("Not yet implemented")
     }
 
     override suspend fun deleteSummoner(name: String) {
