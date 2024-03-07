@@ -4,3 +4,7 @@
 
 
 🛠️ CleanArchitecture, MVI-Pattern, Multi-Module, Compose, Kotlin-dsl, Dagger-Hilt
+
+## Module Dependency Graph
+
+<img src = "project.dot.png">
