@@ -17,9 +17,9 @@ import com.plznoanr.lol.core.database.model.SummonerEntity
 import com.plznoanr.lol.core.database.model.asDomain
 import com.plznoanr.lol.core.datastore.SettingPreferenceDataSource
 import com.plznoanr.lol.core.datastore.SummonerPreferenceDataSource
+import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
-import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Team
 import com.plznoanr.lol.core.network.NetworkDataSource
 import com.plznoanr.lol.core.network.model.SpectatorResponse
@@ -43,7 +43,7 @@ class SummonerRepositoryImpl @Inject constructor(
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
-        val key = requireNotNull(settingPreferenceDataSource.apiKeyFlow.first()) {
+        val key = requireNotNull("RGAPI-9fb34017-e225-4ada-8780-aa566f6d103e") {
             throw Exception(AppError.Forbidden.parse())
         }
         put("X-Riot-Token", key)

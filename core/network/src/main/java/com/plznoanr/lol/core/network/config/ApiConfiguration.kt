@@ -5,15 +5,15 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 
-class ApiConfiguration {
-    init {
-        Timber.d("$this created.")
-    }
-
+interface ApiConfiguration {
     val endPoint: String
-        get() = BuildConfig.RIOT_BASE_URL
+    val connectTimeout: Long
+        get() = 60L
+    val writeTimeout: Long
+        get() = 60L
+    val readTimeout: Long
+        get() = 60L
 
     val headerInterceptor: Interceptor
         get() = Interceptor { chain ->
@@ -40,18 +40,12 @@ class ApiConfiguration {
                     HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
             }
 
-    val connectTimeout: Long
-        get() = 60L
-    val writeTimeout: Long
-        get() = 60L
-    val readTimeout: Long
-        get() = 60L
-
-    val defaultHeader: suspend () -> Map<String, String> = {
-        HashMap<String, String>().apply {
-            put("Accept-Charset", "application/x-www-form-urlencoded; charset=UTF-8")
-            put("Origin", "https://developer.riotgames.com")
+    val defaultHeader: suspend () -> Map<String, String>
+        get() = {
+            HashMap<String, String>().apply {
+                put("Accept-Charset", "application/x-www-form-urlencoded; charset=UTF-8")
+                put("Origin", "https://developer.riotgames.com")
+            }
         }
-    }
 
 }
