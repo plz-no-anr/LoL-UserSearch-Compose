@@ -2,9 +2,12 @@ package com.plznoanr.lol.core.model
 
 data class Profile(
     val id: String,
-    val name: String,
+    val nickname: String,
     val level: String,
     val icon: String
 ) {
-    fun getLevels() = "LV: $level"
+    val profileText: String
+        get() = "$levelText $nickname"
+    val levelText: String
+        get() = "LV: $level"
 }

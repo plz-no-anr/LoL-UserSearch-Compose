@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.R
-import com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar
 import com.plznoanr.lol.navigation.AppBottomBar
 import com.plznoanr.lol.navigation.AppNavHost
 import com.plznoanr.lol.utils.NetworkManager
@@ -31,6 +31,7 @@ fun LoLApp(
 ) {
     val isOnline by appState.isOnline.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     val networkErrorMessage = stringResource(id = R.string.network_error)
     LaunchedEffect(isOnline) {

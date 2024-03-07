@@ -14,7 +14,6 @@ import com.plznoanr.lol.core.database.model.json.SpellEntity
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.model.Summoner
-import kotlin.math.tan
 
 internal fun Search.asEntity() = SearchEntity(
     name = nickname.name,
@@ -45,7 +44,7 @@ internal fun Summoner.MiniSeries.asEntity() = SummonerEntity.MiniSeries(
 
 internal fun Profile.asEntity() = ProfileEntity(
     id = id,
-    name = name,
+    name = nickname,
     level = level,
     icon = icon
 )

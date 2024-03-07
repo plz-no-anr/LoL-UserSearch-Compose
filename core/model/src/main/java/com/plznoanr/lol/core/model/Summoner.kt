@@ -28,7 +28,7 @@ data class Summoner(
 
     fun asProfile() = Profile(
         id = id,
-        name = nickname.toText(),
+        nickname = nickname.toText(),
         level = level,
         icon = icon,
     )

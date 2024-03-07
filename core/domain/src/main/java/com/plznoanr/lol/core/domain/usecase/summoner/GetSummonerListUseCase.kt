@@ -20,8 +20,8 @@ class GetSummonerListUseCase @Inject constructor(
         pageSize: Int = 20,
         sortedBookmark: Boolean = false
     ): Flow<List<Summoner>> = executeFlow(pageSize) {
-//        summonerRepository.getSummonerList(it)
-        getDummy()
+        summonerRepository.getSummonerList(it)
+//        getDummy()
     }.combine(
         summonerRepository.getBookMarkedSummonerIds()
     ) { pagingList, ids ->

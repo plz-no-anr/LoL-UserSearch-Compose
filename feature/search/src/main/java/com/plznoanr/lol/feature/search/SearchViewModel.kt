@@ -40,13 +40,18 @@ class SearchViewModel @Inject constructor(
         val initialState = UiState()
         uiState = eventFlow.sendEvent {
             when (it) {
-                is OnDelete -> deleteSearchUseCase(it.name)
+                is OnDelete -> {
+                    val nickname = it.name.toNickName()
+                    nickname?.also {
+                        deleteSearchUseCase(it.name)
+                    }
+                }
                 is OnDeleteAll -> deleteSearchAllUseCase()
                 is OnSearch -> {
                     val nickname = it.fullName.toNickName()
                     if (nickname != null) {
                         postEffect(NavigateToSummoner(nickname.name, nickname.tag))
-                        insertSearchUseCase(nickname)
+//                        insertSearchUseCase(nickname) // todo - 제거
                     } else {
                         postEffect(ShowSnackbar("소환사명을 확인해 주세요"))
                     }

@@ -2,13 +2,20 @@ package com.plznoanr.lol.feature.home
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -16,15 +23,19 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -127,8 +138,8 @@ fun Drawers(
     )
 
     Text(
-        text = data.name,
-        color = Color.White,
+        text = data.nickname,
+        color = MaterialTheme.colorScheme.primary,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
@@ -136,15 +147,15 @@ fun Drawers(
     )
 
     Text(
-        text = data.getLevels(),
-        color = Color.White,
+        text = data.levelText,
+        color = MaterialTheme.colorScheme.primary,
         fontSize = 18.sp,
         modifier = Modifier
             .padding(start = 16.dp, bottom = 16.dp)
     )
 
     Divider(
-        color = Color.White,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
     )
@@ -176,7 +187,7 @@ private fun KeyView(
             text = stringResource(id = R.string.api_key),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.primary,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -184,11 +195,11 @@ private fun KeyView(
         apiKey?.let {
             Text(
                 text = it,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .border(
                         width = 2.dp,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     .padding(16.dp),
                 textAlign = TextAlign.Center
@@ -213,7 +224,6 @@ private fun KeyView(
                     )
                 }
             }
-
 
         } ?: run {
             KeyAddView { onAddKey(it) }
@@ -241,18 +251,18 @@ private fun KeyAddView(
             label = {
                 Text(
                     text = stringResource(id = R.string.add_key),
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.primary
                 )
             },
             modifier = Modifier
                 .weight(1f),
             colors = TextFieldDefaults.colors(
-//                focusedBorderColor = Color.White,
-//                unfocusedBorderColor = Color.White,
-//                textColor = Color.White,
-                focusedLabelColor = Color.White,
-                unfocusedLabelColor = Color.White,
-                cursorColor = Color.White,
+//                focusedBorderColor = MaterialTheme.colorScheme.primary,
+//                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+//                textColor = MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
             ),
             singleLine = true
         )
@@ -267,7 +277,7 @@ private fun KeyAddView(
             Icon(
                 imageVector = AppIcons.Add,
                 contentDescription = null,
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }

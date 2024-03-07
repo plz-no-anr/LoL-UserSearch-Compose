@@ -3,6 +3,7 @@ package com.plznoanr.lol.feature.summoner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.plznoanr.lol.core.domain.usecase.summoner.RequestSummonerUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
 import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.mvibase.MviViewModel
 import com.plznoanr.lol.feature.summoner.navigation.SummonerArgs
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,6 +21,7 @@ import javax.inject.Inject
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val requestSummonerUseCase: RequestSummonerUseCase,
+    private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
     private val loadEvent = MutableSharedFlow<Unit>(extraBufferCapacity = Int.MAX_VALUE)
 
@@ -37,12 +38,12 @@ class SummonerViewModel @Inject constructor(
         val initialState = UiState()
         uiState = eventFlow.sendEvent {
             when (it) {
-                is OnLoad -> onLoad()
+                is OnBookmark -> saveBookmarkIdUseCase(it.id)
+                is OnWatch -> postEffect(NavigateToSpectator(it.summonerId))
                 else -> return@sendEvent
             }
         }.toStateChangeFlow(initialState) { state, event ->
             when (event) {
-                is OnLoad -> state.copy(isLoading = true)
                 else -> state
             }
         }.combine(summonerFlow) { state, result ->

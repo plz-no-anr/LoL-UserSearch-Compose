@@ -21,7 +21,7 @@ class AppRepositoryImpl @Inject constructor(
     @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
 ) : AppRepository {
 
-    override fun getApiKey(): Flow<String?> = settingPreferenceDataSource.apiKeyFlow
+    override fun getApiKey(): Flow<String> = settingPreferenceDataSource.apiKeyFlow
 
     override suspend fun insertApiKey(key: String) {
         settingPreferenceDataSource.updateApiKey(key)

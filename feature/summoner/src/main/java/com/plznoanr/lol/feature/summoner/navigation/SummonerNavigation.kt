@@ -10,7 +10,7 @@ import com.plznoanr.lol.feature.summoner.SummonerRoute
 
 const val SummonerRoute = "summoner_route"
 const val SummonerNameArg = "summonerName"
-const val SummonerTagArg = "summonerName"
+const val SummonerTagArg = "summonerTag"
 
 internal class SummonerArgs(
     val summonerName: String,
@@ -23,7 +23,7 @@ internal class SummonerArgs(
 }
 
 fun NavController.navigateToSummoner(summonerName: String, summonerTag: String) {
-    navigate("$SummonerRoute?$summonerName?$summonerTag") {
+    navigate("$SummonerRoute?$summonerName/$summonerTag") {
         launchSingleTop = true
     }
 }
@@ -34,7 +34,7 @@ fun NavGraphBuilder.summonerScreen(
     onBackPressed: () -> Unit
 ) {
     composable(
-        route = "$SummonerRoute?{$SummonerNameArg}?{$SummonerTagArg}",
+        route = "$SummonerRoute?{$SummonerNameArg}/{$SummonerTagArg}",
         arguments = listOf(
             navArgument(SummonerNameArg) { type = NavType.StringType },
             navArgument(SummonerTagArg) { type = NavType.StringType },

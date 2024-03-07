@@ -19,8 +19,8 @@ class SettingPreferenceDataSource @Inject constructor(
         val IS_DARK_THEME = booleanPreferencesKey("IS_DARK_THEME")
     }
 
-    val apiKeyFlow: Flow<String?> = dataStore.data.map {
-        it[PreferenceKey.API_KEY]
+    val apiKeyFlow: Flow<String> = dataStore.data.map {
+        it[PreferenceKey.API_KEY] ?: ""
     }
 
     val initFlow: Flow<Boolean?> = dataStore.data.map {
