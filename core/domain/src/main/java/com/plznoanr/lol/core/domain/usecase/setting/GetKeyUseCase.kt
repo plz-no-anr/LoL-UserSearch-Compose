@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetKeyUseCase @Inject constructor(
     private val repository: AppRepository
 ) {
-    operator fun invoke(): Flow<String?> {
+    operator fun invoke(): Flow<String> {
         return repository.getApiKey()
     }
 

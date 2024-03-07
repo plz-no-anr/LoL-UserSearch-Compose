@@ -14,7 +14,7 @@ data class ProfileEntity(
 )
 fun ProfileEntity.asDomain() = Profile(
     id = id,
-    name = name,
+    nickname = name,
     level = level,
     icon = icon
 )

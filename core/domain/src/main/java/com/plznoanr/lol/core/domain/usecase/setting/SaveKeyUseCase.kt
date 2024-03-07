@@ -6,8 +6,8 @@ import javax.inject.Inject
 class SaveKeyUseCase @Inject constructor(
     private val appRepository: AppRepository,
 ) {
-    suspend fun invoke(key: String) {
-        return appRepository.insertApiKey(key)
+    suspend operator fun invoke(key: String) {
+        appRepository.insertApiKey(key)
     }
 
 }

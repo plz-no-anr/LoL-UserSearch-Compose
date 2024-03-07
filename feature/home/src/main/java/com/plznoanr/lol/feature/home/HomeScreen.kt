@@ -74,7 +74,7 @@ private fun HomeScreenPreview() {
 
 private fun getDummyProfile() = Profile(
     id = "id",
-    name = "name",
+    nickname = "name",
     icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6.png",
     level = "100"
 )

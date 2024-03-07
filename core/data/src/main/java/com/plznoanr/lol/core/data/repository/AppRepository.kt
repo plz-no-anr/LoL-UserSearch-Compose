@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppRepository {
 
-    fun getApiKey(): Flow<String?>
+    fun getApiKey(): Flow<String>
 
     suspend fun insertApiKey(key: String)
 
