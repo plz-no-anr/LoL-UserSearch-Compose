@@ -43,7 +43,7 @@ class SummonerRepositoryImpl @Inject constructor(
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
-        val key = requireNotNull("RGAPI-9fb34017-e225-4ada-8780-aa566f6d103e") {
+        val key = requireNotNull(settingPreferenceDataSource.apiKeyFlow.first()) {
             throw Exception(AppError.Forbidden.parse())
         }
         put("X-Riot-Token", key)
