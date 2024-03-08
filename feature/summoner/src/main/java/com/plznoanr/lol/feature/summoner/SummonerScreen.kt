@@ -68,7 +68,8 @@ internal fun SummonerScreen(
                 SummonerContent(
                     modifier = Modifier,
                     summoner = data,
-                    onWatch = { onEvent(OnWatch(it)) }
+                    onWatch = { onEvent(OnWatch(it)) },
+                    onBookmark = { onEvent(OnBookmark(it)) }
                 )
             }
         }
