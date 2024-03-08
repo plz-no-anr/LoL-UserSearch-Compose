@@ -45,11 +45,15 @@ internal fun SearchScreen(
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         sideEffectFlow.onEach { sideEffect ->
             when (sideEffect) {
                 is NavigateToSummoner -> navigateToSummoner(sideEffect.name, sideEffect.tag)
-                is ShowSnackbar -> onShowSnackbar(sideEffect.message)
+                is ShowSnackbar -> coroutineScope.launch {
+                    onShowSnackbar(sideEffect.message)
+                }
             }
         }.collect()
     }

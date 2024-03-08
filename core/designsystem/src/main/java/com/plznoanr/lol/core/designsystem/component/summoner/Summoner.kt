@@ -5,7 +5,7 @@ import androidx.compose.ui.res.painterResource
 import com.plznoanr.lol.core.designsystem.R
 
 @Composable
-fun TierIcon(tier: String) = when (tier) {
+fun tierIcon(tier: String) = when (tier) {
     "IRON" -> painterResource(id = R.drawable.emblem_iron)
     "BRONZE" -> painterResource(id = R.drawable.emblem_bronze)
     "SILVER" -> painterResource(id = R.drawable.emblem_silver)

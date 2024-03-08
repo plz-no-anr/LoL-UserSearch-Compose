@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun SummonerRoute(
@@ -29,7 +28,6 @@ fun SummonerRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
 
-    Timber.d("소환사 상태 -> $uiState")
     SummonerScreen(
         state = uiState,
         onEvent = { coroutineScope.launch { viewModel.onEvent(it) } },
