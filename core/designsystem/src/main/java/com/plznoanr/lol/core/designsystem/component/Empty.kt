@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -19,7 +18,6 @@ fun EmptyBox(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
     val progress by animateLottieCompositionAsState(
         composition = composition,
-//        clipSpec = LottieClipSpec.Frame(0, 42),
         iterations = LottieConstants.IterateForever,
         reverseOnRepeat = true,
         restartOnPlay = false

@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.IconImage
-import com.plznoanr.lol.core.designsystem.component.summoner.TierIcon
+import com.plznoanr.lol.core.designsystem.component.summoner.tierIcon
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.getDummySummoner
 import com.plznoanr.lol.core.model.toText
@@ -60,7 +60,7 @@ fun SummonerContent(
 
         TierRankView(
             tierRank = summoner.tierRank,
-            tierIcon = TierIcon(tier = summoner.tier),
+            tierIcon = tierIcon(tier = summoner.tier),
             miniSeries = summoner.miniSeries,
             isPlaying = false, // todo
             onSpectator = { onWatch(summoner.id) }

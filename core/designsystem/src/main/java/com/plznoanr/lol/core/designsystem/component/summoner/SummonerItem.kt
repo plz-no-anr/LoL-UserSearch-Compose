@@ -35,15 +35,19 @@ import com.plznoanr.lol.core.designsystem.R
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
-import com.plznoanr.lol.core.model.Summoner
-import com.plznoanr.lol.core.model.getDummySummoner
-import com.plznoanr.lol.core.model.toText
 
 @Composable
 fun SummonerItem(
     modifier: Modifier = Modifier,
-    summoner: Summoner,
-    onBookmarked: () -> Unit
+    icon: String = "",
+    nickname: String = "",
+    level: String = "",
+    tierRank: String = "",
+    tierIcon: String = "",
+    isBookmark: Boolean = false,
+    lpWinLose: String = "",
+    progress: String? = null,
+    onBookmarked: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
@@ -61,9 +65,9 @@ fun SummonerItem(
         ) {
 
             SummonerView(
-                icon = summoner.icon,
-                nickname = summoner.nickname.toText(),
-                level = summoner.levelInfo
+                icon = icon,
+                nickname = nickname,
+                level = level
             )
 
             HorizontalDivider(
@@ -81,11 +85,9 @@ fun SummonerItem(
                 TierView(
                     modifier = modifier
                         .weight(1f),
-                    tierRank = summoner.tierRank,
-                    tierIcon = TierIcon(
-                        summoner.tier
-                    ),
-                    isBookmark = summoner.isBookMarked,
+                    tierRank = tierRank,
+                    tierIcon = tierIcon(tierIcon),
+                    isBookmark = isBookmark,
                     onBookmarked = onBookmarked
                 )
 
@@ -94,8 +96,8 @@ fun SummonerItem(
                 LeagueInfoView(
                     modifier = modifier
                         .weight(1f),
-                    pointWinLose = summoner.lpWinLose,
-                    miniSeries = summoner.miniSeries,
+                    pointWinLose = lpWinLose,
+                    progress = progress,
                 )
             }
 
@@ -191,7 +193,7 @@ private fun TierView(
 private fun LeagueInfoView(
     modifier: Modifier = Modifier,
     pointWinLose: String,
-    miniSeries: Summoner.MiniSeries?,
+    progress: String?,
 ) {
     Column(
         modifier = modifier
@@ -203,9 +205,9 @@ private fun LeagueInfoView(
             pointWinLose = pointWinLose
         )
 
-        miniSeries?.let {
+        progress?.let {
             MiniSeriesView(
-                miniSeries = it
+                progress = it
             )
         }
 
@@ -262,28 +264,28 @@ private fun LeaguePointView(
 
 @Composable
 private fun MiniSeriesView(
-    miniSeries: Summoner.MiniSeries,
+    progress: String
 ) {
     Row {
-        miniSeries.progress.let {
-            if (it != "No") {
-                it.forEach { result ->
-                    when (result) {
-                        'W' -> Icon(
-                            imageVector = AppIcons.Check,
-                            contentDescription = null,
-                            tint = Color.Green
-                        )
-                        'L' -> Icon(
-                            imageVector = AppIcons.Close,
-                            contentDescription = null,
-                            tint = Color.Red
-                        )
-                        'N' -> Icon(
-                            imageVector = AppIcons.HorizontalRule,
-                            contentDescription = null
-                        )
-                    }
+        if (progress != "No") {
+            progress.forEach { result ->
+                when (result) {
+                    'W' -> Icon(
+                        imageVector = AppIcons.Check,
+                        contentDescription = null,
+                        tint = Color.Green
+                    )
+
+                    'L' -> Icon(
+                        imageVector = AppIcons.Close,
+                        contentDescription = null,
+                        tint = Color.Red
+                    )
+
+                    'N' -> Icon(
+                        imageVector = AppIcons.HorizontalRule,
+                        contentDescription = null
+                    )
                 }
             }
         }
@@ -322,7 +324,6 @@ private fun SpectatorView(
 private fun HomeItemPreview() {
     LolUserSearchComposeTheme(darkTheme = false) {
         SummonerItem(
-            summoner = getDummySummoner()
         ) {}
     }
 

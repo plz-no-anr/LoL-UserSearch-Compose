@@ -50,6 +50,7 @@ import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
+import com.plznoanr.lol.core.model.toText
 import kotlinx.collections.immutable.PersistentList
 import timber.log.Timber
 
@@ -96,7 +97,14 @@ fun HomeContent(
                 ) {
                     items(data) {
                         SummonerItem(
-                            summoner = it,
+                            icon = it.icon,
+                            nickname = it.nickname.toText(),
+                            level = it.levelInfo,
+                            tierRank = it.tierRank,
+                            tierIcon = it.tier,
+                            isBookmark = it.isBookMarked,
+                            lpWinLose = it.lpWinLose,
+                            progress = it.miniSeries?.progress,
                             onBookmarked = { onBookmarked(it.id) }
                         )
                     }
