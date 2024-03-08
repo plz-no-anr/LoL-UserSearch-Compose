@@ -75,7 +75,6 @@ internal fun SummonerScreen(
         }
     }
 
-
 }
 
 @Preview

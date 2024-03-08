@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-sealed class NetworkState {
-    data object None: NetworkState()
-    data object Connected: NetworkState()
-    data object NotConnected: NetworkState()
+sealed interface NetworkState {
+    data object None: NetworkState
+    data object Connected: NetworkState
+    data object NotConnected: NetworkState
 }
 
 class NetworkManager @Inject constructor(
