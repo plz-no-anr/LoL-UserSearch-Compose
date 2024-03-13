@@ -51,7 +51,7 @@ class SearchViewModel @Inject constructor(
                     val nickname = it.fullName.toNickName()
                     if (nickname != null) {
                         postEffect(NavigateToSummoner(nickname.name, nickname.tag))
-//                        insertSearchUseCase(nickname) // todo - 제거
+                        insertSearchUseCase(nickname)
                     } else {
                         postEffect(ShowSnackbar("소환사명을 확인해 주세요"))
                     }

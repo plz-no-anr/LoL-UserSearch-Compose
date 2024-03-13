@@ -77,5 +77,4 @@ class HomeViewModel @Inject constructor(
         loadEvent.emit(Unit)
     }
 
-
 }
