@@ -4,13 +4,13 @@ import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 abstract class PagingUseCase<T> {
-    private val cachedList = mutableListOf<T>()
+    private val cachedSet = mutableSetOf<T>()
     private var cachedPaging = Paging(
         page = 0,
         size = 20,
@@ -40,9 +40,9 @@ abstract class PagingUseCase<T> {
             page = it.page,
             hasNext = it.hasNext
         )
-        cachedList.addAll(it.data)
+        cachedSet.addAll(it.data)
     }.map {
-        cachedList.toList()
+        cachedSet.toList()
     }
 
     fun executeFlow(
@@ -58,20 +58,20 @@ abstract class PagingUseCase<T> {
         cachedPaging = cachedPaging.next()
     }.filter {
         cachedPaging.hasNext
-    }.flatMapConcat {
+    }.flatMapLatest {
         function(cachedPaging)
     }.onEach {
         cachedPaging = cachedPaging.copy(
             page = it.page,
             hasNext = it.hasNext
         )
-        cachedList.addAll(it.data)
+        cachedSet.addAll(it.data)
     }.map {
-        cachedList.toList()
+        cachedSet.toList()
     }
 
     fun clear() {
-        cachedList.clear()
+        cachedSet.clear()
         cachedPaging = Paging(
             page = 0,
             size = 20,
