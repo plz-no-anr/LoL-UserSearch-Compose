@@ -3,7 +3,7 @@ package com.plznoanr.lol.feature.summoner
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,11 +11,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SummonerRoute(
@@ -24,13 +27,25 @@ fun SummonerRoute(
     onBackPress: () -> Unit,
     viewModel: SummonerViewModel = hiltViewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
+    val eventChannel = remember { Channel<Event>(Channel.UNLIMITED) }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.Main.immediate) {
+            eventChannel
+                .consumeAsFlow()
+                .onEach(viewModel::onEvent)
+                .collect()
+        }
+    }
+    val onEvent = remember {
+        { event: Event ->
+            eventChannel.trySend(event).getOrThrow()
+        }
+    }
 
     SummonerScreen(
         state = uiState,
-        onEvent = { coroutineScope.launch { viewModel.onEvent(it) } },
+        onEvent = onEvent,
         sideEffectFlow = viewModel.sideEffectFlow,
         onNavigateToSpectator = navigateToSpectator,
         onBackPress = onBackPress,

@@ -10,10 +10,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun SettingRoute(
@@ -21,12 +25,25 @@ fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
+    val eventChannel = remember { Channel<Event>(Channel.UNLIMITED) }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.Main.immediate) {
+            eventChannel
+                .consumeAsFlow()
+                .onEach(viewModel::onEvent)
+                .collect()
+        }
+    }
+    val onEvent = remember {
+        { event: Event ->
+            eventChannel.trySend(event).getOrThrow()
+        }
+    }
     SettingScreen(
         state = state,
         sideEffectFlow = viewModel.sideEffectFlow,
-        onThemeChange = { coroutineScope.launch { viewModel.onEvent(OnThemeChange(it)) } },
-        onKeyChange = { coroutineScope.launch { viewModel.onEvent(OnKeyChange(it)) } },
+        onThemeChange = { onEvent(OnThemeChange(it)) },
+        onKeyChange = { onEvent(OnKeyChange(it)) },
         onShowSnackbar = onShowSnackbar
     )
 
