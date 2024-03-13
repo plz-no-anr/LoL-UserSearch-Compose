@@ -2,11 +2,9 @@ package com.plznoanr.lol.feature.summoner
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
@@ -21,7 +19,6 @@ fun SummonerContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
         ) {
 
         SummonerItem(
