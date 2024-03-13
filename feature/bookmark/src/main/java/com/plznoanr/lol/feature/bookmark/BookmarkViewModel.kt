@@ -41,7 +41,7 @@ class BookmarkViewModel @Inject constructor(
                 is OnClear -> clearBookmarkUseCase()
                 is OnNextPage -> return@sendEvent
             }
-        }.toStateChangeFlow(initialState) { state, _ ->
+        }.reduce(initialState) { state, _ ->
             state
         }.combine(bookmarkListState) { state, list ->
             state.copy(

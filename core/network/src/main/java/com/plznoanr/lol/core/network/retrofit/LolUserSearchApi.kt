@@ -1,5 +1,7 @@
 package com.plznoanr.lol.core.network.retrofit
 
+import com.plznoanr.lol.core.common.model.AppError
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.network.model.LeagueResponse
 import com.plznoanr.lol.core.network.model.SpectatorResponse
 import com.plznoanr.lol.core.network.model.SummonerResponse
@@ -31,18 +33,18 @@ interface UserSearchApi {
 
 internal fun <T> Response<T?>.asResult(): Result<T> {
     return if (isSuccessful && body() != null) {
-        Result.success(body()!!)
+        Result.Success(body()!!)
     } else {
-        Result.failure(
-            Exception("${code()}/${message()}")
+        Result.Error(
+            AppError.Retrofit(code(), message())
         )
     }
 }
 
 internal fun <T> Response<T?>.asResultOrNull(): Result<T?> {
     return if (isSuccessful) {
-        Result.success(body())
+        Result.Success(body())
     } else {
-        Result.success(null)
+        Result.Success(null)
     }
 }

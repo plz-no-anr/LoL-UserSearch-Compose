@@ -61,6 +61,8 @@ abstract class PagingUseCase<T> {
     }.flatMapLatest {
         function(cachedPaging)
     }.onEach {
+        if (it.page <= 1 && it.data.isEmpty()) clear()
+    }.onEach {
         cachedPaging = cachedPaging.copy(
             page = it.page,
             hasNext = it.hasNext

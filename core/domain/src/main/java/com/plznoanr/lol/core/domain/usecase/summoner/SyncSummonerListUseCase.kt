@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.model.onSuccess
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -31,8 +32,8 @@ class SyncSummonerListUseCase @Inject constructor(
         ) { i, summonerList ->
             Timber.d("invoke: $i, $summonerList")
             summonerList.map { summoner ->
-                val response = summonerRepository.requestSummoner(summoner.nickname).getOrNull()
-                response?.let {
+                val response = summonerRepository.requestSummoner(summoner.nickname)
+                response.onSuccess {
                     summonerRepository.upsertSummoner(it)
                 }
             }

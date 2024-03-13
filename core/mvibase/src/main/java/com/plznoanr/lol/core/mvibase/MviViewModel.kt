@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.runningFold
+import kotlinx.coroutines.flow.scan
 import timber.log.Timber
 
 interface MviState
@@ -49,10 +49,10 @@ abstract class MviViewModel<State : MviState, Event : MviEvent, SideEffect : Mvi
         function(it)
     }
 
-    protected fun Flow<Event>.toStateChangeFlow(
+    protected fun Flow<Event>.reduce(
         initialState: State,
         accumulator: (State, value: Event) -> State
-    ) = runningFold(initialState) { state, event ->
+    ) = scan(initialState) { state, event ->
         accumulator(state, event)
     }
 

@@ -2,6 +2,7 @@ package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Spectator
@@ -17,8 +18,8 @@ class FakeSummonerRepository(
         TODO("Not yet implemented")
     }
 
-    override fun getSummoner(summonerName: String): Flow<Summoner?> {
-        return flow { emit(summoners.first { it.nickname.name == summonerName }) }
+    override fun getSummoner(summonerId: String): Flow<Summoner?> {
+        return flow { emit(summoners.first { it.nickname.name == summonerId }) }
     }
 
     override fun getSummonerAll(): Flow<List<Summoner>> {

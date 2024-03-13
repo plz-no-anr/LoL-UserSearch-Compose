@@ -1,5 +1,6 @@
 package com.plznoanr.lol.core.network
 
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.network.model.AccountResponse
 import com.plznoanr.lol.core.network.model.LeagueResponse
 import com.plznoanr.lol.core.network.model.SpectatorResponse

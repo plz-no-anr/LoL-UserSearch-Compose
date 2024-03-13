@@ -6,6 +6,9 @@ import com.plznoanr.lol.core.common.di.AppDispatchers
 import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.Result
+import com.plznoanr.lol.core.common.model.getOrNull
+import com.plznoanr.lol.core.common.model.getOrThrow
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.data.utils.safeApiCall
 import com.plznoanr.lol.core.data.utils.toChampImage
@@ -70,7 +73,8 @@ class SummonerRepositoryImpl @Inject constructor(
 
             return@safeApiCall if (league.isNotEmpty()) {
                 league.find { it.queueType == "RANKED_SOLO_5x5" }?.let { // 솔로 랭크만
-                    Result.success(
+                    val bookmarkedList = getBookMarkedSummonerIds().first()
+                    Result.Success(
                         Summoner(
                             id = summoner.id,
                             nickname = Nickname(summoner.name, account.tagLine),
@@ -82,16 +86,17 @@ class SummonerRepositoryImpl @Inject constructor(
                             wins = it.wins,
                             losses = it.losses,
                             miniSeries = it.miniSeries?.asDomain(),
+                            isBookMarked = bookmarkedList.contains(summoner.id)
                         )
                     )
-                } ?: Result.failure(AppError.NoMatchHistory.exception()) // 자랭만 있음
+                } ?: Result.Error(AppError.NoMatchHistory) // 자랭만 있음
             } else {
-                Result.failure(AppError.NoMatchHistory.exception()) // 매치 정보 x
+                Result.Error(AppError.NoMatchHistory) // 매치 정보 x
             }
         }
 
-    override fun getSummoner(summonerName: String): Flow<Summoner?> =
-        summonerLocalDataSource.getSummoner(summonerName)
+    override fun getSummoner(summonerId: String): Flow<Summoner?> =
+        summonerLocalDataSource.getSummoner(summonerId)
             .map { entity ->
                 entity?.asDomain()
             }
@@ -138,9 +143,9 @@ class SummonerRepositoryImpl @Inject constructor(
             }
 
             return@safeApiCall if (spectator != null) {
-                Result.success(spectator)
+                Result.Success(spectator)
             } else {
-                Result.failure(Exception(AppError.NotPlaying.parse()))
+                Result.Error(AppError.NotPlaying)
             }
     }
 

@@ -1,5 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
+import com.plznoanr.lol.core.common.model.Result
+import com.plznoanr.lol.core.common.model.onSuccess
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Summoner

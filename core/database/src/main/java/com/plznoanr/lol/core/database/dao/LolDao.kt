@@ -1,10 +1,11 @@
 package com.plznoanr.lol.core.database.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Upsert
 import com.plznoanr.lol.core.database.model.ProfileEntity
 import com.plznoanr.lol.core.database.model.SearchEntity
 import com.plznoanr.lol.core.database.model.SummonerEntity
-import com.plznoanr.lol.core.model.Nickname
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -37,8 +38,8 @@ interface LolDao {
     @Query("SELECT * FROM Summoner LIMIT :size OFFSET (:page - 1) * :size")
     fun getSummonerList(page: Int, size: Int) : Flow<List<SummonerEntity>?>
 
-    @Query("SELECT * FROM Summoner WHERE name = :summonerName")
-    fun getSummoner(summonerName: String) : Flow<SummonerEntity?>
+    @Query("SELECT * FROM Summoner WHERE id = :summonerId")
+    fun getSummoner(summonerId: String) : Flow<SummonerEntity?>
 
     @Upsert
     fun upsertSummoner(summonerEntity: SummonerEntity)
