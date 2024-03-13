@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.plznoanr.lol.core.designsystem.component.EmptyBox
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.LazyColumnIndicator
 import com.plznoanr.lol.core.designsystem.component.OnBottomReached
@@ -115,6 +116,8 @@ fun HomeContent(
                         modifier = Modifier.align(Alignment.BottomCenter)
                     )
                 }
+            } else {
+                EmptyBox()
             }
 
             PullRefreshIndicator(
