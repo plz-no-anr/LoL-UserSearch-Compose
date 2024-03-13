@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun HomeRoute(
@@ -43,7 +42,6 @@ internal fun HomeScreen(
             }
         }.collect()
     }
-    Timber.d("HomeScreen: $state")
     when {
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(

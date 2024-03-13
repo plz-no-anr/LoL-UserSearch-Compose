@@ -9,8 +9,8 @@ import kotlinx.datetime.LocalDateTime
 @Entity(tableName = "Search")
 data class SearchEntity(
     @PrimaryKey
-    val tag: String,
     val name: String,
+    val tag: String,
     val date: LocalDateTime,
 )
 fun SearchEntity.asDomain() = Search(
