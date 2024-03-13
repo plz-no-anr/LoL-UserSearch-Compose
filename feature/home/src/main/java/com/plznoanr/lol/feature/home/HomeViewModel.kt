@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -49,14 +50,16 @@ class HomeViewModel @Inject constructor(
 
     init {
         val initialState = UiState()
-        uiState = eventFlow.sendEvent {
-            when (it) {
-                is OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
-                is OnDeleteAll -> deleteAllSummonerUseCase()
-                is OnDelete -> deleteSummonerUseCase(it.name)
-                else -> return@sendEvent
-            }
-        }.eventFilter()
+        uiState = eventFlow
+            .onStart { emit(OnInit) }
+            .sendEvent {
+                when (it) {
+                    is OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
+                    is OnDeleteAll -> deleteAllSummonerUseCase()
+                    is OnDelete -> deleteSummonerUseCase(it.name)
+                    else -> return@sendEvent
+                }
+            }.eventFilter()
             .combine(summonerList) { event, list ->
                 event to list
             }.scan(initialState) { state, pair ->
@@ -89,7 +92,6 @@ class HomeViewModel @Inject constructor(
                 initialValue = initialState,
                 started = SharingStarted.Eagerly
             )
-        eventFlow.tryEmit(OnInit)
     }
 
     private fun Flow<Event>.eventFilter() = filter {

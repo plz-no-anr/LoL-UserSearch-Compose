@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -41,7 +40,7 @@ abstract class MviViewModel<State : MviState, Event : MviEvent, SideEffect : Mvi
         sideEffectChannel.close()
     }
 
-    protected fun SharedFlow<Event>.sendEvent(
+    protected fun Flow<Event>.sendEvent(
         function: suspend (Event) -> Unit
     ) = onEach {
         Timber.d("$tag::OnEventCall -> $it")
