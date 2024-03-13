@@ -62,7 +62,7 @@ class SettingViewModel @Inject constructor(
                         postEffect(OnShowSnackbar("키가 저장되었습니다!"))
                     }
                 }
-            }.toStateChangeFlow(initialState) { state, event ->
+            }.reduce(initialState) { state, _ ->
                 state
             }.combine(settingFlow) { state, settingPair ->
                 state.copy(

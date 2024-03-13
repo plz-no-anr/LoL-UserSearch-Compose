@@ -1,11 +1,11 @@
 package com.plznoanr.lol.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
@@ -27,7 +27,7 @@ object AppIcons {
     val SettingBorder = Icons.Outlined.Settings
     val Add = Icons.Rounded.Add
     val Delete = Icons.Rounded.Delete
-    val Back = Icons.Rounded.ArrowBack
+    val Back = Icons.AutoMirrored.Rounded.ArrowBack
     val BookMark = Icons.Rounded.Bookmark
     val BookMarkBorder = Icons.Rounded.BookmarkBorder
     val Check = Icons.Rounded.Check

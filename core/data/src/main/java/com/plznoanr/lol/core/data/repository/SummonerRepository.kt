@@ -2,16 +2,17 @@ package com.plznoanr.lol.core.data.repository
 
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.Result
+import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Spectator
 import com.plznoanr.lol.core.model.Summoner
-import com.plznoanr.lol.core.model.Nickname
 import kotlinx.coroutines.flow.Flow
 
 interface SummonerRepository {
 
     suspend fun requestSummoner(nickname: Nickname): Result<Summoner>
 
-    fun getSummoner(summonerName: String): Flow<Summoner?>
+    fun getSummoner(summonerId: String): Flow<Summoner?>
 
     fun getSummonerAll(): Flow<List<Summoner>>
 

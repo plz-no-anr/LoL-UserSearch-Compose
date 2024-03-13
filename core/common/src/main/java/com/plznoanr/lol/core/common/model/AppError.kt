@@ -1,6 +1,13 @@
 package com.plznoanr.lol.core.common.model
 
-sealed class AppError(val code: Int, val message: String) {
+sealed class AppError(open val code: Int, open val message: String) {
+
+    data class Retrofit(override val code: Int, override val message: String): AppError(code, message)
+
+    data class Exception(val exception: kotlin.Exception): AppError(
+        code = 0,
+        message = exception.message ?: ""
+    )
 
     data object Default : AppError(0, "Default")
     data object Network : AppError(1, "Network")
@@ -11,6 +18,8 @@ sealed class AppError(val code: Int, val message: String) {
     data object NotPlaying : AppError(1000, "Spectator is null")
     data object NoMatchHistory : AppError(1001, "No Match History")
     data object NoJsonData : AppError(1002, "Local Json is null")
+
+    data object SummonerNull: AppError(1003, "Summoner is null")
 
     fun parse() = "${this.code}/${this.message}"
 
@@ -24,6 +33,8 @@ sealed class AppError(val code: Int, val message: String) {
         is NotPlaying -> "The summoner is not in game"
         is NoMatchHistory -> "The summoner does not have a match for this season."
         is NoJsonData -> "Failed to load local json."
+        is SummonerNull -> "Summoner is null"
+        else -> "${this.code} ${this.message}"
     }
 
     fun exception() = Exception(this.parse())

@@ -58,7 +58,7 @@ class SearchViewModel @Inject constructor(
                 }
                 else -> return@sendEvent
             }
-        }.toStateChangeFlow(initialState) { state, event ->
+        }.reduce(initialState) { state, event ->
             when (event) {
                 is OnActiveChange ->
                     state.copy(

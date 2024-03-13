@@ -15,12 +15,12 @@ import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
 
-sealed class MainState {
-    data object Loading : MainState()
+sealed interface MainState {
+    data object Loading : MainState
 
-    data class Success(val data: Boolean) : MainState()
+    data class Success(val data: Boolean) : MainState
 
-    data class Error(val throwable: Throwable) : MainState()
+    data class Error(val throwable: Throwable) : MainState
 }
 
 @HiltViewModel

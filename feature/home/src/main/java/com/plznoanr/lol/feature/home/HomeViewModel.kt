@@ -5,19 +5,28 @@ import com.plznoanr.lol.core.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerListUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
+import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface SummonerState {
+
+    data object Init : SummonerState
+
+    data class Success(val list: PersistentList<Summoner>) : SummonerState
+
+}
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -27,17 +36,14 @@ class HomeViewModel @Inject constructor(
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
-    private val loadEvent = MutableSharedFlow<Unit>(extraBufferCapacity = Int.MAX_VALUE)
-
-    private val summonerList = loadEvent.flatMapLatest {
-        getSummonerListUseCase()
-    }.map {
-        it.toPersistentList()
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = persistentListOf(),
-        started = SharingStarted.WhileSubscribed(5_000)
-    )
+    private val summonerList: StateFlow<SummonerState> = getSummonerListUseCase()
+        .map {
+            SummonerState.Success(it.toPersistentList())
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = SummonerState.Init,
+            started = SharingStarted.WhileSubscribed(5_000)
+        )
 
     override val uiState: StateFlow<UiState>
 
@@ -48,33 +54,46 @@ class HomeViewModel @Inject constructor(
                 is OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
                 is OnDeleteAll -> deleteAllSummonerUseCase()
                 is OnDelete -> deleteSummonerUseCase(it.name)
-                is OnInit, OnNextPage -> onLoad()
                 else -> return@sendEvent
             }
-        }.toStateChangeFlow(initialState) { state, event ->
-            when (event) {
-                is OnRefresh -> state.copy(isRefreshing = true)
-                is OnInit -> state.copy(isLoading = true)
-                is OnNextPage -> state.copy(loadNextPage = true)
-                else -> state
-            }
-        }.combine(summonerList) { state, list ->
-            state.copy(
-                isRefreshing = false,
-                isLoading = false,
-                loadNextPage = false,
-                summonerList = list
+        }.eventFilter()
+            .combine(summonerList) { event, list ->
+                event to list
+            }.scan(initialState) { state, pair ->
+                when (pair.second) {
+                    is SummonerState.Init -> when (pair.first) {
+                        is OnRefresh -> state.copy(
+                            isRefreshing = true
+                        )
+
+                        is OnInit -> state.copy(
+                            isLoading = true
+                        )
+
+                        is OnNextPage -> state.copy(
+                            loadNextPage = true
+                        )
+
+                        else -> state
+                    }
+
+                    is SummonerState.Success -> state.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        loadNextPage = false,
+                        summonerList = (pair.second as SummonerState.Success).list
+                    )
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                initialValue = initialState,
+                started = SharingStarted.Eagerly
             )
-        }.stateIn(
-            scope = viewModelScope,
-            initialValue = initialState,
-            started = SharingStarted.Eagerly
-        )
-        viewModelScope.launch { onLoad() }
+        eventFlow.tryEmit(OnInit)
     }
 
-    private suspend fun onLoad() {
-        loadEvent.emit(Unit)
+    private fun Flow<Event>.eventFilter() = filter {
+        it is OnInit || it is OnRefresh || it is OnNextPage
     }
 
 }

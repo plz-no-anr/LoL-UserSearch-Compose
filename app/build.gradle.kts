@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.lol.android.hilt)
     alias(libs.plugins.lol.android.application.compose)
     alias(libs.plugins.lol.android.application.flavors)
+    alias(libs.plugins.compose.compiler.report)
 }
 
 android {

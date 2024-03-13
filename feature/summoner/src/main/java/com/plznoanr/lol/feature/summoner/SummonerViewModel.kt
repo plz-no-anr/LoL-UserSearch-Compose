@@ -2,7 +2,8 @@ package com.plznoanr.lol.feature.summoner
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.plznoanr.lol.core.domain.usecase.summoner.RequestSummonerUseCase
+import com.plznoanr.lol.core.common.model.Result
+import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
 import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.mvibase.MviViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SummonerViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    private val requestSummonerUseCase: RequestSummonerUseCase,
+    private val getSummonerUseCase: GetSummonerUseCase,
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
     private val loadEvent = MutableSharedFlow<Unit>(extraBufferCapacity = Int.MAX_VALUE)
@@ -31,7 +32,7 @@ class SummonerViewModel @Inject constructor(
     override val uiState: StateFlow<UiState>
 
     private val summonerFlow = loadEvent.map {
-        requestSummonerUseCase(summonerName to summonerTag).getOrNull()
+        getSummonerUseCase(summonerName to summonerTag)
     }
 
     init {
@@ -42,27 +43,24 @@ class SummonerViewModel @Inject constructor(
                 is OnWatch -> postEffect(NavigateToSpectator(it.summonerId))
                 else -> return@sendEvent
             }
-        }.toStateChangeFlow(initialState) { state, event ->
-            when (event) {
-                else -> state
-            }
+        }.reduce(initialState) { state, _ ->
+            state
         }.combine(summonerFlow) { state, result ->
-            if (result != null) {
-                state.copy(
-                    summoner = result,
+            when (result) {
+                is Result.Success -> state.copy(
+                    summoner = result.data,
                     isLoading = false
                 )
-            } else {
-                state.copy(
-                    errorMsg = "",
+                is Result.Error -> state.copy(
+                    errorMsg = result.error.message,
                     isLoading = false
                 )
             }
         }.stateIn(
-                scope = viewModelScope,
-                initialValue = initialState,
-                started = SharingStarted.Eagerly
-            )
+            scope = viewModelScope,
+            initialValue = initialState,
+            started = SharingStarted.Eagerly
+        )
         viewModelScope.launch { onLoad() }
     }
 
