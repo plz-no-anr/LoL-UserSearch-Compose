@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,17 +16,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Square
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +35,7 @@ import com.plznoanr.lol.core.designsystem.R
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
+import com.plznoanr.lol.core.model.toText
 
 @Composable
 fun SummonerItem(
@@ -63,19 +64,10 @@ fun SummonerItem(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-
             SummonerView(
                 icon = icon,
                 nickname = nickname,
                 level = level
-            )
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(2.dp)
-                    .padding(vertical = 10.dp),
-                color = Color.White
             )
 
             Column(
@@ -127,8 +119,10 @@ private fun SummonerView(
 
         Text(
             text = nickname,
-            modifier = Modifier,
-            fontSize = 14.sp
+            modifier = Modifier.width(90.dp),
+            fontSize = 12.sp,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
         )
 
         Text(
@@ -151,15 +145,15 @@ private fun TierView(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                start = 8.dp,
                 top = 16.dp
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = tierIcon,
             contentDescription = null,
             modifier = Modifier
-                .size(70.dp)
+                .size(50.dp)
         )
 
         Column {
@@ -167,13 +161,13 @@ private fun TierView(
                 text = stringResource(id = R.string.solo_rank),
                 modifier = Modifier
                     .padding(bottom = 8.dp),
-                fontSize = 13.sp
+                fontSize = 12.sp
             )
 
             Text(
                 text = tierRank,
                 modifier = Modifier,
-                fontSize = 13.sp
+                fontSize = 12.sp
             )
         }
 
@@ -185,6 +179,8 @@ private fun TierView(
                 contentDescription = null
             )
         }
+
+        Spacer(modifier = Modifier.width(10.dp))
 
     }
 }
@@ -324,6 +320,12 @@ private fun SpectatorView(
 private fun HomeItemPreview() {
     LolUserSearchComposeTheme(darkTheme = false) {
         SummonerItem(
+            icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6334.png",
+            nickname = com.plznoanr.lol.core.model.Nickname("hide on bush", "KR1").toText(),
+            level = "Lv 33",
+            tierRank = "CHALLENGER I",
+            tierIcon = "CHALLENGER",
+            isBookmark = false
         ) {}
     }
 

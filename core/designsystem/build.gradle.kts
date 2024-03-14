@@ -25,4 +25,5 @@ dependencies {
     implementation(libs.coil.kt.compose)
     implementation(libs.lottie.compose)
     implementation(libs.card.stack)
+    implementation(libs.kotlinx.collections.immutable)
 }

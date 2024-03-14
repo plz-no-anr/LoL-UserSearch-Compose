@@ -16,7 +16,6 @@ data class UiState(
 sealed interface Event: MviEvent
 
 data class OnBookmark(val id: String): Event
-data object OnNextPage: Event
 data object OnClear: Event
 
 sealed interface SideEffect: MviSideEffect
