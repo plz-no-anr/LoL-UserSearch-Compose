@@ -1,12 +1,12 @@
 package com.plznoanr.lol.feature.setting
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
 import com.plznoanr.lol.core.mvibase.MviState
 
-@Stable
+@Immutable
 data class UiState(
     val profile: Profile? = null,
     val apiKey: String = "",
