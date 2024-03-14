@@ -39,7 +39,6 @@ class BookmarkViewModel @Inject constructor(
             when (it) {
                 is OnBookmark -> saveBookmarkIdUseCase(it.id)
                 is OnClear -> clearBookmarkUseCase()
-                is OnNextPage -> return@sendEvent
             }
         }.reduce(initialState) { state, _ ->
             state

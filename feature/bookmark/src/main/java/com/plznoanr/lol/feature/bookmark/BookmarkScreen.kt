@@ -32,7 +32,6 @@ internal fun BookmarkScreen(
     if (bookmarkList.isNotEmpty()) {
         BookmarkContent(
             bookmarkList = bookmarkList,
-            onNextPage = { onEvent(OnNextPage) },
             onBookmark = { onEvent(OnBookmark(it)) },
             onClear = { onEvent(OnClear) }
         )

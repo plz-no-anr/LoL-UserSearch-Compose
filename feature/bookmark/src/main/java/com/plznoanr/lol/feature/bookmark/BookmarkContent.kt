@@ -1,57 +1,62 @@
 package com.plznoanr.lol.feature.bookmark
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.plznoanr.lol.core.designsystem.component.OnBottomReached
+import androidx.compose.ui.unit.dp
+import com.plznoanr.lol.core.designsystem.component.SummonerCardStack
 import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
 import kotlinx.collections.immutable.PersistentList
-import timber.log.Timber
 
 @Composable
 internal fun BookmarkContent(
     bookmarkList: PersistentList<Summoner>,
-    onNextPage: () -> Unit,
     onBookmark: (String) -> Unit,
     onClear: () -> Unit
 ) {
-    Column {
-        val lazyColumnState = rememberLazyListState().apply {
-            OnBottomReached {
-                Timber.d("HomeScreen call")
-                if (bookmarkList.size >= 20) {
-                    onNextPage()
-                }
-            }
-        }
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+    ) {
         TextButton(modifier = Modifier.align(Alignment.End), onClick = onClear) {
             Text(text = "전체 해제", color = MaterialTheme.colorScheme.secondary)
         }
-        LazyColumn(
-            state = lazyColumnState,
-        ) {
-            items(bookmarkList) {
+
+        when (bookmarkList.size) {
+            1 -> {
+                val summoner = bookmarkList[0]
                 SummonerItem(
-                    icon = it.icon,
-                    nickname = it.nickname.toText(),
-                    level = it.levelInfo,
-                    tierRank = it.tierRank,
-                    tierIcon = it.tier,
-                    isBookmark = it.isBookMarked,
-                    lpWinLose = it.lpWinLose,
-                    progress = it.miniSeries?.progress,
-                    onBookmarked = { onBookmark(it.id) }
+                    icon = summoner.icon,
+                    nickname = summoner.nickname.toText(),
+                    level = summoner.levelInfo,
+                    tierRank = summoner.tierRank,
+                    tierIcon = summoner.tier,
+                    isBookmark = summoner.isBookMarked,
+                    lpWinLose = summoner.lpWinLose,
+                    progress = summoner.miniSeries?.progress,
+                    onBookmarked = { onBookmark(summoner.id) }
                 )
             }
+            else -> SummonerCardStack(
+                summoners = bookmarkList,
+                onBookmark = onBookmark
+            )
         }
+
     }
+}
+
+
+@Composable
+private fun Preview(
+
+) {
+
 }
