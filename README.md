@@ -3,7 +3,7 @@
 > Clean Architecture + MVI + Multi Module + Dagger-Hilt + Kotlin dsl
 
 
-🛠️ CleanArchitecture, MVI-Pattern, Multi-Module, Compose, Kotlin-dsl, Dagger-Hilt
+🛠️ CleanArchitecture, MVI-Pattern, Multi-Module, Compose, Kotlin-DSL, Dagger-Hilt
 
 ## Module Dependency Graph
 
