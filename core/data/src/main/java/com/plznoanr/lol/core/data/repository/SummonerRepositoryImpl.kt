@@ -50,7 +50,7 @@ class SummonerRepositoryImpl @Inject constructor(
         val key = requireNotNull(settingPreferenceDataSource.apiKeyFlow.first()) {
             throw Exception(AppError.Forbidden.parse())
         }
-        put("X-Riot-Token", "RGAPI-4fc365c2-05a9-40c6-be74-ef98a4e476fc")
+        put("X-Riot-Token", key)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
