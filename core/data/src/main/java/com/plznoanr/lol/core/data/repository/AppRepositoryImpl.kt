@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.data.repository
 
-import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.data.utils.JsonParser
 import com.plznoanr.lol.core.data.utils.asEntity
@@ -18,7 +19,7 @@ class AppRepositoryImpl @Inject constructor(
     private val appLocalDataSource: AppLocalDataSource,
     private val settingPreferenceDataSource: SettingPreferenceDataSource,
     private val jsonParser: JsonParser,
-    @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : AppRepository {
 
     override fun getApiKey(): Flow<String> = settingPreferenceDataSource.apiKeyFlow

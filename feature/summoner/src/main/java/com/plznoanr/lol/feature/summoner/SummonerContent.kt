@@ -28,6 +28,7 @@ fun SummonerContent(
             tierRank = summoner.tierRank,
             tierIcon = summoner.tier,
             isBookmark = summoner.isBookMarked,
+            isHideBookmark = true,
             lpWinLose = summoner.lpWinLose,
             progress = summoner.miniSeries?.progress,
             onBookmarked = { onBookmark(summoner.id) }

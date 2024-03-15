@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
-import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.common.model.onSuccess
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +17,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class SyncSummonerListUseCase @Inject constructor(
     private val summonerRepository: SummonerRepository,
-    @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
     private val infiniteRepeater: Flow<Int> = flow {
         repeat(Int.MAX_VALUE) {

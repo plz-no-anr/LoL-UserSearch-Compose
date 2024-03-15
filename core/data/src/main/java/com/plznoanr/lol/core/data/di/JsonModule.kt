@@ -1,7 +1,8 @@
 package com.plznoanr.lol.core.data.di
 
 import android.content.Context
-import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.data.utils.JsonParser
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,7 @@ object JsonModule {
     @Singleton
     fun provideJsonUtils(
         @ApplicationContext context: Context,
-        @AppDispatchers.Default coroutineDispatcher: CoroutineDispatcher
+        @Dispatcher(AppDispatcher.Default) coroutineDispatcher: CoroutineDispatcher
     ): JsonParser = JsonParser(
         context,
         Json { ignoreUnknownKeys = true },

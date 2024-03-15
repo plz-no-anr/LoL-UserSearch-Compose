@@ -14,22 +14,21 @@ import kotlinx.coroutines.SupervisorJob
 @InstallIn(SingletonComponent::class)
 object CoroutineModule {
 
-    @AppDispatchers.Default
+    @Dispatcher(AppDispatcher.Default)
     @Provides
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
-    @AppDispatchers.IO
+    @Dispatcher(AppDispatcher.IO)
     @Provides
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
-    @AppDispatchers.Main
+    @Dispatcher(AppDispatcher.Main)
     @Provides
     fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
-    @AppDispatchers.ApplicationScope
     @Provides
     fun provideApplicationScope(
-        @AppDispatchers.Default dispatcher: CoroutineDispatcher
+        @Dispatcher(AppDispatcher.Default) dispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(dispatcher + SupervisorJob())
 
 }

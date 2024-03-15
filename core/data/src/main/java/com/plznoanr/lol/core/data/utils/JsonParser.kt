@@ -1,9 +1,10 @@
 package com.plznoanr.lol.core.data.utils
 
 import android.content.Context
-import com.plznoanr.lol.core.common.di.AppDispatchers
-import com.plznoanr.lol.core.data.model.LocalJson
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.data.model.ChampionJson
+import com.plznoanr.lol.core.data.model.LocalJson
 import com.plznoanr.lol.core.data.model.MapJson
 import com.plznoanr.lol.core.data.model.RuneJson
 import com.plznoanr.lol.core.data.model.SummonerJson
@@ -17,7 +18,7 @@ import timber.log.Timber
 class JsonParser(
     private val context: Context,
     private val json: Json,
-    @AppDispatchers.Default private val coroutineDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.Default) private val coroutineDispatcher: CoroutineDispatcher
 ) {
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Timber.e(throwable)
