@@ -46,6 +46,7 @@ fun SummonerItem(
     tierRank: String = "",
     tierIcon: String = "",
     isBookmark: Boolean = false,
+    isHideBookmark: Boolean = false,
     lpWinLose: String = "",
     progress: String? = null,
     onBookmarked: () -> Unit = {}
@@ -80,6 +81,7 @@ fun SummonerItem(
                     tierRank = tierRank,
                     tierIcon = tierIcon(tierIcon),
                     isBookmark = isBookmark,
+                    isHideBookmark = isHideBookmark,
                     onBookmarked = onBookmarked
                 )
 
@@ -139,7 +141,8 @@ private fun TierView(
     tierRank: String,
     tierIcon: Painter,
     isBookmark: Boolean,
-    onBookmarked: () -> Unit
+    isHideBookmark: Boolean,
+    onBookmarked: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -173,11 +176,13 @@ private fun TierView(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(onClick = { onBookmarked() }) {
-            Icon(
-                imageVector = if (isBookmark) AppIcons.BookMark else AppIcons.BookMarkBorder,
-                contentDescription = null
-            )
+        if (!isHideBookmark) {
+            IconButton(onClick = { onBookmarked() }) {
+                Icon(
+                    imageVector = if (isBookmark) AppIcons.BookMark else AppIcons.BookMarkBorder,
+                    contentDescription = null
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(10.dp))

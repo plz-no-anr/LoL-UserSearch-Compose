@@ -2,7 +2,8 @@ package com.plznoanr.lol.core.data.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Paging
 import com.plznoanr.lol.core.common.model.PagingResult
@@ -42,14 +43,14 @@ class SummonerRepositoryImpl @Inject constructor(
     private val networkDataSource: NetworkDataSource,
     private val settingPreferenceDataSource: SettingPreferenceDataSource,
     private val summonerPreferenceDataSource: SummonerPreferenceDataSource,
-    @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : SummonerRepository {
 
     private suspend fun authTokenHeader() = HashMap<String, String>().apply {
         val key = requireNotNull(settingPreferenceDataSource.apiKeyFlow.first()) {
             throw Exception(AppError.Forbidden.parse())
         }
-        put("X-Riot-Token", key)
+        put("X-Riot-Token", "RGAPI-4fc365c2-05a9-40c6-be74-ef98a4e476fc")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

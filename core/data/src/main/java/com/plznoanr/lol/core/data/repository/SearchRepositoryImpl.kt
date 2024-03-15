@@ -1,6 +1,7 @@
 package com.plznoanr.lol.core.data.repository
 
-import com.plznoanr.lol.core.common.di.AppDispatchers
+import com.plznoanr.lol.core.common.di.AppDispatcher
+import com.plznoanr.lol.core.common.di.Dispatcher
 import com.plznoanr.lol.core.data.utils.asEntity
 import com.plznoanr.lol.core.database.data.search.SearchLocalDataSource
 import com.plznoanr.lol.core.database.model.SearchEntity
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
     private val localDataSource: SearchLocalDataSource,
-    @AppDispatchers.IO private val ioDispatcher: CoroutineDispatcher
+    @Dispatcher(AppDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : SearchRepository {
 
     override fun getSearchList(): Flow<List<Search>> =
