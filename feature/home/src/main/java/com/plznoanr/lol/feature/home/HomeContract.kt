@@ -11,12 +11,49 @@ import kotlinx.collections.immutable.PersistentList
 data class UiState(
     val summonerList: PersistentList<Summoner>? = null,
     val isLoading: Boolean = false,
-    val loadNextPage: Boolean = false,
+    val isLoadNextPage: Boolean = false,
     val isRefreshing: Boolean = false,
     val error: String? = null
 ) : MviState
 
-sealed interface Event: MviEvent
+sealed interface SummonerState {
+
+    data object Loading : SummonerState
+
+    data class Success(val list: PersistentList<Summoner>) : SummonerState
+
+}
+
+internal fun SummonerState.reduceState(
+    initialState: UiState,
+    event: Event
+): UiState = when (this) {
+    is SummonerState.Loading -> event.reduceState(initialState)
+    is SummonerState.Success -> initialState.copy(
+        isLoading = false,
+        isRefreshing = false,
+        isLoadNextPage = false,
+        summonerList = list
+    )
+}
+
+sealed interface Event : MviEvent
+
+private fun Event.reduceState(state: UiState): UiState = when (this) {
+    is OnInit -> state.copy(
+        isLoading = true
+    )
+
+    is OnRefresh -> state.copy(
+        isRefreshing = true
+    )
+
+    is OnNextPage -> state.copy(
+        isLoadNextPage = true
+    )
+
+    else -> state
+}
 
 data object OnInit : Event
 
