@@ -40,14 +40,14 @@ class SearchViewModel @Inject constructor(
         val initialState = UiState()
         uiState = eventFlow.sendEvent {
             when (it) {
-                is OnDelete -> {
+                is Event.OnDelete -> {
                     val nickname = it.name.toNickName()
                     nickname?.also {
                         deleteSearchUseCase(it.name)
                     }
                 }
-                is OnDeleteAll -> deleteSearchAllUseCase()
-                is OnSearch -> {
+                is Event.OnDeleteAll -> deleteSearchAllUseCase()
+                is Event.OnSearch -> {
                     val nickname = it.fullName.toNickName()
                     if (nickname != null) {
                         postEffect(NavigateToSummoner(nickname.name, nickname.tag))
@@ -60,12 +60,12 @@ class SearchViewModel @Inject constructor(
             }
         }.reduce(initialState) { state, event ->
             when (event) {
-                is OnActiveChange ->
+                is Event.OnActiveChange ->
                     state.copy(
                         isActive = event.isActive
                     )
 
-                is OnQueryChange -> state.copy(
+                is Event.OnQueryChange -> state.copy(
                     query = event.query
                 )
 

@@ -39,8 +39,8 @@ class SummonerViewModel @Inject constructor(
         val initialState = UiState()
         uiState = eventFlow.sendEvent {
             when (it) {
-                is OnBookmark -> saveBookmarkIdUseCase(it.id)
-                is OnWatch -> postEffect(NavigateToSpectator(it.summonerId))
+                is Event.OnBookmark -> saveBookmarkIdUseCase(it.id)
+                is Event.OnWatch -> postEffect(NavigateToSpectator(it.summonerId))
                 else -> return@sendEvent
             }
         }.reduce(initialState) { state, _ ->

@@ -13,9 +13,10 @@ data class UiState(
     val bookmarkList: PersistentList<Summoner> = persistentListOf(),
 ): MviState
 
-sealed interface Event: MviEvent
-
-data class OnBookmark(val id: String): Event
-data object OnClear: Event
+@Immutable
+sealed interface Event: MviEvent {
+    data class OnBookmark(val id: String): Event
+    data object OnClear: Event
+}
 
 sealed interface SideEffect: MviSideEffect

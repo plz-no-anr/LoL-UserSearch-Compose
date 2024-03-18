@@ -37,8 +37,8 @@ class BookmarkViewModel @Inject constructor(
         val initialState = UiState()
         uiState = eventFlow.sendEvent {
             when (it) {
-                is OnBookmark -> saveBookmarkIdUseCase(it.id)
-                is OnClear -> clearBookmarkUseCase()
+                is Event.OnBookmark -> saveBookmarkIdUseCase(it.id)
+                is Event.OnClear -> clearBookmarkUseCase()
             }
         }.reduce(initialState) { state, _ ->
             state

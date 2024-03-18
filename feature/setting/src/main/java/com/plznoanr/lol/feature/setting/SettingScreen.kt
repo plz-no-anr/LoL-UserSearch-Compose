@@ -42,8 +42,8 @@ fun SettingRoute(
     SettingScreen(
         state = state,
         sideEffectFlow = viewModel.sideEffectFlow,
-        onThemeChange = { onEvent(OnThemeChange(it)) },
-        onKeyChange = { onEvent(OnKeyChange(it)) },
+        onThemeChange = { onEvent(Event.OnThemeChange(it)) },
+        onKeyChange = { onEvent(Event.OnKeyChange(it)) },
         onShowSnackbar = onShowSnackbar
     )
 

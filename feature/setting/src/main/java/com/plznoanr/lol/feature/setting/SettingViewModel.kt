@@ -46,7 +46,7 @@ class SettingViewModel @Inject constructor(
         uiState = debounceFlow
             .sendEvent {
                 when (it) {
-                    is OnThemeChange -> {
+                    is Event.OnThemeChange -> {
                         saveDarkThemeUseCase(it.isDarkTheme)
                         postEffect(
                             OnShowSnackbar(
@@ -57,7 +57,7 @@ class SettingViewModel @Inject constructor(
                             )
                         )
                     }
-                    is OnKeyChange -> {
+                    is Event.OnKeyChange -> {
                         saveKeyUseCase(it.key)
                         postEffect(OnShowSnackbar("키가 저장되었습니다!"))
                     }
