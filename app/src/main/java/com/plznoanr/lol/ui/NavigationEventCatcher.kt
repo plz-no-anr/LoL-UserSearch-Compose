@@ -10,7 +10,7 @@ import timber.log.Timber
 @Stable
 class NavigationEventCatcher {
 
-    private val eventChannel: MutableSharedFlow<TopDestination> = MutableSharedFlow(Int.MAX_VALUE)
+    private val eventChannel: MutableSharedFlow<TopDestination> = MutableSharedFlow(extraBufferCapacity = 1)
     val eventCallBack: Flow<TopDestination> = eventChannel.onEach { Timber.d("Click $it") }
 
     fun onNavigateEvent(topDestination: TopDestination) {
