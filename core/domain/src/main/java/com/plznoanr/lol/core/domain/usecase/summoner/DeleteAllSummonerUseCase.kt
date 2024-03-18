@@ -8,7 +8,7 @@ class DeleteAllSummonerUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke() {
-        return summonerRepository.deleteSummonerAll()
+        summonerRepository.deleteSummonerAll()
     }
 
 }

@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -181,7 +182,8 @@ class SummonerRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSummonerAll() {
         withContext(ioDispatcher) {
-            summonerLocalDataSource.deleteSummonerAll()
+            launch { summonerPreferenceDataSource.clearBookmark() }
+            launch { summonerLocalDataSource.deleteSummonerAll() }
         }
     }
 

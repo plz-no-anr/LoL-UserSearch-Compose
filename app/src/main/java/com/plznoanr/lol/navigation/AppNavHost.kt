@@ -13,6 +13,7 @@ import com.plznoanr.lol.feature.spectator.navigation.navigateToSpectator
 import com.plznoanr.lol.feature.summoner.navigation.navigateToSummoner
 import com.plznoanr.lol.feature.summoner.navigation.summonerScreen
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 
 
@@ -25,7 +26,7 @@ fun AppNavHost(
 ) {
 
     val navCallback = remember {
-        { topDestination: TopDestination -> navigateCallbackFlow.map { it == topDestination } }
+        { topDestination: TopDestination -> navigateCallbackFlow.map { it == topDestination }.filter { it } }
     }
 
     NavHost(
