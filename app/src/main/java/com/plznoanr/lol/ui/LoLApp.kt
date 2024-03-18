@@ -41,6 +41,10 @@ fun LoLApp(
         }
     }
 
+    val navigationEventCatcher = remember {
+        NavigationEventCatcher()
+    }
+
     Scaffold(
         containerColor = Color.Transparent,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -48,8 +52,10 @@ fun LoLApp(
             if (appState.shouldShowBottomBar) {
                 AppBottomBar(
                     destinations = appState.topDestinations,
-                    onNavigateTo = appState::navigateTo,
+                    currentTopDestination = appState.currentTopDestination,
                     currentDestination = appState.currentDestination,
+                    onNavigateTo = appState::navigateTo,
+                    onNavigateCallBack = navigationEventCatcher::onNavigateEvent
                 )
             }
         }
@@ -63,7 +69,8 @@ fun LoLApp(
                 navController = appState.navController,
                 onShowSnackbar = { message ->
                     snackbarHostState.showSnackbar(message = message, withDismissAction = true) == SnackbarResult.ActionPerformed
-                }
+                },
+                navigateCallbackFlow = navigationEventCatcher.eventCallBack
             )
         }
 

@@ -12,10 +12,12 @@ import com.plznoanr.lol.core.designsystem.component.AppNavigationBarItem
 
 @Composable
 fun AppBottomBar(
-    destinations: List<TopDestination>,
-    onNavigateTo: (TopDestination) -> Unit,
-    currentDestination: NavDestination?,
     modifier: Modifier = Modifier,
+    destinations: List<TopDestination>,
+    currentTopDestination: TopDestination?,
+    currentDestination: NavDestination?,
+    onNavigateTo: (TopDestination) -> Unit,
+    onNavigateCallBack: (TopDestination) -> Unit
 ) {
     AppNavigationBar(
         modifier = modifier
@@ -24,7 +26,13 @@ fun AppBottomBar(
             val selected = currentDestination.isTopLevelDestinationInHierarchy(topDestination)
             AppNavigationBarItem(
                 selected = selected,
-                onClick = { onNavigateTo(topDestination) },
+                onClick = {
+                    if (topDestination != currentTopDestination) {
+                        onNavigateTo(topDestination)
+                    } else {
+                        onNavigateCallBack(currentTopDestination)
+                    }
+                },
                 icon = {
                     Icon(
                         imageVector = topDestination.unselectedIcon,
