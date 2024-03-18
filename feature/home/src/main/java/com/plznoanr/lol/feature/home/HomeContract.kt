@@ -38,37 +38,38 @@ internal fun SummonerState.reduceState(
     )
 }
 
-sealed interface Event : MviEvent
+@Immutable
+sealed interface Event : MviEvent {
+    data object OnInit : Event
+
+    data object OnRefresh : Event
+
+    data object OnNextPage : Event
+
+    data class OnSummonerClick(val summonerName: String) : Event
+
+    data class OnBookmark(val summonerId: String) : Event
+
+    data class OnDelete(val name: String) : Event
+
+    data object OnDeleteAll : Event
+}
 
 private fun Event.reduceState(state: UiState): UiState = when (this) {
-    is OnInit -> state.copy(
+    is Event.OnInit -> state.copy(
         isLoading = true
     )
 
-    is OnRefresh -> state.copy(
+    is Event.OnRefresh -> state.copy(
         isRefreshing = true
     )
 
-    is OnNextPage -> state.copy(
+    is Event.OnNextPage -> state.copy(
         isLoadNextPage = true
     )
 
     else -> state
 }
-
-data object OnInit : Event
-
-data object OnRefresh : Event
-
-data object OnNextPage : Event
-
-data class OnSummonerClick(val summonerName: String) : Event
-
-data class OnBookmark(val summonerId: String) : Event
-
-data class OnDelete(val name: String) : Event
-
-data object OnDeleteAll : Event
 
 sealed interface SideEffect : MviSideEffect
 

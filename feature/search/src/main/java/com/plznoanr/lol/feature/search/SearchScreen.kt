@@ -86,14 +86,14 @@ internal fun SearchScreen(
                 data = state.data,
                 name = state.query,
                 isActive = state.isActive,
-                onNameChange = { onEvent(OnQueryChange(it)) },
+                onNameChange = { onEvent(Event.OnQueryChange(it)) },
                 onSearch = {
-                    onEvent(OnSearch(it))
+                    onEvent(Event.OnSearch(it))
                     keyboardController?.hide()
                 },
-                onActiveChange = { onEvent(OnActiveChange(it)) },
-                onDelete = { onEvent(OnDelete(it)) },
-                onDeleteAll = { onEvent(OnDeleteAll) }
+                onActiveChange = { onEvent(Event.OnActiveChange(it)) },
+                onDelete = { onEvent(Event.OnDelete(it)) },
+                onDeleteAll = { onEvent(Event.OnDeleteAll) }
             )
         }
     }

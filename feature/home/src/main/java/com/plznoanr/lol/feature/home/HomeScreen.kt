@@ -48,7 +48,7 @@ fun HomeRoute(
     val lazyListState = rememberLazyListState().apply {
         OnBottomReached {
             if (state.summonerList.size >= 20) {
-                onEvent(OnNextPage)
+                onEvent(Event.OnNextPage)
             }
         }
     }
@@ -87,7 +87,7 @@ internal fun HomeScreen(
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(
             error = state.error.parseError()
-        ) { onEvent(OnInit) }
+        ) { onEvent(Event.OnInit) }
 
         else -> {
             HomeContent(
@@ -95,9 +95,9 @@ internal fun HomeScreen(
                 isRefreshing = state.isRefreshing,
                 isLoadNextPage = state.isLoadNextPage,
                 lazyListState = lazyListState,
-                onRefresh = { onEvent(OnRefresh) },
-                onBookmarked = { onEvent(OnBookmark(it)) },
-                onDeleteAll = { onEvent(OnDeleteAll) },
+                onRefresh = { onEvent(Event.OnRefresh) },
+                onBookmarked = { onEvent(Event.OnBookmark(it)) },
+                onDeleteAll = { onEvent(Event.OnDeleteAll) },
             )
         }
     }

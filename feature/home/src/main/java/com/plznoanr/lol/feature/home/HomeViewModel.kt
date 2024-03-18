@@ -42,12 +42,12 @@ class HomeViewModel @Inject constructor(
     init {
         val initialState = UiState()
         uiState = eventFlow
-            .onStart { emit(OnInit) }
+            .onStart { emit(Event.OnInit) }
             .sendEvent {
                 when (it) {
-                    is OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
-                    is OnDeleteAll -> deleteAllSummonerUseCase()
-                    is OnDelete -> deleteSummonerUseCase(it.name)
+                    is Event.OnBookmark -> saveBookmarkIdUseCase(it.summonerId)
+                    is Event.OnDeleteAll -> deleteAllSummonerUseCase()
+                    is Event.OnDelete -> deleteSummonerUseCase(it.name)
                     else -> return@sendEvent
                 }
             }
@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun Flow<Event>.eventFilter() = filter {
-        it is OnInit || it is OnRefresh || it is OnNextPage
+        it is Event.OnInit || it is Event.OnRefresh || it is Event.OnNextPage
     }
 
     private fun Flow<Pair<SummonerState, Event>>.scan(

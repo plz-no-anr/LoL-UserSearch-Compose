@@ -17,12 +17,14 @@ data class UiState(
     val error: String? = null
 ): MviState
 
-sealed interface Event: MviEvent
-data class OnSearch(val fullName: String): Event
-data class OnActiveChange(val isActive: Boolean): Event
-data class OnQueryChange(val query: String): Event
-data class OnDelete(val name: String): Event
-data object OnDeleteAll: Event
+@Immutable
+sealed interface Event: MviEvent {
+    data class OnSearch(val fullName: String): Event
+    data class OnActiveChange(val isActive: Boolean): Event
+    data class OnQueryChange(val query: String): Event
+    data class OnDelete(val name: String): Event
+    data object OnDeleteAll: Event
+}
 
 sealed interface SideEffect: MviSideEffect
 

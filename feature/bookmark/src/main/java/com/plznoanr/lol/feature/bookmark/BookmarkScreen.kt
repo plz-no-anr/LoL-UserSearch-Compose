@@ -51,8 +51,8 @@ internal fun BookmarkScreen(
     if (bookmarkList.isNotEmpty()) {
         BookmarkContent(
             bookmarkList = bookmarkList,
-            onBookmark = { onEvent(OnBookmark(it)) },
-            onClear = { onEvent(OnClear) }
+            onBookmark = { onEvent(Event.OnBookmark(it)) },
+            onClear = { onEvent(Event.OnClear) }
         )
     } else {
         EmptyBox()

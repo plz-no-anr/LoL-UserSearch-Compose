@@ -77,14 +77,14 @@ internal fun SummonerScreen(
         state.isLoading -> AppProgressBar()
         state.errorMsg != null -> ErrorScreen(
             error = state.errorMsg.parseError()
-        ) { onEvent(OnBackPress) }
+        ) { onEvent(Event.OnBackPress) }
         else -> {
             state.summoner?.also { data ->
                 SummonerContent(
                     modifier = Modifier,
                     summoner = data,
-                    onWatch = { onEvent(OnWatch(it)) },
-                    onBookmark = { onEvent(OnBookmark(it)) }
+                    onWatch = { onEvent(Event.OnWatch(it)) },
+                    onBookmark = { onEvent(Event.OnBookmark(it)) }
                 )
             }
         }
