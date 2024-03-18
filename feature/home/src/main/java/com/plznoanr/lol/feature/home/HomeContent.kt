@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.EmptyBox
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.LazyColumnIndicator
-import com.plznoanr.lol.core.designsystem.component.OnBottomReached
 import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.SkyBlue
@@ -53,17 +52,17 @@ import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
 import kotlinx.collections.immutable.PersistentList
-import timber.log.Timber
+import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    data: PersistentList<Summoner>? = null,
+    data: PersistentList<Summoner> = persistentListOf(),
     isRefreshing: Boolean = false,
-    loadNextPage: Boolean = false,
+    isLoadNextPage: Boolean = false,
+    lazyListState: LazyListState,
     onRefresh: () -> Unit = {},
-    onNextPage: () -> Unit = {},
     onBookmarked: (String) -> Unit = {},
     onDeleteAll: () -> Unit = {},
 ) {
@@ -73,28 +72,23 @@ fun HomeContent(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Text(
-            text = stringResource(id = R.string.delete_all),
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(top = 16.dp, end = 16.dp)
-                .clickable { onDeleteAll() },
-        )
+        if (data.isNotEmpty()) {
+            Text(
+                text = stringResource(id = R.string.delete_all),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(top = 16.dp, end = 16.dp)
+                    .clickable { onDeleteAll() },
+            )
+        }
+
         Box(
             modifier = Modifier
                 .pullRefresh(state = pullRefreshState)
         ) {
-            if (!data.isNullOrEmpty()) {
-                val lazyColumnState = rememberLazyListState().apply {
-                    OnBottomReached {
-                        Timber.d("HomeScreen call")
-                        if (data.size >= 20) {
-                            onNextPage()
-                        }
-                    }
-                }
+            if (data.isNotEmpty()) {
                 LazyColumn(
-                    state = lazyColumnState,
+                    state = lazyListState,
                 ) {
                     items(data) {
                         SummonerItem(
@@ -111,7 +105,8 @@ fun HomeContent(
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                if (loadNextPage) {
+
+                if (isLoadNextPage) {
                     LazyColumnIndicator(
                         modifier = Modifier.align(Alignment.BottomCenter)
                     )

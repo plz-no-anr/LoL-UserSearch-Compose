@@ -6,10 +6,11 @@ import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
 import com.plznoanr.lol.core.mvibase.MviState
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class UiState(
-    val summonerList: PersistentList<Summoner>? = null,
+    val summonerList: PersistentList<Summoner> = persistentListOf(),
     val isLoading: Boolean = false,
     val isLoadNextPage: Boolean = false,
     val isRefreshing: Boolean = false,
