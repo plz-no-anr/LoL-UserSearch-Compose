@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
+import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -65,16 +66,15 @@ internal fun SearchScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        sideEffectFlow.onEach { sideEffect ->
-            when (sideEffect) {
-                is NavigateToSummoner -> navigateToSummoner(sideEffect.name, sideEffect.tag)
-                is ShowSnackbar -> coroutineScope.launch {
-                    onShowSnackbar(sideEffect.message)
-                }
+    sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            is NavigateToSummoner -> navigateToSummoner(sideEffect.name, sideEffect.tag)
+            is ShowSnackbar -> coroutineScope.launch {
+                onShowSnackbar(sideEffect.message)
             }
-        }.collect()
+        }
     }
+
     when {
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(

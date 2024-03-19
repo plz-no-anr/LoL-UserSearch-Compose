@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
+import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -63,14 +64,12 @@ internal fun SummonerScreen(
     onBackPress: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean
 ) {
-    LaunchedEffect(Unit) {
-        sideEffectFlow.onEach { sideEffect ->
-            when (sideEffect) {
-                is ShowSnackbar -> onShowSnackbar(sideEffect.message)
-                is OnPopBack -> onBackPress()
-                is NavigateToSpectator -> onNavigateToSpectator(sideEffect.summonerId)
-            }
-        }.collect()
+    sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            is ShowSnackbar -> onShowSnackbar(sideEffect.message)
+            is OnPopBack -> onBackPress()
+            is NavigateToSpectator -> onNavigateToSpectator(sideEffect.summonerId)
+        }
     }
 
     when {
@@ -78,6 +77,7 @@ internal fun SummonerScreen(
         state.errorMsg != null -> ErrorScreen(
             error = state.errorMsg.parseError()
         ) { onEvent(Event.OnBackClick) }
+
         else -> {
             state.summoner?.also { data ->
                 SummonerContent(
@@ -98,9 +98,9 @@ private fun SummonerScreenPreview() {
     SummonerScreen(
         state = UiState(),
         onNavigateToSpectator = {},
-        onShowSnackbar = {true},
+        onShowSnackbar = { true },
         onBackPress = {},
         onEvent = {},
-        sideEffectFlow = flow {  }
+        sideEffectFlow = flow { }
     )
 }
