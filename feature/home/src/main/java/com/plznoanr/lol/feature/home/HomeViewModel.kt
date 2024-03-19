@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
-    private val summonerList: StateFlow<SummonerState> =
+    private val summonerListState: StateFlow<SummonerState> =
         getSummonerListUseCase()
             .map {
                 SummonerState.Success(it.toPersistentList())
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
             .eventFilter()
-            .combine(summonerList) { event, summonerState ->
+            .combine(summonerListState) { event, summonerState ->
                 summonerState to event
             }.scan(initialState) { uiState, summonerState, event ->
                 summonerState.reduceState(uiState, event)

@@ -2,7 +2,6 @@ package com.plznoanr.lol.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -14,13 +13,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.plznoanr.lol.feature.bookmark.navigation.BookmarkRoute
-import com.plznoanr.lol.feature.bookmark.navigation.navigateToBookmark
 import com.plznoanr.lol.feature.home.navigation.HomeRoute
-import com.plznoanr.lol.feature.home.navigation.navigateToHome
 import com.plznoanr.lol.feature.search.navigation.SearchRoute
-import com.plznoanr.lol.feature.search.navigation.navigateToSearch
 import com.plznoanr.lol.feature.setting.navigation.SettingRoute
-import com.plznoanr.lol.feature.setting.navigation.navigateToSetting
 import com.plznoanr.lol.navigation.TopDestination
 import com.plznoanr.lol.utils.NetworkManager
 import com.plznoanr.lol.utils.NetworkState
@@ -74,7 +69,12 @@ class AppState(
             initialValue = false
         )
 
-    val topDestinations = TopDestination.entries.toList()
+    val topDestinations = listOf(
+        TopDestination.Home,
+        TopDestination.Search,
+        TopDestination.Bookmark,
+        TopDestination.Setting
+    )
 
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
@@ -101,12 +101,7 @@ class AppState(
             restoreState = true
         }
 
-        when (destination) {
-            TopDestination.Home -> navController.navigateToHome(navOptions)
-            TopDestination.Search -> navController.navigateToSearch(navOptions)
-            TopDestination.Bookmark -> navController.navigateToBookmark(navOptions)
-            TopDestination.Setting -> navController.navigateToSetting(navOptions)
-        }
+        navController.navigate(destination.route, navOptions)
     }
 }
 

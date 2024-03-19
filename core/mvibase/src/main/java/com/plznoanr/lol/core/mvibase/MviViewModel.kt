@@ -55,4 +55,11 @@ abstract class MviViewModel<State : MviState, Event : MviEvent, SideEffect : Mvi
         accumulator(state, event)
     }
 
+    protected fun Flow<Event>.reduce(
+        initialState: State,
+        accumulator: (State) -> State
+    ) = scan(initialState) { state, _ ->
+        accumulator(state)
+    }
+
 }

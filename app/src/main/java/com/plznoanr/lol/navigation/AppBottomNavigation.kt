@@ -55,5 +55,5 @@ fun AppBottomBar(
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopDestination) =
     this?.hierarchy?.any {
-        it.route?.contains(destination.name, true) ?: false
+        it.route?.contains(destination.route, true) ?: false
     } ?: false
