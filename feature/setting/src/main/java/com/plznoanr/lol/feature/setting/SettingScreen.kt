@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -65,14 +66,12 @@ internal fun SettingScreen(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(Unit) {
-        sideEffectFlow.onEach { sideEffect ->
-            when (sideEffect) {
-                is OnShowSnackbar -> coroutineScope.launch {
-                    onShowSnackbar(sideEffect.message)
-                }
+    sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            is OnShowSnackbar -> coroutineScope.launch {
+                onShowSnackbar(sideEffect.message)
             }
-        }.collect()
+        }
     }
 
     SettingContent(
@@ -88,8 +87,6 @@ internal fun SettingScreen(
     )
 
 }
-
-
 
 
 @Preview

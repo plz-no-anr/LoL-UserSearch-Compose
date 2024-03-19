@@ -12,6 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.OnBottomReached
+import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import com.plznoanr.lol.core.model.Profile
 import kotlinx.coroutines.Dispatchers
@@ -76,13 +77,12 @@ internal fun HomeScreen(
     sideEffectFlow: Flow<SideEffect>,
     lazyListState: LazyListState
 ) {
-    LaunchedEffect(Unit) {
-        sideEffectFlow.onEach { sideEffect ->
-            when (sideEffect) {
-                else -> Unit
-            }
-        }.collect()
+    sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            else -> Unit
+        }
     }
+
     when {
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(
