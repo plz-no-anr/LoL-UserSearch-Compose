@@ -16,13 +16,13 @@ data class UiState(
 
 @Immutable
 sealed interface Event: MviEvent {
-    data object OnLoad: Event
+    data object OnInit: Event
     data class OnBookmark(val id: String): Event
-    data object OnBackPress: Event
+    data object OnBackClick: Event
     data class OnWatch(val summonerId: String): Event
 }
 
 sealed interface SideEffect: MviSideEffect
 data class NavigateToSpectator(val summonerId: String): SideEffect
-data object OnBack: SideEffect
+data object OnPopBack: SideEffect
 data class ShowSnackbar(val message: String): SideEffect

@@ -67,7 +67,7 @@ internal fun SummonerScreen(
         sideEffectFlow.onEach { sideEffect ->
             when (sideEffect) {
                 is ShowSnackbar -> onShowSnackbar(sideEffect.message)
-                is OnBack -> onBackPress()
+                is OnPopBack -> onBackPress()
                 is NavigateToSpectator -> onNavigateToSpectator(sideEffect.summonerId)
             }
         }.collect()
@@ -77,7 +77,7 @@ internal fun SummonerScreen(
         state.isLoading -> AppProgressBar()
         state.errorMsg != null -> ErrorScreen(
             error = state.errorMsg.parseError()
-        ) { onEvent(Event.OnBackPress) }
+        ) { onEvent(Event.OnBackClick) }
         else -> {
             state.summoner?.also { data ->
                 SummonerContent(
