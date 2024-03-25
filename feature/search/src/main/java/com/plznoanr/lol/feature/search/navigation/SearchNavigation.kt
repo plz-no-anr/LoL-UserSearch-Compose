@@ -9,7 +9,6 @@ const val SearchGraph = "search_graph"
 const val SearchRoute = "search_route"
 
 fun NavGraphBuilder.searchGraph(
-    onShowSnackbar: suspend  (String) -> Boolean,
     navigateToSummoner: (String, String) -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit,
 ) {
@@ -19,7 +18,6 @@ fun NavGraphBuilder.searchGraph(
     ) {
         composable(route = SearchRoute) {
             SearchRoute(
-                onShowSnackbar = onShowSnackbar,
                 navigateToSummoner = navigateToSummoner
             )
         }

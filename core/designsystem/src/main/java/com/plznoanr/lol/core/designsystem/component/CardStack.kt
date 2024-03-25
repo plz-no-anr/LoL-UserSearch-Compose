@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 import plznoanr.cardstack.CardStack
 import plznoanr.cardstack.animation.VerticalAnimationStyle
 import plznoanr.cardstack.ui.Orientation
@@ -19,7 +19,7 @@ import plznoanr.cardstack.ui.VerticalAlignment
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SummonerCardStack(
-    summoners: PersistentList<Summoner>,
+    summoners: ImmutableList<Summoner>,
     onCardClick: (Int) -> Unit = {},
     onBookmark: (String) -> Unit = {}
 ) {

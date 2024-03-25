@@ -51,14 +51,13 @@ import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
-    data: PersistentList<Summoner> = persistentListOf(),
+    data: ImmutableList<Summoner>,
     isRefreshing: Boolean = false,
     isLoadNextPage: Boolean = false,
     lazyListState: LazyListState,
@@ -103,14 +102,15 @@ fun HomeContent(
                             onBookmarked = { onBookmarked(it.id) }
                         )
                     }
+                    item {
+                        if (isLoadNextPage) {
+                            LazyColumnIndicator(
+                                modifier = Modifier.align(Alignment.BottomCenter)
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-
-                if (isLoadNextPage) {
-                    LazyColumnIndicator(
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    )
-                }
             } else {
                 EmptyBox()
             }

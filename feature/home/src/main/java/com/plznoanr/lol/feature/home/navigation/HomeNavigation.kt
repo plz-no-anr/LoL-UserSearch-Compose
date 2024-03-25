@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 const val HomeRoute = "home_route"
 
 fun NavGraphBuilder.homeScreen(
-    navCallbackFlow: Flow<Boolean>
+    navCallbackFlow: () -> Flow<Boolean>
 ) {
     composable(route = HomeRoute) {
         HomeRoute(
