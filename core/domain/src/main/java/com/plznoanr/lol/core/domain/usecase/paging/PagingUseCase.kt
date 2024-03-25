@@ -20,37 +20,40 @@ abstract class PagingUseCase<T> {
     val hasNext: Boolean
         get() = cachedPaging.hasNext
 
-    fun execute(
-        pageSize: Int = 20,
-        function: suspend (Paging) -> PagingResult<T>,
-    ): Flow<List<T>> = flow {
-        emit(Unit)
-    }.onEach {
-        cachedPaging = cachedPaging.copy(
-            size = pageSize
-        )
-    }.onEach {
-        cachedPaging = cachedPaging.next()
-    }.filter {
-        cachedPaging.hasNext
-    }.map {
-        function(cachedPaging)
-    }.onEach {
-        cachedPaging = cachedPaging.copy(
-            page = it.page,
-            hasNext = it.hasNext
-        )
-        cachedSet.addAll(it.data)
-    }.map {
-        cachedSet.toList()
-    }
+//    fun execute(
+//        pageSize: Int = 20,
+//        function: suspend (Paging) -> PagingResult<T>,
+//    ): Flow<List<T>> = flow {
+//        emit(Unit)
+//    }.onEach {
+//        cachedPaging = cachedPaging.copy(
+//            size = pageSize
+//        )
+//    }.onEach {
+//        cachedPaging = cachedPaging.next()
+//    }.filter {
+//        cachedPaging.hasNext
+//    }.map {
+//        function(cachedPaging)
+//    }.onEach {
+//        cachedPaging = cachedPaging.copy(
+//            page = it.page,
+//            hasNext = it.hasNext
+//        )
+//        cachedSet.addAll(it.data)
+//    }.map {
+//        cachedSet.toList()
+//    }
 
     fun executeFlow(
         pageSize: Int = 20,
+        isClear: Boolean = false,
         function: (Paging) -> Flow<PagingResult<T>>
     ): Flow<List<T>> = flow {
         emit(Unit)
     }.onEach {
+        if (isClear) clear()
+    }.onEach {
         cachedPaging = cachedPaging.copy(
             size = pageSize
         )
@@ -58,6 +61,7 @@ abstract class PagingUseCase<T> {
         cachedPaging = cachedPaging.next()
     }.filter {
         cachedPaging.hasNext
+        true
     }.flatMapLatest {
         function(cachedPaging)
     }.onEach {
@@ -72,7 +76,7 @@ abstract class PagingUseCase<T> {
         cachedSet.toList()
     }
 
-    fun clear() {
+    private fun clear() {
         cachedSet.clear()
         cachedPaging = Paging(
             page = 0,

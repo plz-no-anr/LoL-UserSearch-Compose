@@ -20,14 +20,16 @@ fun <R> Result<R>.getOrThrow(): R = when (this) {
 fun <R> Result<R>.getOrNull(): R? =
     if (isSuccess()) (this as Result.Success).data else null
 
-inline fun <T> Result<T>.onSuccess(action: (value: T) -> Unit) {
+inline fun <T> Result<T>.onSuccess(action: (value: T) -> Unit): Result<T> {
     if (isSuccess()) {
         action((this as Result.Success).data)
     }
+    return this
 }
 
-inline fun <T> Result<T>.onError(action: (Result.Error) -> Unit) {
+inline fun <T> Result<T>.onError(action: (Result.Error) -> Unit): Result<T> {
     if (this is Result.Error) {
         action(this)
     }
+    return this
 }

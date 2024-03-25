@@ -16,33 +16,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
-import com.plznoanr.lol.core.model.Search
-import com.plznoanr.lol.core.model.getDummyName
-import com.plznoanr.lol.core.model.toText
-import kotlinx.datetime.toKotlinLocalDateTime
-import java.time.LocalDateTime
 
 @Composable
 internal fun SearchItem(
-    data: Search,
+    nickname: String,
+    date: String,
     onSearch: (String) -> Unit = {},
     onDelete: (String) -> Unit = {},
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onSearch(data.nickname.toText()) },
+            .clickable { onSearch(nickname) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(text = data.nickname.toText())
+        Text(text = nickname)
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Text(text = data.displayDateTime)
+        Text(text = date)
 
-        IconButton(onClick = { onDelete(data.nickname.toText()) }) {
+        IconButton(onClick = { onDelete(nickname) }) {
             Icon(
                 imageVector = AppIcons.Close,
                 contentDescription = null
@@ -59,9 +55,7 @@ internal fun SearchItem(
 @Composable
 private fun SearchItemPreview() {
     SearchItem(
-        Search(
-            nickname = getDummyName(),
-            date = LocalDateTime.now().toKotlinLocalDateTime()
-        )
+        nickname = "",
+        date = "asd"
     )
 }

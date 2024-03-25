@@ -47,6 +47,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        viewModel.syncState
+            .flowWithLifecycle(
+                lifecycle,
+                Lifecycle.State.STARTED
+            ).launchIn(lifecycleScope)
+
         setContent {
             val isDarkTheme by viewModel.isDarkThemeState.collectAsStateWithLifecycle()
             LolUserSearchComposeTheme(

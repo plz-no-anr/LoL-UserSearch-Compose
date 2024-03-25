@@ -13,11 +13,11 @@ import com.plznoanr.lol.core.designsystem.component.SummonerCardStack
 import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun BookmarkContent(
-    bookmarkList: PersistentList<Summoner>,
+    bookmarkList: ImmutableList<Summoner>,
     onBookmark: (String) -> Unit,
     onClear: () -> Unit
 ) {

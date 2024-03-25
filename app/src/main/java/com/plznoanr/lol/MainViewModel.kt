@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plznoanr.lol.core.domain.usecase.json.InitialLocalJsonUseCase
 import com.plznoanr.lol.core.domain.usecase.setting.GetDarkThemeUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.SyncSummonerListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,8 @@ sealed interface MainState {
 @HiltViewModel
 class MainViewModel @Inject constructor(
     initialLocalJsonUseCase: InitialLocalJsonUseCase,
-    getDarkThemeUseCase: GetDarkThemeUseCase
+    getDarkThemeUseCase: GetDarkThemeUseCase,
+    syncSummonerListUseCase: SyncSummonerListUseCase
 ) : ViewModel() {
 
     val mainState: StateFlow<MainState> = flow {
@@ -49,6 +51,15 @@ class MainViewModel @Inject constructor(
 
     val isDarkThemeState: StateFlow<Boolean> = getDarkThemeUseCase()
         .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false
+        )
+
+    val syncState: StateFlow<Boolean> = syncSummonerListUseCase()
+        .onEach {
+            Timber.d("SyncResult -> $it")
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = false

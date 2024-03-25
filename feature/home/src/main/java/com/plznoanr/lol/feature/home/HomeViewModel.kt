@@ -5,16 +5,21 @@ import com.plznoanr.lol.core.domain.usecase.summoner.DeleteAllSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.DeleteSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerListUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
+import com.plznoanr.lol.core.domain.usecase.summoner.SummonerState
 import com.plznoanr.lol.core.mvibase.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -27,11 +32,18 @@ class HomeViewModel @Inject constructor(
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
+    private val userEvent = MutableSharedFlow<Event>()
+    private val userEventFlow = userEvent.flatMapLatest {
+        getSummonerListUseCase(isClear = it is Event.OnRefresh)
+    }
+
     private val summonerListState: StateFlow<SummonerState> =
-        getSummonerListUseCase()
-            .map {
-                SummonerState.Success(it.toPersistentList())
-            }.stateIn(
+        merge(
+            getSummonerListUseCase(),
+            userEventFlow
+        ).distinctUntilChanged()
+            .map { it }
+            .stateIn(
                 scope = viewModelScope,
                 initialValue = SummonerState.Loading,
                 started = SharingStarted.WhileSubscribed(5_000)
@@ -52,6 +64,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
             .eventFilter()
+            .onEach { userEvent.emit(it) }
             .combine(summonerListState) { event, summonerState ->
                 summonerState to event
             }.scan(initialState) { uiState, summonerState, event ->

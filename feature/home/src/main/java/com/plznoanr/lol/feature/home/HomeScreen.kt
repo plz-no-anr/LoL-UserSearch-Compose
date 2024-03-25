@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
-    navCallbackFlow: Flow<Boolean>
+    navCallbackFlow: () -> Flow<Boolean>
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val eventChannel = remember { Channel<Event>(Channel.UNLIMITED) }
@@ -55,17 +55,22 @@ fun HomeRoute(
     }
 
     LaunchedEffect(Unit) {
-        navCallbackFlow
+        navCallbackFlow()
             .onEach {
                 lazyListState.animateScrollToItem(0)
             }.collect()
+    }
+
+    viewModel.sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            else -> Unit
+        }
     }
 
 
     HomeScreen(
         state = state,
         onEvent = onEvent,
-        sideEffectFlow = viewModel.sideEffectFlow,
         lazyListState = lazyListState
     )
 }
@@ -74,15 +79,8 @@ fun HomeRoute(
 internal fun HomeScreen(
     state: UiState,
     onEvent: (Event) -> Unit,
-    sideEffectFlow: Flow<SideEffect>,
     lazyListState: LazyListState
 ) {
-    sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
-        when (sideEffect) {
-            else -> Unit
-        }
-    }
-
     when {
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(

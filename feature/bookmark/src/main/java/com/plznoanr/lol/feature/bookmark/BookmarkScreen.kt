@@ -7,8 +7,6 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.EmptyBox
-import com.plznoanr.lol.core.model.Summoner
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -37,7 +35,7 @@ fun BookmarkRoute(
     }
 
     BookmarkScreen(
-        bookmarkList = uiState.bookmarkList,
+        uiState = uiState,
         onEvent = onEvent
     )
 
@@ -45,12 +43,12 @@ fun BookmarkRoute(
 
 @Composable
 internal fun BookmarkScreen(
-    bookmarkList: PersistentList<Summoner>,
+    uiState: UiState,
     onEvent: (Event) -> Unit,
 ) {
-    if (bookmarkList.isNotEmpty()) {
+    if (uiState.bookmarkList.isNotEmpty()) {
         BookmarkContent(
-            bookmarkList = bookmarkList,
+            bookmarkList = uiState.bookmarkList,
             onBookmark = { onEvent(Event.OnBookmark(it)) },
             onClear = { onEvent(Event.OnClear) }
         )

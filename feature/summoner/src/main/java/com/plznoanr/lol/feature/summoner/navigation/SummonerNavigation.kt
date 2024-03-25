@@ -29,7 +29,6 @@ fun NavController.navigateToSummoner(summonerName: String, summonerTag: String) 
 }
 
 fun NavGraphBuilder.summonerScreen(
-    onShowSnackbar: suspend (String) -> Boolean,
     navigateToSpectator: (String) -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -41,7 +40,6 @@ fun NavGraphBuilder.summonerScreen(
         )
     ) {
         SummonerRoute(
-            onShowSnackbar = onShowSnackbar,
             navigateToSpectator = navigateToSpectator,
             onBackPress = onBackPressed
         )

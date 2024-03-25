@@ -9,17 +9,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 import kotlin.random.Random
 
+sealed interface SummonerState {
+
+    data object Loading : SummonerState
+
+    data class Success(val list: List<Summoner>) : SummonerState
+
+}
 class GetSummonerListUseCase @Inject constructor(
     private val summonerRepository: SummonerRepository,
 ): PagingUseCase<Summoner>() {
 
     operator fun invoke(
         pageSize: Int = 20,
-        sortedBookmark: Boolean = false
-    ): Flow<List<Summoner>> = executeFlow(pageSize) {
+        sortedBookmark: Boolean = false,
+        isClear: Boolean = false
+    ): Flow<SummonerState> = executeFlow(pageSize, isClear) {
         summonerRepository.getSummonerList(it)
     }.combine(
         summonerRepository.getBookMarkedSummonerIds()
@@ -35,7 +44,9 @@ class GetSummonerListUseCase @Inject constructor(
         } else {
             it
         }
-    }
+    }.map {
+        SummonerState.Success(it) as SummonerState
+    }.onStart { emit(SummonerState.Loading) }
 
     private fun getDummy() = flow {
         val random = Random(10000)

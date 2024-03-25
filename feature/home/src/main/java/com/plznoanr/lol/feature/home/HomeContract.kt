@@ -1,14 +1,17 @@
 package com.plznoanr.lol.feature.home
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import com.plznoanr.lol.core.domain.usecase.summoner.SummonerState
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
 import com.plznoanr.lol.core.mvibase.MviState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
-@Immutable
+@Stable
 data class UiState(
     val summonerList: PersistentList<Summoner> = persistentListOf(),
     val isLoading: Boolean = false,
@@ -16,14 +19,6 @@ data class UiState(
     val isRefreshing: Boolean = false,
     val error: String? = null
 ) : MviState
-
-sealed interface SummonerState {
-
-    data object Loading : SummonerState
-
-    data class Success(val list: PersistentList<Summoner>) : SummonerState
-
-}
 
 internal fun SummonerState.reduceState(
     initialState: UiState,
@@ -34,7 +29,7 @@ internal fun SummonerState.reduceState(
         isLoading = false,
         isRefreshing = false,
         isLoadNextPage = false,
-        summonerList = list
+        summonerList = list.toPersistentList()
     )
 }
 
