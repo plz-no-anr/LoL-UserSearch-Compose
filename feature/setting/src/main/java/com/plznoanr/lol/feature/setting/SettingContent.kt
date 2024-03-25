@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.DefaultDialog
@@ -164,7 +163,7 @@ private fun KeyChangeDialog(
                         bottomEnd = 24.dp
                     )
                 )
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -182,7 +181,12 @@ private fun KeyChangeDialog(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(onClick = { onKeyChange(key) }) {
+            Button(
+                onClick = {
+                    onKeyChange(key)
+                    onDismiss()
+                }
+            ) {
                 Text(text = "변경", color = MaterialTheme.colorScheme.secondary)
             }
         }

@@ -323,7 +323,7 @@ private fun SpectatorView(
 @Preview
 @Composable
 private fun HomeItemPreview() {
-    LolUserSearchComposeTheme(darkTheme = false) {
+    LolUserSearchComposeTheme(darkTheme = true) {
         SummonerItem(
             icon = "http://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/6334.png",
             nickname = com.plznoanr.lol.core.model.Nickname("hide on bush", "KR1").toText(),
