@@ -65,8 +65,6 @@ fun LoLApp(
             }
         }
     ) { paddingValues ->
-
-
        SnackbarHostContainer(snackbarHostState = snackbarHostState) {
            AppNavHost(
                modifier = Modifier.padding(paddingValues),
@@ -74,7 +72,6 @@ fun LoLApp(
                navigateCallbackFlow = navCallback
            )
        }
-
     }
 
 }

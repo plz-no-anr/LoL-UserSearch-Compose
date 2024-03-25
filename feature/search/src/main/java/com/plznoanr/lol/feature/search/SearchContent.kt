@@ -56,6 +56,9 @@ internal fun SearchContent(
             },
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.primary,
+                inputFieldColors = SearchBarDefaults.inputFieldColors().copy(
+                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+                )
             )
         ) {
             TextButton(

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -56,13 +57,11 @@ class MainViewModel @Inject constructor(
             initialValue = false
         )
 
-    val syncState: StateFlow<Boolean> = syncSummonerListUseCase()
-        .onEach {
-            Timber.d("SyncResult -> $it")
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
-        )
+    init {
+        syncSummonerListUseCase()
+            .onEach {
+                Timber.d("SyncResult -> $it")
+            }.launchIn(viewModelScope)
+    }
 
 }

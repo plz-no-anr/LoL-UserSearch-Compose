@@ -17,5 +17,4 @@ fun SnackbarHostContainer(
         value = LocalSnackbarHostState provides snackbarHostState,
         content = content
     )
-
 }
