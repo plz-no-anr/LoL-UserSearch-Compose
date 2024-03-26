@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.OnBottomReached
 import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
@@ -84,7 +83,7 @@ internal fun HomeScreen(
     when {
         state.isLoading -> AppProgressBar()
         state.error != null -> ErrorScreen(
-            error = state.error.parseError()
+            error = state.error
         ) { onEvent(Event.OnInit) }
 
         else -> {
@@ -92,10 +91,12 @@ internal fun HomeScreen(
                 data = state.summonerList,
                 isRefreshing = state.isRefreshing,
                 isLoadNextPage = state.isLoadNextPage,
+                isSortedBookmark = state.isSortedBookmark,
                 lazyListState = lazyListState,
                 onRefresh = { onEvent(Event.OnRefresh) },
                 onBookmarked = { onEvent(Event.OnBookmark(it)) },
                 onDeleteAll = { onEvent(Event.OnDeleteAll) },
+                onSortedBookmark = { onEvent(Event.OnSortedBookmark(it)) }
             )
         }
     }

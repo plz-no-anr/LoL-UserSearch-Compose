@@ -2,6 +2,7 @@ package com.plznoanr.lol.feature.home
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.domain.usecase.summoner.SummonerState
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviEvent
@@ -17,7 +18,8 @@ data class UiState(
     val isLoading: Boolean = false,
     val isLoadNextPage: Boolean = false,
     val isRefreshing: Boolean = false,
-    val error: String? = null
+    val isSortedBookmark: Boolean = false,
+    val error: AppError? = null
 ) : MviState
 
 internal fun SummonerState.reduceState(
@@ -48,6 +50,8 @@ sealed interface Event : MviEvent {
     data class OnDelete(val name: String) : Event
 
     data object OnDeleteAll : Event
+
+    data class OnSortedBookmark(val sorted: Boolean) : Event
 }
 
 private fun Event.reduceState(state: UiState): UiState = when (this) {
@@ -61,6 +65,10 @@ private fun Event.reduceState(state: UiState): UiState = when (this) {
 
     is Event.OnNextPage -> state.copy(
         isLoadNextPage = true
+    )
+
+    is Event.OnSortedBookmark -> state.copy(
+        isSortedBookmark = sorted
     )
 
     else -> state

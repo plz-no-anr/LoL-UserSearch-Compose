@@ -34,7 +34,10 @@ class HomeViewModel @Inject constructor(
 
     private val userEvent = MutableSharedFlow<Event>()
     private val userEventFlow = userEvent.flatMapLatest {
-        getSummonerListUseCase(isClear = it is Event.OnRefresh)
+        getSummonerListUseCase(
+            isSortedBookmark = if (it is Event.OnSortedBookmark) it.sorted else false,
+            isClear = it is Event.OnRefresh
+        )
     }
 
     private val summonerListState: StateFlow<SummonerState> =
@@ -77,7 +80,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun Flow<Event>.eventFilter() = filter {
-        it is Event.OnInit || it is Event.OnRefresh || it is Event.OnNextPage
+        it is Event.OnInit || it is Event.OnRefresh || it is Event.OnNextPage || it is Event.OnSortedBookmark
     }
 
     private fun Flow<Pair<SummonerState, Event>>.scan(

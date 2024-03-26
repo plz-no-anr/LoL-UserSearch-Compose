@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.plznoanr.lol.core.common.model.parseError
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.LocalSnackbarHostState
 import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
@@ -71,8 +70,8 @@ internal fun SummonerScreen(
 ) {
     when {
         state.isLoading -> AppProgressBar()
-        state.errorMsg != null -> ErrorScreen(
-            error = state.errorMsg.parseError()
+        state.error != null -> ErrorScreen(
+            error = state.error
         ) { onEvent(Event.OnBackClick) }
 
         else -> {

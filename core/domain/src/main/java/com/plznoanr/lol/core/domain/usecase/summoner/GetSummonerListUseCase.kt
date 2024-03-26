@@ -26,7 +26,7 @@ class GetSummonerListUseCase @Inject constructor(
 
     operator fun invoke(
         pageSize: Int = 20,
-        sortedBookmark: Boolean = false,
+        isSortedBookmark: Boolean = false,
         isClear: Boolean = false
     ): Flow<SummonerState> = executeFlow(pageSize, isClear) {
         summonerRepository.getSummonerList(it)
@@ -39,7 +39,7 @@ class GetSummonerListUseCase @Inject constructor(
             )
         }
     }.map {
-        if (sortedBookmark) {
+        if (isSortedBookmark) {
             it.sortedByDescending { summoner -> summoner.isBookMarked }
         } else {
             it
