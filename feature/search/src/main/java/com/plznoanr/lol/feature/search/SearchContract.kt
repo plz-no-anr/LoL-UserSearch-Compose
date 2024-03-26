@@ -2,6 +2,7 @@ package com.plznoanr.lol.feature.search
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
@@ -15,7 +16,7 @@ data class UiState(
     val query: String = "",
     val isActive: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: AppError? = null
 ): MviState
 
 @Immutable

@@ -1,20 +1,8 @@
 package com.plznoanr.lol.feature.spectator
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.plznoanr.lol.core.common.model.parseError
-import com.plznoanr.lol.core.designsystem.component.DefaultTopAppBar
-import com.plznoanr.lol.core.mvibase.MviViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun SpectatorRoute(

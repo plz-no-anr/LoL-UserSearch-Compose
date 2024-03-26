@@ -55,7 +55,7 @@ class SummonerViewModel @Inject constructor(
                     )
 
                     is Result.Error -> state.copy(
-                        errorMsg = result.error.message,
+                        error = result.error,
                         isLoading = false
                     )
                 }

@@ -21,6 +21,8 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,10 +62,12 @@ fun HomeContent(
     data: ImmutableList<Summoner>,
     isRefreshing: Boolean = false,
     isLoadNextPage: Boolean = false,
+    isSortedBookmark: Boolean = false,
     lazyListState: LazyListState,
     onRefresh: () -> Unit = {},
     onBookmarked: (String) -> Unit = {},
     onDeleteAll: () -> Unit = {},
+    onSortedBookmark: (Boolean) -> Unit = {}
 ) {
     val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
 
@@ -72,13 +76,35 @@ fun HomeContent(
             .fillMaxSize()
     ) {
         if (data.isNotEmpty()) {
-            Text(
-                text = stringResource(id = R.string.delete_all),
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(top = 16.dp, end = 16.dp)
-                    .clickable { onDeleteAll() },
-            )
+            Row(
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FilterChip(
+                    selected = isSortedBookmark,
+                    onClick = { onSortedBookmark(!isSortedBookmark) },
+                    label = { Text(text = "북마크 정렬") },
+                    colors = FilterChipDefaults.filterChipColors().copy(
+                        selectedContainerColor = MaterialTheme.colorScheme.inversePrimary
+                    ),
+//                    trailingIcon = {
+//                        Icon(
+//                            imageVector = AppIcons.BookMark,
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.secondary
+//                        )
+//                    }
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = stringResource(id = R.string.delete_all),
+                    modifier = Modifier
+                        .clickable { onDeleteAll() },
+                )
+            }
+
         }
 
         Box(
