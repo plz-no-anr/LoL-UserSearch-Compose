@@ -7,7 +7,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 
 internal fun Project.configureKotestAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *>
+    commonExtension: CommonExtension<*, *, *, *, *, *>
 ) {
     configureKotest()
     configureJUnitAndroid(commonExtension)
@@ -28,7 +28,7 @@ internal fun Project.configureJUnit() {
 }
 
 internal fun configureJUnitAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *>
+    commonExtension: CommonExtension<*, *, *, *, *, *>
 ) {
     commonExtension.apply {
         testOptions {
