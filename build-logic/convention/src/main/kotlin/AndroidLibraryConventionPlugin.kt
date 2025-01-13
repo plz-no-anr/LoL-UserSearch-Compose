@@ -1,8 +1,10 @@
 import com.android.build.gradle.LibraryExtension
-import com.metaverse.world.cube.configureFlavors
-import com.metaverse.world.cube.configureKotestAndroid
-import com.metaverse.world.cube.configureKotlinAndroid
-import com.metaverse.world.cube.libs
+import com.plznoanr.lol.configureFlavors
+import com.plznoanr.lol.configureKotestAndroid
+import com.plznoanr.lol.configureKotlinAndroid
+import com.plznoanr.lol.library
+import com.plznoanr.lol.libs
+import com.plznoanr.lol.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -11,9 +13,7 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply("com.android.library")
-            }
+            pluginManager.apply(libs.plugin("android-library").pluginId)
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
@@ -22,7 +22,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configureFlavors(this)
             }
             dependencies {
-                add("testImplementation", libs.findLibrary("junit4").get())
+                add("testImplementation", libs.library("junit4"))
             }
         }
     }

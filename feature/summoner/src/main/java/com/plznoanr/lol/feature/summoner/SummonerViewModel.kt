@@ -46,7 +46,7 @@ class SummonerViewModel @Inject constructor(
                     is Event.OnBackClick -> postEffect(OnPopBack)
                     else -> return@sendEvent
                 }
-            }.reduce(initialState) { state -> state }
+            }.reduceThis(initialState)
             .combine(summonerFlow) { state, result ->
                 when (result) {
                     is Result.Success -> state.copy(
@@ -55,7 +55,7 @@ class SummonerViewModel @Inject constructor(
                     )
 
                     is Result.Error -> state.copy(
-                        error = result.error,
+                        error = result,
                         isLoading = false
                     )
                 }

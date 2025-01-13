@@ -19,12 +19,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plznoanr.lol.core.designsystem.component.DefaultDialog
+import com.plznoanr.lol.core.designsystem.theme.LolUserSearchTheme
 
 @Composable
 internal fun SettingContent(
@@ -68,6 +74,24 @@ internal fun SettingContent(
             onQueryChange = onQueryChange,
             onKeyChange = onKeyChange,
             onDismiss = { onShowDialog(false) }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewSettingContent() {
+    LolUserSearchTheme {
+        SettingContent(
+            nickname = "닉네임",
+            apiKey = "키",
+            keyQuery = "키",
+            isDarkTheme = true,
+            isShowDialog = true,
+            onShowDialog = {},
+            onThemeChange = {},
+            onQueryChange = {},
+            onKeyChange = {}
         )
     }
 }
@@ -191,7 +215,22 @@ private fun KeyChangeDialog(
             }
         }
     }
+}
 
+@Preview
+@Composable
+private fun PreviewKeyChangeDialog() {
+    var key by remember { mutableStateOf("") }
+    LolUserSearchTheme {
+        KeyChangeDialog(
+            key = key,
+            onQueryChange = {},
+            onKeyChange = {
+                key = it
+            },
+            onDismiss = {}
+        )
+    }
 }
 
 @Composable

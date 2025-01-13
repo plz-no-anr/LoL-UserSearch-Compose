@@ -1,6 +1,5 @@
 package com.plznoanr.lol.core.network.retrofit
 
-import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.network.model.LeagueResponse
 import com.plznoanr.lol.core.network.model.SpectatorResponse
@@ -35,8 +34,9 @@ internal fun <T> Response<T?>.asResult(): Result<T> {
     return if (isSuccessful && body() != null) {
         Result.Success(body()!!)
     } else {
-        Result.Error(
-            AppError.Retrofit(code(), message())
+        Result.NetworkError(
+            code = code(),
+            message = message()
         )
     }
 }

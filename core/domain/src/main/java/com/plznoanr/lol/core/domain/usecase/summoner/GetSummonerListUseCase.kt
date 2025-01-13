@@ -1,6 +1,6 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
-import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.PagingList
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import com.plznoanr.lol.core.domain.usecase.paging.PagingUseCase
 import com.plznoanr.lol.core.model.Summoner
@@ -51,7 +51,7 @@ class GetSummonerListUseCase @Inject constructor(
     private fun getDummy() = flow {
         val random = Random(10000)
         emit(
-            PagingResult(
+            PagingList(
                 data = getDummySummonerList(random.nextInt()),
                 page = 1,
                 hasNext = true

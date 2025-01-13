@@ -42,6 +42,5 @@ sealed class TopDestination(
         unselectedIcon = AppIcons.SettingBorder,
         iconTitleId = SettingR.string.setting_title,
     )
-
 }
 

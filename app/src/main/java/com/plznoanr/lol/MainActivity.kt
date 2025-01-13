@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.plznoanr.lol.core.designsystem.theme.LolUserSearchComposeTheme
+import com.plznoanr.lol.core.designsystem.theme.LolUserSearchTheme
 import com.plznoanr.lol.ui.LoLApp
 import com.plznoanr.lol.utils.NetworkManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val isDarkTheme by viewModel.isDarkThemeState.collectAsStateWithLifecycle()
-            LolUserSearchComposeTheme(
+            LolUserSearchTheme(
                 darkTheme = isDarkTheme
             ) {
                 LoLApp(networkManager = networkManager)
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    LolUserSearchComposeTheme {
+    LolUserSearchTheme {
 
     }
 }

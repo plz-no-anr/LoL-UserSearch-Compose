@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,34 +38,38 @@ internal fun SearchContent(
     onDelete: (String) -> Unit,
     onDeleteAll: () -> Unit,
 ) {
-
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
+        val searchBarColors = colors(containerColor = MaterialTheme.colorScheme.primary)
         SearchBar(
-            query = name,
-            onQueryChange = onNameChange,
-            onSearch = onSearch,
-            active = isActive,
-            onActiveChange = onActiveChange,
-            placeholder = {
-                Text(text = "닉네임#태그")
-            },
-            leadingIcon = {
-                Icon(imageVector = AppIcons.Search, contentDescription = null)
-            },
-            colors = SearchBarDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                inputFieldColors = SearchBarDefaults.inputFieldColors().copy(
-                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = name,
+                    onQueryChange = onNameChange,
+                    onSearch = onSearch,
+                    expanded = isActive,
+                    onExpandedChange = onActiveChange,
+                    placeholder = {
+                        Text(text = "닉네임#태그")
+                    },
+                    leadingIcon = {
+                        Icon(imageVector = AppIcons.Search, contentDescription = null)
+                    },
+                    colors = SearchBarDefaults.inputFieldColors().copy(
+                        cursorColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
                 )
-            )
+            },
+            expanded = isActive,
+            onExpandedChange = onActiveChange,
+            colors = searchBarColors,
         ) {
             TextButton(
                 modifier = Modifier
                     .align(Alignment.End),
-                onClick = onDeleteAll ,
+                onClick = onDeleteAll,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color.Black
                 )

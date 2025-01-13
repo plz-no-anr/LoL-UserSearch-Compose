@@ -1,10 +1,7 @@
 package com.plznoanr.lol.feature.search
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,14 +10,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.LocalSnackbarHostState
 import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
-import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.plznoanr.lol.core.mvibase.rememberEvent
+import com.plznoanr.lol.core.ui.error.ErrorScreen
 
 @Composable
 fun SearchRoute(
@@ -28,30 +19,13 @@ fun SearchRoute(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val eventChannel = remember { Channel<Event>(Channel.UNLIMITED) }
-    val coroutineScope = rememberCoroutineScope()
     val snackbarHostState by rememberUpdatedState(LocalSnackbarHostState.current)
-
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.Main.immediate) {
-            eventChannel
-                .consumeAsFlow()
-                .onEach(viewModel::onEvent)
-                .collect()
-        }
-    }
-    val onEvent = remember {
-        { event: Event ->
-            eventChannel.trySend(event).getOrThrow()
-        }
-    }
+    val onEvent = rememberEvent(viewModel::onEvent)
 
     viewModel.sideEffectFlow.collectInLaunchedEffectWithLifecycle { sideEffect ->
         when (sideEffect) {
             is NavigateToSummoner -> navigateToSummoner(sideEffect.name, sideEffect.tag)
-            is ShowSnackbar -> coroutineScope.launch {
-                snackbarHostState.showSnackbar(sideEffect.message)
-            }
+            is ShowSnackbar -> snackbarHostState.showSnackbar(sideEffect.message)
         }
     }
 

@@ -2,12 +2,12 @@ package com.plznoanr.lol.feature.home
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.plznoanr.lol.core.common.model.AppError
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.domain.usecase.summoner.SummonerState
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
-import com.plznoanr.lol.core.mvibase.MviState
+import com.plznoanr.lol.core.mvibase.MviUiState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,8 +19,8 @@ data class UiState(
     val isLoadNextPage: Boolean = false,
     val isRefreshing: Boolean = false,
     val isSortedBookmark: Boolean = false,
-    val error: AppError? = null
-) : MviState
+    val error: Result.Error? = null
+) : MviUiState
 
 internal fun SummonerState.reduceState(
     initialState: UiState,

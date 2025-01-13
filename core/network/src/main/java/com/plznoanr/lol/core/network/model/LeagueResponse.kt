@@ -6,7 +6,7 @@ import com.plznoanr.lol.core.model.Summoner
 data class LeagueResponse(
     val leagueId: String,
     val summonerId: String,
-    val summonerName: String,
+    val summonerName: String? = null,
     val queueType: String,
     val tier: String,
     val rank: String,

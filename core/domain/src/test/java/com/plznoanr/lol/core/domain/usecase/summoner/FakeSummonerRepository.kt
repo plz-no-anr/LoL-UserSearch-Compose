@@ -1,7 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
 import com.plznoanr.lol.core.common.model.Paging
-import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.PagingList
 import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import com.plznoanr.lol.core.model.Nickname
@@ -26,10 +26,10 @@ class FakeSummonerRepository(
         return flow { emit(summoners) }
     }
 
-    override fun getSummonerList(paging: Paging): Flow<PagingResult<Summoner>> {
+    override fun getSummonerList(paging: Paging): Flow<PagingList<Summoner>> {
         return flow {
             emit(
-                PagingResult(
+                PagingList(
                     data = summoners,
                     page = paging.page
                 )

@@ -10,8 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -24,26 +22,19 @@ class SettingViewModel @Inject constructor(
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
     private val settingFlow =
-        combine(getKeyUseCase(), getDarkThemeUseCase()) { key, isDark ->
-            key to isDark
+        combine(getKeyUseCase(), getDarkThemeUseCase()) { key, darkMode ->
+            key to darkMode
         }.stateIn(
             scope = viewModelScope,
             initialValue = "" to false,
             started = SharingStarted.WhileSubscribed(5_000)
         )
 
-    private val debounceFlow = eventFlow
-        .debounce(400L)
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily
-        )
-
     override val uiState: StateFlow<UiState>
 
     init {
         val initialState = UiState()
-        uiState = debounceFlow
+        uiState = eventFlow
             .sendEvent {
                 when (it) {
                     is Event.OnThemeChange -> {
@@ -61,9 +52,18 @@ class SettingViewModel @Inject constructor(
                         saveKeyUseCase(it.key)
                         postEffect(OnShowSnackbar("키가 저장되었습니다!"))
                     }
+                    else -> Unit
                 }
-            }.reduce(initialState) { state, _ ->
-                state
+            }.reduce(initialState) { state, event ->
+                 when (event) {
+                    is Event.OnQueryChange -> state.copy(
+                        keyQuery = event.query
+                    )
+                    is Event.OnShowDialog -> state.copy(
+                        showKeyChangeDialog = event.show
+                    )
+                    else -> state
+                }
             }.combine(settingFlow) { state, settingPair ->
                 state.copy(
                     apiKey = settingPair.first,

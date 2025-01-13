@@ -5,22 +5,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.core.designsystem.component.AppProgressBar
 import com.plznoanr.lol.core.designsystem.component.OnBottomReached
 import com.plznoanr.lol.core.designsystem.component.collectInLaunchedEffectWithLifecycle
-import com.plznoanr.lol.core.designsystem.component.error.ErrorScreen
 import com.plznoanr.lol.core.model.Profile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import com.plznoanr.lol.core.mvibase.rememberEvent
+import com.plznoanr.lol.core.ui.error.ErrorScreen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeRoute(
@@ -28,22 +24,7 @@ fun HomeRoute(
     navCallbackFlow: () -> Flow<Boolean>
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val eventChannel = remember { Channel<Event>(Channel.UNLIMITED) }
-
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.Main.immediate) {
-            eventChannel
-                .consumeAsFlow()
-                .onEach(viewModel::onEvent)
-                .collect()
-        }
-    }
-
-    val onEvent = remember {
-        { event: Event ->
-            eventChannel.trySend(event).getOrThrow()
-        }
-    }
+    val onEvent = rememberEvent(viewModel::onEvent)
 
     val lazyListState = rememberLazyListState().apply {
         OnBottomReached {

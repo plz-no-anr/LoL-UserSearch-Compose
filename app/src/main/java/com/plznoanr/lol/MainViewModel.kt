@@ -2,6 +2,9 @@ package com.plznoanr.lol
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plznoanr.lol.core.common.model.exceptionOrNull
+import com.plznoanr.lol.core.common.model.getOrThrow
+import com.plznoanr.lol.core.common.model.isSuccess
 import com.plznoanr.lol.core.domain.usecase.json.InitialLocalJsonUseCase
 import com.plznoanr.lol.core.domain.usecase.setting.GetDarkThemeUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SyncSummonerListUseCase
@@ -35,7 +38,7 @@ class MainViewModel @Inject constructor(
     val mainState: StateFlow<MainState> = flow {
         emit(initialLocalJsonUseCase())
     }.map {
-        if (it.isSuccess) {
+        if (it.isSuccess()) {
             MainState.Success(it.getOrThrow())
         } else {
             MainState.Error(it.exceptionOrNull()!!)
@@ -58,7 +61,7 @@ class MainViewModel @Inject constructor(
         )
 
     init {
-        syncSummonerListUseCase()
+        syncSummonerListUseCase() // todo : 스코프 수정
             .onEach {
                 Timber.d("SyncResult -> $it")
             }.launchIn(viewModelScope)

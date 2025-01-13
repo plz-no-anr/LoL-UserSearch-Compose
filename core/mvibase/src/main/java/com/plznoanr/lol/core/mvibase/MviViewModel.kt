@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.scan
 import timber.log.Timber
 
-interface MviState
+interface MviUiState
 interface MviEvent
 interface MviSideEffect
 
-abstract class MviViewModel<State : MviState, Event : MviEvent, SideEffect : MviSideEffect> :
+abstract class MviViewModel<State : MviUiState, Event : MviEvent, SideEffect : MviSideEffect> :
     ViewModel() {
 
     private val tag = this@MviViewModel.javaClass.simpleName
@@ -55,11 +55,10 @@ abstract class MviViewModel<State : MviState, Event : MviEvent, SideEffect : Mvi
         accumulator(state, event)
     }
 
-    protected fun Flow<Event>.reduce(
-        initialState: State,
-        accumulator: (State) -> State
+    protected fun Flow<Event>.reduceThis(
+        initialState: State
     ) = scan(initialState) { state, _ ->
-        accumulator(state)
+        state
     }
 
 }

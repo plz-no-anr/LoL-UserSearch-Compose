@@ -1,15 +1,15 @@
 package com.plznoanr.lol.core.data.di
 
 import com.plznoanr.lol.core.data.repository.AppRepository
-import com.plznoanr.lol.core.data.repository.AppRepositoryImpl
+import com.plznoanr.lol.core.data.repository.DefaultAppRepository
+import com.plznoanr.lol.core.data.repository.DefaultProfileRepository
+import com.plznoanr.lol.core.data.repository.DefaultSearchRepository
+import com.plznoanr.lol.core.data.repository.DefaultSettingRepository
+import com.plznoanr.lol.core.data.repository.DefaultSummonerRepository
 import com.plznoanr.lol.core.data.repository.ProfileRepository
-import com.plznoanr.lol.core.data.repository.ProfileRepositoryImpl
 import com.plznoanr.lol.core.data.repository.SearchRepository
-import com.plznoanr.lol.core.data.repository.SearchRepositoryImpl
 import com.plznoanr.lol.core.data.repository.SettingRepository
-import com.plznoanr.lol.core.data.repository.SettingRepositoryImpl
 import com.plznoanr.lol.core.data.repository.SummonerRepository
-import com.plznoanr.lol.core.data.repository.SummonerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,30 +17,30 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface RepositoryModule {
+abstract class RepositoryModule {
     @Binds
-    fun bindAppRepository(
-        appRepositoryImpl: AppRepositoryImpl
+    abstract fun bindAppRepository(
+        defaultAppRepository: DefaultAppRepository
     ): AppRepository
 
     @Binds
-    fun bindProfileRepository(
-        profileRepositoryImpl: ProfileRepositoryImpl
+    abstract fun bindProfileRepository(
+        defaultProfileRepository: DefaultProfileRepository
     ) : ProfileRepository
 
     @Binds
-    fun bindSearchRepository(
-        searchRepositoryImpl: SearchRepositoryImpl
+    abstract fun bindSearchRepository(
+        defaultSearchRepository: DefaultSearchRepository
     ) : SearchRepository
 
     @Binds
-    fun bindSummonerRepository(
-        summonerRepositoryImpl: SummonerRepositoryImpl
+    abstract fun bindSummonerRepository(
+        defaultSummonerRepository: DefaultSummonerRepository
     ) : SummonerRepository
 
     @Binds
-    fun bindSettingRepository(
-        settingRepositoryImpl: SettingRepositoryImpl
+    abstract fun bindSettingRepository(
+        defaultSettingRepository: DefaultSettingRepository
     ) : SettingRepository
 
 }

@@ -1,5 +1,5 @@
 import com.android.build.gradle.LibraryExtension
-import com.metaverse.world.cube.libs
+import com.plznoanr.lol.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -22,7 +22,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
             dependencies {
                 add("implementation", project(":core:model"))
-                add("implementation", project(":core:designsystem"))
+                add("implementation", project(":core:ui"))
                 add("implementation", project(":core:domain"))
                 add("implementation", project(":core:mvibase"))
 
@@ -37,8 +37,6 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
                 add("implementation", libs.findLibrary("kotlinx.coroutines.android").get())
                 add("implementation", libs.findLibrary("kotlinx.collections.immutable").get())
-
-                add("implementation", libs.findLibrary("coma").get())
             }
         }
     }

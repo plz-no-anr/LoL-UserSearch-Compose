@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 @Suppress("ComposableNaming")
@@ -20,14 +22,14 @@ fun <T> Flow<T>.collectInLaunchedEffectWithLifecycle(
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     collector: suspend CoroutineScope.(T) -> Unit
 ) {
-    val flow = this
     val currentCollector by rememberUpdatedState(collector)
 
-    LaunchedEffect(flow, lifecycle, minActiveState, *keys) {
+    LaunchedEffect(this, lifecycle, minActiveState, *keys) {
         withContext(Dispatchers.Main.immediate) {
-            lifecycle.repeatOnLifecycle(minActiveState) {
-                flow.collect { currentCollector(it) }
-            }
+            this@collectInLaunchedEffectWithLifecycle
+                .onEach { currentCollector(it) }
+                .flowWithLifecycle(lifecycle)
+                .launchIn(this)
         }
     }
 }
