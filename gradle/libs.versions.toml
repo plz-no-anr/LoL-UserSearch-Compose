@@ -150,7 +150,7 @@ lol-android-coroutines = { id = "lol.android.coroutines", version = "unspecified
 lol-android-hilt = { id = "lol.android.hilt", version = "unspecified" }
 lol-android-room = { id = "lol.android.room", version = "unspecified" }
 lol-jvm-library = { id = "lol.jvm.library", version = "unspecified" }
-
+lol-kotlin-serialization = { id = "lol.kotlin.serialization", version = "unspecified" }
 
 [bundles]
 androidx-compose = ["androidx-compose-ui", "androidx-compose-ui-graphics", "androidx-compose-ui-viewbinding", "androidx-compose-foundation", "androidx-compose-foundation-layout", "androidx-compose-material-icons", "androidx-compose-material-iconsExtended", "androidx-compose-material3", "androidx-compose-material3-window", "androidx-compose-runtime"]

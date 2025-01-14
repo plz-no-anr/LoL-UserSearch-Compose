@@ -20,6 +20,7 @@ sealed interface SummonerState {
     data class Success(val list: List<Summoner>) : SummonerState
 
 }
+
 class GetSummonerListUseCase @Inject constructor(
     private val summonerRepository: SummonerRepository,
 ): PagingUseCase<Summoner>() {

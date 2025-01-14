@@ -1,4 +1,4 @@
-package com.plznoanr.lol.navigation
+package com.plznoanr.lol.core.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.plznoanr.lol.core.designsystem.component.AppNavigationBar
 import com.plznoanr.lol.core.designsystem.component.AppNavigationBarItem
@@ -55,5 +56,5 @@ fun AppBottomBar(
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopDestination) =
     this?.hierarchy?.any {
-        it.route?.contains(destination.route, true) ?: false
+        it.hasRoute(destination.route::class)
     } ?: false

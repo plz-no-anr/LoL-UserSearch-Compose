@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.lol.android.library)
     alias(libs.plugins.lol.android.hilt)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.lol.kotlin.serialization)
 }
 
 android {
@@ -17,7 +17,6 @@ dependencies {
     implementation(projects.core.network)
 
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.junit4)

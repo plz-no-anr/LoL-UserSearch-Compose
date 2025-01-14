@@ -54,7 +54,7 @@ internal fun SummonerScreen(
         ) { onEvent(Event.OnBackClick) }
 
         else -> {
-            state.summoner?.also { data ->
+            state.summoner?.let { data ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -71,7 +71,6 @@ internal fun SummonerScreen(
                         progress = data.miniSeries?.progress,
                         onBookmarked = { onEvent(Event.OnBookmark(data.id)) }
                     )
-
                 }
             }
         }

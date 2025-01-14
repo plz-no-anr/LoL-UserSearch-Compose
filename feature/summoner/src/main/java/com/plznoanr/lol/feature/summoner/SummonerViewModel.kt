@@ -2,13 +2,14 @@ package com.plznoanr.lol.feature.summoner
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.domain.usecase.summoner.GetSummonerUseCase
 import com.plznoanr.lol.core.domain.usecase.summoner.SaveBookmarkIdUseCase
 import com.plznoanr.lol.core.model.Nickname
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviViewModel
-import com.plznoanr.lol.feature.summoner.navigation.SummonerArgs
+import com.plznoanr.lol.core.navigation.NavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,13 +27,12 @@ class SummonerViewModel @Inject constructor(
     private val saveBookmarkIdUseCase: SaveBookmarkIdUseCase
 ) : MviViewModel<UiState, Event, SideEffect>() {
 
-    private val summonerName: String = SummonerArgs(stateHandle).summonerName
-    private val summonerTag: String = SummonerArgs(stateHandle).summonerTag
+    private val route: NavGraph.SummonerRoute = stateHandle.toRoute()
 
     override val uiState: StateFlow<UiState>
 
     private val summonerFlow: Flow<Result<Summoner>> = flow {
-        emit(getSummonerUseCase(summonerName to summonerTag))
+        emit(getSummonerUseCase(route.summonerName to route.summonerTag))
     }
 
     init {

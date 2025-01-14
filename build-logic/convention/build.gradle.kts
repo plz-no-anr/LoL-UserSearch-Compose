@@ -64,5 +64,9 @@ gradlePlugin {
             id = "lol.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
         }
+        register("kotlinSerialization") {
+            id = "lol.kotlin.serialization"
+            implementationClass = "KotlinSerializationConventionPlugin"
+        }
     }
 }

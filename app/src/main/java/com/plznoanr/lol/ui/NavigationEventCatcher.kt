@@ -1,7 +1,7 @@
 package com.plznoanr.lol.ui
 
 import androidx.compose.runtime.Stable
-import com.plznoanr.lol.navigation.TopDestination
+import com.plznoanr.lol.core.navigation.TopDestination
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach

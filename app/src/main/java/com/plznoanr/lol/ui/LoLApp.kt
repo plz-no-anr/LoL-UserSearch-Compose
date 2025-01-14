@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plznoanr.lol.R
 import com.plznoanr.lol.core.designsystem.component.SnackbarHostContainer
-import com.plznoanr.lol.navigation.AppBottomBar
+import com.plznoanr.lol.core.navigation.AppBottomBar
+import com.plznoanr.lol.core.navigation.TopDestination
 import com.plznoanr.lol.navigation.AppNavHost
-import com.plznoanr.lol.navigation.TopDestination
 import com.plznoanr.lol.utils.NetworkManager
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
