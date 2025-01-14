@@ -7,7 +7,7 @@
 
 ## Module Dependency Graph
 
-<img src = "project.dot.png">
+<img src = "graph.png">
 
 
 https://github.com/plz-no-anr/lol-user-search-compose-mvi/assets/71485469/8c7b2686-3514-4b8d-b6c0-badba287c617
