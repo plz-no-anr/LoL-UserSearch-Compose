@@ -1,4 +1,6 @@
-import com.metaverse.world.cube.libs
+import com.plznoanr.lol.library
+import com.plznoanr.lol.libs
+import com.plznoanr.lol.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
@@ -6,16 +8,16 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidHiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply("dagger.hilt.android.plugin")
-                apply("com.google.devtools.ksp")
+            pluginManager.run {
+                apply(libs.plugin("hilt-android").pluginId)
+                apply(libs.plugin("ksp").pluginId)
             }
 
             dependencies {
-                "implementation"(libs.findLibrary("hilt.android").get())
-                "ksp"(libs.findLibrary("hilt.android.compiler").get())
-                "kspTest"(libs.findLibrary("hilt.android.compiler").get())
-                "kspAndroidTest"(libs.findLibrary("hilt.android.compiler").get())
+                "implementation"(libs.library("hilt-android"))
+                "ksp"(libs.library("hilt-android-compiler"))
+                "kspTest"(libs.library("hilt-android-compiler"))
+                "kspAndroidTest"(libs.library("hilt-android-compiler"))
             }
         }
     }

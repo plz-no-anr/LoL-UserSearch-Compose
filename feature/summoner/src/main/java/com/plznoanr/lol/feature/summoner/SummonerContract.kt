@@ -2,18 +2,18 @@ package com.plznoanr.lol.feature.summoner
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.plznoanr.lol.core.common.model.AppError
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
-import com.plznoanr.lol.core.mvibase.MviState
+import com.plznoanr.lol.core.mvibase.MviUiState
 
 @Stable
 data class UiState(
     val summoner: Summoner? = null,
     val isLoading: Boolean = true,
-    val error: AppError? = null
-): MviState
+    val error: Result.Error? = null
+): MviUiState
 
 @Immutable
 sealed interface Event: MviEvent {

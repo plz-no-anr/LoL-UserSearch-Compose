@@ -1,15 +1,18 @@
-import com.android.build.gradle.LibraryExtension
-import com.metaverse.world.cube.configureAndroidCompose
+import com.plznoanr.lol.configureAndroidCompose
+import com.plznoanr.lol.libraryExtension
+import com.plznoanr.lol.libs
+import com.plznoanr.lol.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
 
 class AndroidLibraryComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.android.library")
-            val extension = extensions.getByType<LibraryExtension>()
-            configureAndroidCompose(extension)
+            pluginManager.run {
+                apply(libs.plugin("android-library").pluginId)
+                apply(libs.plugin("compose-compiler").pluginId)
+            }
+            configureAndroidCompose(libraryExtension)
         }
     }
 

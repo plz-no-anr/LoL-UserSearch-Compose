@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -35,7 +34,7 @@ class HomeViewModel @Inject constructor(
     private val userEvent = MutableSharedFlow<Event>()
     private val userEventFlow = userEvent.flatMapLatest {
         getSummonerListUseCase(
-            isSortedBookmark = if (it is Event.OnSortedBookmark) it.sorted else false,
+            isSortedBookmark = if (it is Event.OnSortedBookmark) it.sorted else uiState.value.isSortedBookmark,
             isClear = it is Event.OnRefresh
         )
     }
@@ -45,7 +44,6 @@ class HomeViewModel @Inject constructor(
             getSummonerListUseCase(),
             userEventFlow
         ).distinctUntilChanged()
-            .map { it }
             .stateIn(
                 scope = viewModelScope,
                 initialValue = SummonerState.Loading,

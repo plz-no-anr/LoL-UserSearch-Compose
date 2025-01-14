@@ -49,7 +49,8 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.core.domain)
-    implementation(projects.core.designsystem)
+    implementation(projects.core.ui)
+    implementation(projects.core.navigation)
     implementation(projects.feature.home)
     implementation(projects.feature.search)
     implementation(projects.feature.bookmark)

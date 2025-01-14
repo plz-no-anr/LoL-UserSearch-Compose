@@ -13,9 +13,7 @@ internal class GetBookmarkedSummonerListUseCaseTest : FunSpec() {
     )
 
     private val useCase = GetBookmarkedSummonerListUseCase(
-        getSummonerListUseCase = GetSummonerListUseCase(
-            summonerRepository = repository
-        )
+        summonerRepository = repository
     )
 
     init {
@@ -42,6 +40,5 @@ internal class GetBookmarkedSummonerListUseCaseTest : FunSpec() {
     private fun generateSummonerList(size: Int) = (0..size).mapIndexed { index, i ->
         getDummySummoner(index = index)
     }
-
 
 }

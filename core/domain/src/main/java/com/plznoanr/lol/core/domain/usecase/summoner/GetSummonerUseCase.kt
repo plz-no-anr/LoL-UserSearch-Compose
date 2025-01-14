@@ -1,6 +1,5 @@
 package com.plznoanr.lol.core.domain.usecase.summoner
 
-import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.data.repository.SummonerRepository
 import com.plznoanr.lol.core.model.Nickname
@@ -21,7 +20,7 @@ class GetSummonerUseCase @Inject constructor(
                 return if (local != null) {
                     Result.Success(local)
                 } else {
-                    Result.Error(AppError.SummonerNull)
+                    Result.SummonerNullError
                 }
             }
             is Result.Error -> result

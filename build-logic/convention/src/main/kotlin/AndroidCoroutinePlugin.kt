@@ -1,4 +1,4 @@
-import com.metaverse.world.cube.configureCoroutineAndroid
+import com.plznoanr.lol.configureCoroutineAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

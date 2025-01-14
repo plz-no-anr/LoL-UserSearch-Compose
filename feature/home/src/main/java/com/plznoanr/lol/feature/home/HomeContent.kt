@@ -44,15 +44,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.plznoanr.lol.core.designsystem.component.EmptyBox
 import com.plznoanr.lol.core.designsystem.component.IconImage
 import com.plznoanr.lol.core.designsystem.component.LazyColumnIndicator
-import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.designsystem.icon.AppIcons
 import com.plznoanr.lol.core.designsystem.theme.SkyBlue
 import com.plznoanr.lol.core.model.Profile
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
+import com.plznoanr.lol.core.ui.EmptyBox
+import com.plznoanr.lol.core.ui.summoner.SummonerItem
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalMaterialApi::class)

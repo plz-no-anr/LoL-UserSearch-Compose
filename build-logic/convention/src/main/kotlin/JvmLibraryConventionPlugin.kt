@@ -1,13 +1,13 @@
-import com.metaverse.world.cube.configureKotlinJvm
+import com.plznoanr.lol.configureKotlinJvm
+import com.plznoanr.lol.libs
+import com.plznoanr.lol.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class JvmLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            with(pluginManager) {
-                apply("org.jetbrains.kotlin.jvm")
-            }
+            pluginManager.apply(libs.plugin("kotlin-jvm").pluginId)
             configureKotlinJvm()
         }
     }

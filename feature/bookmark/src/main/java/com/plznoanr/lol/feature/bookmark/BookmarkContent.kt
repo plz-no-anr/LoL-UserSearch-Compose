@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.plznoanr.lol.core.designsystem.component.SummonerCardStack
-import com.plznoanr.lol.core.designsystem.component.summoner.SummonerItem
 import com.plznoanr.lol.core.model.Summoner
 import com.plznoanr.lol.core.model.toText
+import com.plznoanr.lol.core.ui.summoner.SummonerCardStack
+import com.plznoanr.lol.core.ui.summoner.SummonerItem
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable

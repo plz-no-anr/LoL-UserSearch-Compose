@@ -2,11 +2,11 @@ package com.plznoanr.lol.feature.search
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.plznoanr.lol.core.common.model.AppError
+import com.plznoanr.lol.core.common.model.Result
 import com.plznoanr.lol.core.model.Search
 import com.plznoanr.lol.core.mvibase.MviEvent
 import com.plznoanr.lol.core.mvibase.MviSideEffect
-import com.plznoanr.lol.core.mvibase.MviState
+import com.plznoanr.lol.core.mvibase.MviUiState
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -16,8 +16,8 @@ data class UiState(
     val query: String = "",
     val isActive: Boolean = false,
     val isLoading: Boolean = false,
-    val error: AppError? = null
-): MviState
+    val error: Result.Error? = null
+): MviUiState
 
 @Immutable
 sealed interface Event: MviEvent {

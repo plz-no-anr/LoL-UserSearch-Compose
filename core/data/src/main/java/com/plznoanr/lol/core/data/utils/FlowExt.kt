@@ -1,6 +1,5 @@
 package com.plznoanr.lol.core.data.utils
 
-import com.plznoanr.lol.core.common.model.AppError
 import com.plznoanr.lol.core.common.model.Result
 
 
@@ -12,4 +11,4 @@ suspend fun <T> safeApiCall(
     e.toError()
 }
 
-private fun Exception.toError() = Result.Error(AppError.Exception(this))
+private fun Exception.toError() = Result.ExceptionError(this)

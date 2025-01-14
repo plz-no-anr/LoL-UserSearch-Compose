@@ -7,18 +7,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.plznoanr.lol.feature.bookmark.navigation.BookmarkRoute
-import com.plznoanr.lol.feature.home.navigation.HomeRoute
-import com.plznoanr.lol.feature.search.navigation.SearchRoute
-import com.plznoanr.lol.feature.setting.navigation.SettingRoute
-import com.plznoanr.lol.navigation.TopDestination
+import com.plznoanr.lol.core.navigation.NavGraph
+import com.plznoanr.lol.core.navigation.TopDestination
 import com.plznoanr.lol.utils.NetworkManager
 import com.plznoanr.lol.utils.NetworkState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +47,6 @@ fun rememberAppState(
     }
 }
 
-
 @Stable
 class AppState(
     val navController: NavHostController,
@@ -69,7 +68,7 @@ class AppState(
             initialValue = false
         )
 
-    val topDestinations = listOf(
+    val topDestinations: ImmutableList<TopDestination> = persistentListOf(
         TopDestination.Home,
         TopDestination.Search,
         TopDestination.Bookmark,
@@ -84,12 +83,14 @@ class AppState(
         get() = currentTopDestination != null
 
     val currentTopDestination: TopDestination?
-        @Composable get() = when (currentDestination?.route) {
-            HomeRoute -> TopDestination.Home
-            SearchRoute -> TopDestination.Search
-            BookmarkRoute -> TopDestination.Bookmark
-            SettingRoute -> TopDestination.Setting
-            else -> null
+        @Composable get() = currentDestination?.let {
+            when {
+                it.hasRoute<NavGraph.HomeRoute>() -> TopDestination.Home
+                it.hasRoute<NavGraph.SearchGraph.SearchRoute>() -> TopDestination.Search
+                it.hasRoute<NavGraph.BookmarkRoute>() -> TopDestination.Bookmark
+                it.hasRoute<NavGraph.SettingRoute>() -> TopDestination.Setting
+                else -> null
+            }
         }
 
     fun navigateTo(destination: TopDestination) {
@@ -108,9 +109,10 @@ class AppState(
 @Composable
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     DisposableEffect(navController) {
-        val listener = NavController.OnDestinationChangedListener { navController, destination, bundle ->
-            Timber.d("[네비게이션] -> [$navController][$destination][$bundle]")
-        }
+        val listener =
+            NavController.OnDestinationChangedListener { navController, destination, bundle ->
+                Timber.d("[네비게이션] -> [$navController][$destination][$bundle]")
+            }
 
         navController.addOnDestinationChangedListener(listener)
 

@@ -17,13 +17,11 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
 
     debugApi(libs.androidx.compose.ui.tooling)
 
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.core.ktx)
+    api(libs.lottie.compose)
     implementation(libs.coil.kt.compose)
-    implementation(libs.lottie.compose)
-    implementation(libs.card.stack)
-    implementation(libs.kotlinx.collections.immutable)
 }

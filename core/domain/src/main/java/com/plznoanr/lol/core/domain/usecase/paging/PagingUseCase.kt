@@ -1,7 +1,7 @@
 package com.plznoanr.lol.core.domain.usecase.paging
 
 import com.plznoanr.lol.core.common.model.Paging
-import com.plznoanr.lol.core.common.model.PagingResult
+import com.plznoanr.lol.core.common.model.PagingList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
@@ -48,7 +48,7 @@ abstract class PagingUseCase<T> {
     fun executeFlow(
         pageSize: Int = 20,
         isClear: Boolean = false,
-        function: (Paging) -> Flow<PagingResult<T>>
+        function: (Paging) -> Flow<PagingList<T>>
     ): Flow<List<T>> = flow {
         emit(Unit)
     }.onEach {

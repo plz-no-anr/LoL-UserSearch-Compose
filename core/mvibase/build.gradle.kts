@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.lol.android.library)
+    alias(libs.plugins.lol.android.library.compose)
 }
 
 android {
@@ -8,7 +9,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.timber)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
